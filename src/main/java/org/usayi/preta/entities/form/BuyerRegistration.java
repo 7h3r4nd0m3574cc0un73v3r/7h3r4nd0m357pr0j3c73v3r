@@ -12,6 +12,18 @@ public class BuyerRegistration
 	private String confirmPassword;
 	
 	private String mobile;
+	
+	private String captcha;
+
+	public String getCaptcha()
+	{
+		return captcha;
+	}
+
+	public void setCaptcha(String captcha)
+	{
+		this.captcha = captcha;
+	}
 
 	public UserInfo getUserInfo()
 	{

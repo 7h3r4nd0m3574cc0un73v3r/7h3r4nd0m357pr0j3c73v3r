@@ -18,7 +18,8 @@ var App = angular.module( "pretaApp", [
                                        'ngStomp',
                                        'ngAudio',
                                        'ngMessages',
-                                       'rzModule'
+                                       'rzModule',
+                                       'vcRecaptcha'
                                       ]);
 App.config( config);
 
@@ -813,7 +814,7 @@ function config( $stateProvider, $urlRouterProvider, $mdThemingProvider) {
 				/* End Pagination Setting */
 				
 				/* Init */
-				$scope.entities = [];
+				$scope.favEShops = [];
 				
 				/* View Config */
 				$scope.view = { title: 'Boutiques favorites', icon: 'fa fa-star', description: 'Retrouvez vos boutiques pr\xE9f\xE9r\xE9es'}
@@ -828,7 +829,7 @@ function config( $stateProvider, $urlRouterProvider, $mdThemingProvider) {
 							$scope.pagination.itemsNumber = response.itemsNumber;
 							$stateParams.page = $scope.pagination.currentPage;
 
-							$scope.entities = response.entities;
+							$scope.favEShops = response.entities;
 						  
 						    $scope.isLoading = false;
 					  }, function ( response) {

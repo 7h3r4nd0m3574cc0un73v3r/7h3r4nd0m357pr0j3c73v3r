@@ -16,7 +16,6 @@ import java.util.Random;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
-import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -79,6 +78,7 @@ import org.usayi.preta.entities.User;
 import org.usayi.preta.entities.UserInfo;
 import org.usayi.preta.entities.form.BuyerRegistration;
 import org.usayi.preta.entities.form.EShopRegistration;
+import org.usayi.preta.entities.form.PWRequest;
 import org.usayi.preta.entities.form.PasswordChangeForm;
 import org.usayi.preta.entities.form.UserLogin;
 import org.usayi.preta.entities.json.CategoryTreeJSON;
@@ -92,6 +92,7 @@ import org.usayi.preta.service.GoogleDriveService;
 import org.usayi.preta.service.GoogleDriveServiceBuilder;
 import org.usayi.preta.service.GoogleDriveServiceImpl;
 import org.usayi.preta.service.NotificationService;
+import org.usayi.preta.service.ReCaptchaVerificationServiceImpl;
 import org.usayi.preta.service.SchedulerService;
 import org.usayi.preta.service.WebSocketService;
 
@@ -1005,6 +1006,8 @@ public class PublicRESTAPIController
 				fErrors.add( new FieldErrorResource( "User", "email", "NotNull", "This field is mandatory."));
 			if( entity.getMobile() == null || entity.getMobile().isEmpty())
 				fErrors.add( new FieldErrorResource( "User", "mobile", "NotNull", "This field is mandatory."));
+			if( entity.getCaptcha() == null || entity.getCaptcha().isEmpty())
+				fErrors.add( new FieldErrorResource( "User", "captcha", "NotNull", "This field is mandatory."));
 			/* Note: Never let a null value pass this step, otherwise, NullPointerException */
 			if( !fErrors.isEmpty())
 				return Tools.handleMultipleFieldErrors(fErrors);
@@ -1016,6 +1019,8 @@ public class PublicRESTAPIController
 				fErrors.add( new FieldErrorResource( "User", "email", "Invalid", "This email is invalid."));
 			if( entity.getPassword().length() < 8)
 				fErrors.add( new FieldErrorResource( "User", "password", "Short", "The passwords must contain at least 8 characters."));
+			if( !ReCaptchaVerificationServiceImpl.verify( entity.getCaptcha()))
+				fErrors.add( new FieldErrorResource( "User", "captcha", "Invalid", "This catcha is invalid."));
 			/*
 			 * TODO
 			 * Invalid username like prefixed with admin, etc ...
@@ -1103,124 +1108,137 @@ public class PublicRESTAPIController
 	@RequestMapping( value="/register/e-shop")
 	public ResponseEntity<?> registerEShop( @RequestBody EShopRegistration entity)
 	{	
-		List<FieldErrorResource> fErrors = new ArrayList<FieldErrorResource>();
-		
-		/* Level 1 */ 
-		if( entity.getUsername() == null || entity.getUsername().isEmpty())
-			fErrors.add( new FieldErrorResource( "User", "username", "NotNull", "This field is mandatory."));
-		if( entity.getPassword() == null || entity.getPassword().isEmpty())
-			fErrors.add( new FieldErrorResource( "User", "password", "NotNull", "This field is mandatory."));
-		if( entity.getConfirmPassword() == null || entity.getConfirmPassword().isEmpty())
-			fErrors.add( new FieldErrorResource( "User", "confirmPassword", "NotNull", "This field is mandatory."));
-		if( entity.getUserEmail() == null || entity.getUserEmail().isEmpty())
-			fErrors.add( new FieldErrorResource( "User", "email", "NotNull", "This field is mandatory."));
-		if( entity.getUserMobile() == null || entity.getUserMobile().isEmpty())
-			fErrors.add( new FieldErrorResource( "User", "mobile", "NotNull", "This field is mandatory."));
-		/* Note: Never let a null value pass this step, otherwise, NullPointerException */
-		if( !fErrors.isEmpty())
-			return Tools.handleMultipleFieldErrors(fErrors);
-		
-
-		/* Level 2 Checks */
-		if( !entity.getUserEmail().matches( ".+@.+\\..+"))
-			fErrors.add( new FieldErrorResource( "User", "email", "Invalid", "This email is invalid."));
-		if( entity.getPassword().length() < 8)
-			fErrors.add( new FieldErrorResource( "User", "password", "Short", "The passwords must contain at least 8 characters."));
-		
-		/* Level 3 Checks */
-		/*
-		 * TODO
-		 * Invalid username like prefixed with admin, etc ...
-		 */
-		if( pRESTAPI.loadEShop( entity.getEshopName()) != null)
-			fErrors.add( new FieldErrorResource( "EShop", "eshopName", "Conflict", "This name is already registered."));
-		if( pRESTAPI.loadUserByUsername( entity.getUsername()) != null)
-			fErrors.add( new FieldErrorResource( "User", "username", "Conflict", "This username is already taken."));
-		if( pRESTAPI.loadUserByEMail( entity.getUserEmail()) != null)
-			fErrors.add( new FieldErrorResource( "User", "userEmail", "Conflict", "This email is already registered."));
-		if( pRESTAPI.isEAccountNumberTaken( entity.getUserMobile()))
-			fErrors.add( new FieldErrorResource( "User", "userMobile", "Conflict", "This number is already registered."));
-		
-		/* EAccount checks */
-		boolean hasMatch = false;
-		
-		/* Check if mobile matches any EMP */
-		@SuppressWarnings("unchecked")
-		List<EMoneyProvider> emps = (List<EMoneyProvider>) restBL.listEMoneyProviders( 1, 0).getEntities();
-		
-		Long empId = 0L;
-		for( EMoneyProvider emp : emps)
+		try
 		{
-			if( entity.getUserMobile().matches( emp.getNumPattern()))
-			{
-				//eAccount.seteMoneyProvider( restBL.getEMoneyProvider( emp.getId()));
-				empId = emp.getId();
-				hasMatch = true;
-			}
-		}
-
-		if( !hasMatch)
-			fErrors.add( new FieldErrorResource( "User", "userMobile", "Invalid", "The specified number is not supported at this moment."));
-		
-		if( !fErrors.isEmpty())
-			return Tools.handleMultipleFieldErrors(fErrors);
+			List<FieldErrorResource> fErrors = new ArrayList<FieldErrorResource>();
 			
-		//Register UserInfo for New User
-		UserInfo userInfo = new UserInfo();
-		userInfo.setEmail( entity.getUserEmail());
-		pRESTAPI.addUserInfo( userInfo);
-		
-		/* EAccount Affectation */
-		EAccount eAccount = new EAccount();
-		
-		if( pRESTAPI.isEAccountNumberRegistered( entity.getUserMobile())) {
-			eAccount = pRESTAPI.loadEAccountByNumber( entity.getUserMobile());
+			/* Level 1 */ 
+			if( entity.getUsername() == null || entity.getUsername().isEmpty())
+				fErrors.add( new FieldErrorResource( "User", "username", "NotNull", "This field is mandatory."));
+			if( entity.getPassword() == null || entity.getPassword().isEmpty())
+				fErrors.add( new FieldErrorResource( "User", "password", "NotNull", "This field is mandatory."));
+			if( entity.getConfirmPassword() == null || entity.getConfirmPassword().isEmpty())
+				fErrors.add( new FieldErrorResource( "User", "confirmPassword", "NotNull", "This field is mandatory."));
+			if( entity.getUserEmail() == null || entity.getUserEmail().isEmpty())
+				fErrors.add( new FieldErrorResource( "User", "email", "NotNull", "This field is mandatory."));
+			if( entity.getUserMobile() == null || entity.getUserMobile().isEmpty())
+				fErrors.add( new FieldErrorResource( "User", "mobile", "NotNull", "This field is mandatory."));
+			if( entity.getCaptcha() == null || entity.getCaptcha().isEmpty())
+				fErrors.add( new FieldErrorResource( "User", "captcha", "NotNull", "This field is mandatory."));
+			/* Note: Never let a null value pass this step, otherwise, NullPointerException */
+			if( !fErrors.isEmpty())
+				return Tools.handleMultipleFieldErrors(fErrors);
+			
+
+			/* Level 2 Checks */
+			if( !entity.getUserEmail().matches( ".+@.+\\..+"))
+				fErrors.add( new FieldErrorResource( "User", "email", "Invalid", "This email is invalid."));
+			if( entity.getPassword().length() < 8)
+				fErrors.add( new FieldErrorResource( "User", "password", "Short", "The passwords must contain at least 8 characters."));
+			if( !ReCaptchaVerificationServiceImpl.verify( entity.getCaptcha()))
+				fErrors.add( new FieldErrorResource( "User", "captcha", "Invalid", "This catcha is invalid."));
+			
+			/* Level 3 Checks */
+			/*
+			 * TODO
+			 * Invalid username like prefixed with admin, etc ...
+			 */
+			if( pRESTAPI.loadEShop( entity.getEshopName()) != null)
+				fErrors.add( new FieldErrorResource( "EShop", "eshopName", "Conflict", "This name is already registered."));
+			if( pRESTAPI.loadUserByUsername( entity.getUsername()) != null)
+				fErrors.add( new FieldErrorResource( "User", "username", "Conflict", "This username is already taken."));
+			if( pRESTAPI.loadUserByEMail( entity.getUserEmail()) != null)
+				fErrors.add( new FieldErrorResource( "User", "userEmail", "Conflict", "This email is already registered."));
+			if( pRESTAPI.isEAccountNumberTaken( entity.getUserMobile()))
+				fErrors.add( new FieldErrorResource( "User", "userMobile", "Conflict", "This number is already registered."));
+			
+			/* EAccount checks */
+			boolean hasMatch = false;
+			
+			/* Check if mobile matches any EMP */
+			@SuppressWarnings("unchecked")
+			List<EMoneyProvider> emps = (List<EMoneyProvider>) restBL.listEMoneyProviders( 1, 0).getEntities();
+			
+			Long empId = 0L;
+			for( EMoneyProvider emp : emps)
+			{
+				if( entity.getUserMobile().matches( emp.getNumPattern()))
+				{
+					//eAccount.seteMoneyProvider( restBL.getEMoneyProvider( emp.getId()));
+					empId = emp.getId();
+					hasMatch = true;
+				}
+			}
+
+			if( !hasMatch)
+				fErrors.add( new FieldErrorResource( "User", "userMobile", "Invalid", "The specified number is not supported at this moment."));
+			
+			if( !fErrors.isEmpty())
+				return Tools.handleMultipleFieldErrors(fErrors);
+				
+			//Register UserInfo for New User
+			UserInfo userInfo = new UserInfo();
+			userInfo.setEmail( entity.getUserEmail());
+			pRESTAPI.addUserInfo( userInfo);
+			
+			/* EAccount Affectation */
+			EAccount eAccount = new EAccount();
+			
+			if( pRESTAPI.isEAccountNumberRegistered( entity.getUserMobile())) {
+				eAccount = pRESTAPI.loadEAccountByNumber( entity.getUserMobile());
+			}
+			else {
+				eAccount.setAccount( entity.getMobile());
+				eAccount.setIsDefault( true);
+				eAccount.setRelId( 1L);
+			}
+			
+			pRESTAPI.addEAccountToUserInfo( userInfo.getId(), empId, eAccount);
+			
+			userInfo.addEAccount( eAccount);
+			pRESTAPI.updateUserInfo( userInfo);
+
+			//Set base for User
+			User user = new User();
+			user.setUserInfo( userInfo);
+			user.setUsername( entity.getUsername());
+
+			//Adding Roles to user
+			user.addRole( pRESTAPI.loadRole( "ROLE_BUYER"));
+			user.addRole( pRESTAPI.loadRole( "ROLE_MANAGER"));
+
+			//Generating salt and confirmation token for user
+			user.setSalt( RandomStringUtils.random( 32, true, true));
+			user.setConfToken( RandomStringUtils.random( 64, true, true));
+
+			//Encoding password using CustomPasswordEncoder
+			CustomPasswordEncoder passwordEncoder = new CustomPasswordEncoder();
+			user.setPassword( passwordEncoder.encode( user.getSalt() + entity.getPassword()));
+
+			/* Registering the EShop */
+			EShop eShop = new EShop();
+			eShop.setName( entity.getEshopName());
+			eShop.setEmail( entity.getEmail());
+			eShop.setCustomerNum( entity.getMobile());
+			eShop.setLogoGoogleId( GoogleDriveServiceImpl.defaultEShopPicId);
+			eShop.setRelId( 1L);
+			
+			pRESTAPI.addEShop( eShop);
+
+			user.addManagedEShop( eShop);
+
+			pRESTAPI.addUser( user);
+
+			emails.activation(user);
+			
+			return Tools.ok();
+			
 		}
-		else {
-			eAccount.setAccount( entity.getMobile());
-			eAccount.setIsDefault( true);
-			eAccount.setRelId( 1L);
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
 		}
-		
-		pRESTAPI.addEAccountToUserInfo( userInfo.getId(), empId, eAccount);
-		
-		userInfo.addEAccount( eAccount);
-		pRESTAPI.updateUserInfo( userInfo);
-
-		//Set base for User
-		User user = new User();
-		user.setUserInfo( userInfo);
-		user.setUsername( entity.getUsername());
-
-		//Adding Roles to user
-		user.addRole( pRESTAPI.loadRole( "ROLE_BUYER"));
-		user.addRole( pRESTAPI.loadRole( "ROLE_MANAGER"));
-
-		//Generating salt and confirmation token for user
-		user.setSalt( RandomStringUtils.random( 32, true, true));
-		user.setConfToken( RandomStringUtils.random( 64, true, true));
-
-		//Encoding password using CustomPasswordEncoder
-		CustomPasswordEncoder passwordEncoder = new CustomPasswordEncoder();
-		user.setPassword( passwordEncoder.encode( user.getSalt() + entity.getPassword()));
-
-		/* Registering the EShop */
-		EShop eShop = new EShop();
-		eShop.setName( entity.getEshopName());
-		eShop.setEmail( entity.getEmail());
-		eShop.setCustomerNum( entity.getMobile());
-		eShop.setLogoGoogleId( GoogleDriveServiceImpl.defaultEShopPicId);
-		eShop.setRelId( 1L);
-		
-		pRESTAPI.addEShop( eShop);
-
-		user.addManagedEShop( eShop);
-
-		pRESTAPI.addUser( user);
-
-		emails.activation(user);
-		
-		return Tools.ok();
 	}
 	/* End Registration */
 	
@@ -1782,11 +1800,27 @@ public class PublicRESTAPIController
 		}
 		@PostMapping
 		@RequestMapping( "/request-password")
-		public ResponseEntity<?> requestPassword( @RequestBody @Email final String email)
+		public ResponseEntity<?> requestPassword( @RequestBody final PWRequest request)
 		{
 			try
-			{
-				User user = pRESTAPI.loadUserByEMail( email);
+			{	
+				List<FieldErrorResource> fErrors = new ArrayList<FieldErrorResource>();
+				
+				if( request.getEmail() == null || request.getEmail().isEmpty())
+					fErrors.add( new FieldErrorResource( "PWRequest", "email", "NotNull", "This field is mandatory."));
+				if( request.getCaptcha() == null || request.getCaptcha().isEmpty())
+					fErrors.add( new FieldErrorResource( "PWRequest", "captcha", "NotNull", "This field is mandatory."));
+				
+				if( !fErrors.isEmpty())
+					return Tools.handleMultipleFieldErrors(fErrors);
+
+				if( !ReCaptchaVerificationServiceImpl.verify( request.getCaptcha()))
+					fErrors.add( new FieldErrorResource( "PWRequest", "captcha", "Invalid", "This catcha is invalid."));
+
+				if( !fErrors.isEmpty())
+					return Tools.handleMultipleFieldErrors(fErrors);
+				
+				User user = pRESTAPI.loadUserByEMail( request.getEmail());
 				
 				if( user == null || user.hasRole( "ROLE_ADMIN")) {
 					return Tools.handleSingleFieldError(  new FieldErrorResource( "user", "email", "NotFound", "not found"));
@@ -2899,6 +2933,12 @@ public class PublicRESTAPIController
 			return new ResponseEntity<String>( "Found", HttpStatus.OK);
 		else
 			return new ResponseEntity<String>( "NotFound", HttpStatus.OK);
+	}
+	@GetMapping
+	@RequestMapping( "/debug/captcha-secret")
+	public ResponseEntity<?> checkCaptchaKey()
+	{
+		return new ResponseEntity<String>( System.getenv( "GOOGLE_RECAPTCHA_KEY"), HttpStatus.OK);
 	}
 	@GetMapping
 	@RequestMapping( "/debug/init-e-shops/{count}/{articleCount}")

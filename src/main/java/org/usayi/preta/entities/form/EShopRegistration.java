@@ -25,6 +25,18 @@ public class EShopRegistration
 	
 	private String userMobile;
 
+	private String captcha;
+
+	public String getCaptcha()
+	{
+		return captcha;
+	}
+
+	public void setCaptcha(String captcha)
+	{
+		this.captcha = captcha;
+	}
+
 	public String getEshopName()
 	{
 		return eshopName;

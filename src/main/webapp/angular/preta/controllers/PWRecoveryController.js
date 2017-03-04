@@ -4,13 +4,13 @@ App.controller( 'PWRecoveryController',[ '$scope', '$mdDialog', 'UserService', f
 	$scope.done = false;
 	
 	/* Init Var */
-	$scope.form = { email: null};
+	$scope.form = { email: null, captcha: null};
 	initFormErrors();
 	
 	$scope.requestPassword = function() {
 		$scope.isLoading = true;
 		initFormErrors();
-			UserService.requestPassword( $scope.form.email)
+			UserService.requestPassword( $scope.form)
 						.then( function( response) {
 							$scope.done = true;
 							$scope.isLoading = false;

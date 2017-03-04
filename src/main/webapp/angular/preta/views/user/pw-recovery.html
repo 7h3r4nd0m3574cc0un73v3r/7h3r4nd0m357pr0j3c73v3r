@@ -1,4 +1,4 @@
-<div class="col-lg-offset-3 col-md-offset-3 col-sm-offset-2 col-lg-6 col-md-6 col-sm-8 col-xs-12">
+<div class="col-lg-offset-2 col-md-offset-1 col-lg-8 col-md-10 col-sm-12 col-xs-12">
 
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			<div class="row">
@@ -12,13 +12,14 @@
 							<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
 			        	</div>
 						        	
-						<div layout="row" layout-wrap layout-padding x-ng-if="!done && !isLoading">
+						<div layout="column" layout-wrap layout-padding x-ng-if="!done && !isLoading">
 							<div flex="100">
 								<p class="text-center">
 									Entrez votre adresse e-mail pour initier la procédure de changement de mot de passe.
 								</p>
 							</div>
-							<form flex="100" layout="row" layout-wrap>
+							
+							<form flex="100" layout="column" layout-wrap>
 								<div flex="100">
 									<md-input-container flex class="md-block">
 										<label>Adresse E-Mail</label>
@@ -33,6 +34,13 @@
 										</div>
 									</md-input-container>
 								</div>
+								
+								<div layout="column" layout-align="center center" flex>
+								  	<md-input-container class="md-block" flex>
+								  		<div flex vc-recaptcha key="'6LclTRcUAAAAAMdM9DJOL7a6QQum6lh8PyC1Maos'" x-ng-model="form.captcha" required></div>
+								  	</md-input-container>
+								</div>
+						  
 								<div flex="100" layout="row" layout-align="end">
 									<md-button class="md-raised md-primary" aria-label="Valider" x-ng-click="requestPassword()" type="submit">
 										Valider <i class="fa fa-check-circle"></i>
@@ -42,9 +50,26 @@
 						</div>
 						
 						<div layout="row" layout-wrap layout-padding x-ng-if="done && !isLoading">
-							<div flex="100">
+						
+							<div layout-sm="column" layout-gt-sm="row" layout-padding>
+								<div flex-sm="100" flex-gt-sm="40">
+									<img x-ng-src="https://drive.google.com/uc?id=0B0W0ktANhIydRHQ4TUU1YjJ6c3M&amp;export=download" class="img-responsive product-img" />
+								</div>
+								<div flex-sm="100" flex-gt-sm="60">
+									<div class="container-fluid" style="margin-top: 12px;">
+										<p class="text-justify animated flash" style="text-indent: 30px; font-weight: 100%;">
+											Votre demande de récupération de mot de passe a bien été prise en compte.
+											Un mail de réinitialisation vous a été envoyé à l'adresse spécifiée. Merci de vous conformer
+											aux instructions y figurant pour terminer le processus de récupération.
+										</p>
+										
+										<a x-ui-sref="root" class="btn p-btn-default center-block"><i class="fa fa-home"></i> Retour à l'accueil</a>
+									</div>
+								</div>
+							</div>
+							
+<!-- 							<div flex="100">
 								<p class="text-center">
-									<i class="fa fa-check-square" style="font-size: 150%; color: #00B200;"></i>&nbsp;
 									Votre demande de récupération de mot de passe a bien été prise en compte.
 									Un mail de réinitialisation vous a été envoyé à l'adresse spécifiée. Merci de vous conformer
 									aux instructions y figurant pour terminer le processus de récupération.
@@ -54,7 +79,7 @@
 								<md-button class="md-raised md-primary" aria-label="Valider" x-ui-sref="root" x-ui-sref-options="{reload: true}">
 									<i class="fa fa-home"></i> Retour à l'accueil
 								</md-button>
-							</div>
+							</div> -->
 						</div>
 					</div>
 				</div>

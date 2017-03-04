@@ -174,7 +174,13 @@
 					            </div>
 					          </md-input-container>
 					      </div>
-					      
+					      	
+						  <div layout="row" layout-align="center center" flex>
+						  	<md-input-container class="md-block" flex>
+						  		<div flex vc-recaptcha key="'6LclTRcUAAAAAMdM9DJOL7a6QQum6lh8PyC1Maos'" x-ng-model="entity.captcha" required></div>
+						  	</md-input-container>
+						  </div>
+						  
 					      <div layout="row" layout-align="end center" flex layout-margin>
 					          <md-button class="md-raised md-primary" type="submit" x-ng-click="addEntity()" x-ng-disabled="!form.$valid">
 					          	Valider&nbsp;<i class="fa fa-check-circle"></i>

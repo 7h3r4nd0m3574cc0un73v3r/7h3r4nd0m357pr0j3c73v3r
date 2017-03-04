@@ -37,11 +37,11 @@ App.factory( 'UserService', [ '$http', '$q', function( $http, $q) {
 						})
 		},
 		/* Request password */
-		requestPassword: function( email) {
+		requestPassword: function( form) {
 			return $http({
 				method: 'POST',
 				url: 'rest-api/request-password',
-				data: encodeURI( email),
+				data: form,
 			}).then( function( response) { return response.data;}, function( response) { return $q.reject( response);});
 		},
 		/* Reset Passwords */

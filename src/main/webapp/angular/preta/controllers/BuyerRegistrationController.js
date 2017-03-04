@@ -2,7 +2,7 @@
 
 App.controller( 'BuyerRegistrationController', [ '$scope', '$state', 'RegistrationService', 'ToastService', 'SoundService', function( $scope, $state, RegistrationService, ToastService, SoundService) {
 				  /* Init variables */
-				  $scope.entity = { userInfo: { email: null}, username: null, password: null, confirmPassword: null, mobile: null};
+				  $scope.entity = { userInfo: { email: null}, username: null, password: null, confirmPassword: null, mobile: null, captcha: null};
 				  $scope.formErrors;
 				  
 				  /* Tools for Verif */
@@ -29,8 +29,15 @@ App.controller( 'BuyerRegistrationController', [ '$scope', '$state', 'Registrati
 							  required: false,
 							  invalid: false,
 							  conflict: false
+						  },
+						  captcha: {
+							  invalid: false
 						  }
 					  };
+				  }
+				  
+				  $scope.debugCaptcha = function() {
+					  console.log( $scope.entity.captcha);
 				  }
 				  
 				  /* Varification */

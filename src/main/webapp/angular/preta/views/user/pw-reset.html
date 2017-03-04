@@ -12,7 +12,6 @@
 							<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
 			        	</div>
 						
-						
 						<div layout="row" layout-wrap layout-padding x-ng-if="!done && !isLoading">
 							<form flex="100" layout="row" layout-wrap>
 								<div flex="100">
@@ -41,6 +40,7 @@
 										</div>
 									</md-input-container>
 								</div>
+								
 								<div flex="100" layout="row" layout-align="end">
 									<md-button class="md-raised md-primary" aria-label="Valider" type="submit" x-ng-click="resetPassword()" type="submit">
 										Valider <i class="fa fa-check-circle"></i>
@@ -52,13 +52,28 @@
 						
 						
 						<div layout="row" layout-wrap layout-padding x-ng-if="done && !isLoading">
-							<div flex="100">
+						
+							<div layout-sm="column" layout-gt-sm="row" layout-padding flex>
+								<div flex-sm="100" flex-gt-sm="40">
+									<img x-ng-src="https://drive.google.com/uc?id=0B0W0ktANhIydRHQ4TUU1YjJ6c3M&amp;export=download" class="img-responsive product-img" />
+								</div>
+								<div flex-sm="100" flex-gt-sm="60">
+									<div class="container-fluid" style="margin-top: 12px;">
+										<p class="text-justify animated flash" style="text-indent: 30px; font-weight: 100%;">
+											Votre mot de passe a été réinitialisé avec succès. Un mail de confirmation vous sera également envoyé.
+											Vous pouvez dès à présent vous connecter en utilisant votre nouveau mot de passe.
+										</p>
+									</div>
+								</div>
+							</div>
+							
+							<!-- <div flex="100">
 								<p class="text-justify">
 									<i class="fa fa-check-square" style="font-size: 150%; color: #00B200;"></i>&nbsp;
 									Votre mot de passe a été réinitialisé avec succès. Un mail de confirmation vous sera également envoyé.
 									Vous pouvez dès à présent vous connecter en utilisant votre nouveau mot de passe.
 								</p>
-							</div>
+							</div> -->
 							<div flex="100" layout="row" layout-align="start">
 								<md-button class="md-raised" aria-label="Valider" x-ui-sref="root" x-ui-sref-options="{reload: true}">
 									<i class="fa fa-home"></i> Retour à l'accueil

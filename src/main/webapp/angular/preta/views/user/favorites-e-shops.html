@@ -16,8 +16,8 @@
 									<div class="loading loading--double"></div>&nbsp;<span class="default-text text-mainge">Chargement en cours ...</span>
 								</div>
 								
-								<div x-ng-if="!isListLoading && entities.length">
-									<div x-ng-repeat="entity in entities" layout-gt-sm="row" layout-sm="column" layout-gt-sm="start center" layout-sm="center center"
+								<div x-ng-if="!isListLoading && favEShops.length">
+									<div x-ng-repeat="entity in favEShops" layout-gt-sm="row" layout-sm="column" layout-gt-sm="start center" layout-sm="center center"
 										style="margin: 4px; border: 1px solid #eee">
 										<!-- Picture -->
 										<div flex-gt-sm="300px" flex-sm="100">
@@ -59,7 +59,7 @@
 									</div>
 								</div>
 								
-								<div layout="column" layout-align="center center" x-ng-if="!isListLoading && !entities.length">
+								<div layout="column" layout-align="center center" x-ng-if="!isListLoading && !favEShops.length">
 				   					<div flex="auto">
 				   						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucune boutique favorite</b></h3>
 				   					</div>

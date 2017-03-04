@@ -4,7 +4,7 @@
 			<button ng-init="isNavCollapsed = true" ng-click="isNavCollapsed = !isNavCollapsed" type="button" class="navbar-toggle">
 				<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" x-ui-sref="root"><em><b><span class="text-mainge">Hôbossa</span></b></em></a>
+			<a class="navbar-brand" x-ui-sref="root"><em><b><span class="text-mainge">H</span></b></em></a>
 		</div>
 
 		<div collapse="isNavCollapsed" class="collapse navbar-collapse" uib-collapse="isNavCollapsed">
@@ -55,16 +55,25 @@
 				</li>
 				
 				<li role="presentation" x-ng-if="loggedUser == null">
-					<a x-ui-sref="root.registration">Inscription</a>
-				</li>
-				<li role="presentation" x-ng-if="loggedUser != null">
-					<a x-ui-sref="root.upgrade-request" x-ng-show="loggedUser != null && !loggedUser.isManager" class="text-mainge blink blink-infinite">Créer ma Boutique</a>
-					<a href="preta-manager" x-ng-show="loggedUser != null && loggedUser.isManager" class="text-mainge blink blink-infinite">Créer ma Boutique</a>
+					<a x-ui-sref="root.registration">S'enregistrer</a>
 				</li>
 				<li role="presentation" x-ng-if="loggedUser == null">
+					<a x-ui-sref="root.login">Se Connecter</a>
+				</li>
+				<!-- <li role="presentation" x-ng-if="loggedUser != null">
+					<a x-ui-sref="root.upgrade-request" x-ng-show="loggedUser != null && !loggedUser.isManager" class="text-mainge blink blink-infinite">Créer ma Boutique</a>
+					<a href="preta-manager" x-ng-show="loggedUser != null && loggedUser.isManager" class="text-mainge blink blink-infinite">Créer ma Boutique</a>
+				</li> -->
+				<!-- <li role="presentation" x-ng-if="loggedUser == null">
 					<a x-ui-sref="root.e-shop-reg" x-ng-show="loggedUser == null" class="text-mainge blink blink-infinite">Inscription Boutique</a>
+				</li> -->
+				<li role="presentation" x-ng-if="loggedUser != null">
+					<a x-ui-sref="root.favorites-e-shops">Boutiques Favorites</a>
 				</li>
 				<li role="presentation"><a>Tracking de colis</a></li>
+				<li role="presentation" x-ng-if="loggedUser != null">
+					<a x-ui-sref="root.orders-all">Mes Commandes</a>
+				</li>
 				<li role="presentation"><a>Plan du site</a></li>
 				<li role="presentation"><a>Aide</a></li>
 			</ul>
