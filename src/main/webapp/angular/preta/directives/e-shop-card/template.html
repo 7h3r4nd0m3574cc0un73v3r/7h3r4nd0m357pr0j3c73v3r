@@ -1,0 +1,18 @@
+<div class="default-panel">
+	<div class="default-panel-header bg-mainge" style="color: white; padding-left: 8px;">
+		<h3><i class="fa fa-opencart"></i>&nbsp;<b>{{ eShop.name }}</b></h3>
+	</div>
+	<div class="default-panel-content">
+		<div layout="row" layout-align="start" style="padding-top: 0;">
+			<img ng-src="rest/e-shop/{{ eShop.id }}/fetch-logo" style="max-width: 100%; max-height: 180px;" class="img-responsive pull-left" />
+			<div class="">
+				<div style="display: inline-block;">
+					{{ eShop.name }}
+				</div>
+				<div style="display: inline-block;">
+					{{ eShop.description }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

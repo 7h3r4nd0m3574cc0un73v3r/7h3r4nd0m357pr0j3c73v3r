@@ -1,0 +1,18 @@
+<div class="products-container">
+	<div class="products-container-header">
+		<h4 class="title text-mainge"><i class="{{ icon}}"></i>&nbsp;{{ title }}</h4> <small class="hidden-xs">{{ summary }}</small>
+		<a x-ui-sref="{{ moreSref }}" class="more-btn pull-right hidden-xs">Voir plus <i class="fa fa-cubes"></i></a>
+	</div>
+	<div class="products-container-content">
+
+		<div class="loader-container" x-ng-if="isLoading">
+			<div class="loading loading--double" x-ng-show="isLoading"></div>
+		</div>
+		
+		<div class="products-flex-container"  x-ng-if="!isLoading && entities.length">	
+			<default-article-widget article="entity" x-ng-repeat="entity in entities" />
+		</div>
+		
+		<h3 class="no-content-text" x-ng-if="!isLoading && !entities.length"><i class="fa fa-circle-o-notch"></i> Désolé, aucun contenu à afficher</h3>
+	</div>
+</div>

@@ -1,0 +1,140 @@
+<div x-ba-panel x-ba-panel-title="Mise à jour Boutique : {{ entity.name }}" x-ba-panel-class="with-scroll">
+	<div class="container-fluid">
+		<form class="form-horizontal">
+		
+			<div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Nom de la boutique</label>
+	            <input ng-model="entity.name" required md-minlength="4">
+	          </md-input-container>
+			</div>
+			
+			<div layout-gt-sm="row" layout-sm="column">
+	          <md-input-container class="md-block" flex-sm="100" flex-gt-sm>
+	            <label>Présentation</label>
+	            <textarea ng-model="entity.description" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+	          </md-input-container>
+	          <md-input-container class="md-block" flex-sm="100" flex-gt-sm layout-align-sm="center">
+				<div class="userpic" flex>
+					<div class="userpic-wrapper">
+						<img ngf-thumbnail=" mokujin.file || 'angular/common/img/default-eshop.jpg'"
+						     ng-src="angular/common/img/default-eshop.jpg" 
+						     x-ng-click="selectPicture()" />
+					</div>
+					<a class="change-userpic" ng-click="selectPicture()">Ajouter une image</a>
+					<input type="file" ng-show="false" id="uploadFile" 
+						   x-ngf-select x-ng-model="file" name="file"    
+		             	   accept="image/*" x-ngf-max-size="4MB" />
+				</div>
+			  </md-input-container>
+			</div>
+			
+			<div layout-gt-sm="row" layout-sm="column">
+	          <md-input-container class="md-block" flex-sm="100" flex-gt-sm>
+	            <label>IFU</label>
+	            <input ng-model="entity.ifu" md-maxlength="13" md-minlength="13" numbers-only>
+	          </md-input-container>
+	          <md-input-container class="md-block" flex-sm="100" flex-gt-sm>
+	            <label>Registre de Commerce</label>
+	            <input ng-model="entity.rc">
+	          </md-input-container>
+			</div>
+			
+			<div layout-sm="column" layout-gt-sm="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Marché de la place</label>
+	            <md-switch class="md-primary" ng-model="entity.isInMarket" aria-label="Switch 1">
+				    {{ entity.isInMarket ? 'Oui' : 'Non' }}
+				</md-switch>
+	          </md-input-container>
+	          <md-input-container class="md-block" flex>
+	            <label>Type de boutique</label>
+	            <md-select x-ng-model="entity.shopType" required>
+	            	<md-option x-ng-value="'LOCAL'">
+	            		Locale
+	            	</md-option>
+	            	<md-option x-ng-value="'NOT_LOCAL'">
+	            		Non locale
+	            	</md-option>
+	            </md-select>
+	          </md-input-container>
+			</div>
+			
+			<h3 class="text-primary"><b>Contacts</b></h3>
+			
+			<div layout-sm="column" layout-gt-sm="row">
+				<md-input-container class="md-block" flex>
+					<label>Service client</label>
+					<md-icon style="display:inline-block;"><i class="fa fa-phone"></i></md-icon>
+					<input x-ng-model="entity.customerNum" />
+				</md-input-container>
+			</div>
+			<div layout="row">
+				<md-input-container class="md-block" flex>
+					<label>Adresse E-Mail</label>
+					<md-icon style="display:inline-block;"><i class="fa fa-envelope"></i></md-icon>
+					<input x-ng-model="entity.email" />
+				</md-input-container>
+			</div>
+			
+			<h3 class="text-primary"><b>Localisation</b></h3>
+			 <div layout-gt-sm="row">
+				 <md-input-container class="md-block" flex-gt-sm>
+		            <label>Pays</label>
+		            <md-select ng-model="entity.country">
+		            	<md-option ng-repeat="country in countries" ng-value="country.code" ng-disabled="country.code != 'BJ'">
+		            		{{ country.name }}
+		            	</md-option>
+		            </md-select>
+	         	 </md-input-container>
+	                    
+		          <md-input-container class="md-block" flex-gt-sm>
+		            <label>Département</label>
+		            <input ng-model="entity.department" type="text">
+		          </md-input-container>
+		          
+		          <md-input-container class="md-block" flex-gt-sm>
+		            <label>Ville</label>
+		            <input ng-model="entity.city" type="text">
+		          </md-input-container>
+	          </div>
+	          
+	        <div layout-gt-sm="row">
+	          <md-input-container class="md-block" flex-gt-sm>
+	            <label>Arrondissement</label>
+	            <input ng-model="entity.borough" type="text">
+	          </md-input-container>
+	          <md-input-container class="md-block" flex-gt-sm>
+	            <label>Quartier</label>
+	            <input ng-model="entity.district" type="text">
+	          </md-input-container>
+	          <md-input-container class="md-block" flex-gt-sm>
+	            <label>Rue</label>
+	            <input ng-model="entity.street" type="text">
+	          </md-input-container>
+	        </div>
+	        
+		    <div layout-gt-sm="row">
+	          <md-input-container class="md-block" flex-gt-sm>
+	            <label>Adresse complète</label>
+	            <textarea ng-model="entity.fullAddress" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+	          </md-input-container>
+		    </div>
+		</form>
+	
+		<div class="pull-left">
+			<md-button class="md-raised" x-ui-sref="root.e-shops">
+				<i class="fa fa-arrow-circle-left"></i> <span class="">&nbsp;Retour à la liste</span>
+			</md-button>
+		</div>
+	
+		<div class="pull-right">
+			<md-button class="md-raised md-accent" x-ng-click="resetEntity()">
+				<span class="hidden-xs">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+			</md-button>
+			<md-button class="md-raised md-primary" x-ng-click="updateEntity( file)">
+				<span class="hidden-xs">Valider</span>&nbsp;<i class="fa fa-check"></i>
+			</md-button>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,20 @@
+<div class="products-container">
+	<div class="products-container-header">
+		<h4 class="title text-mainge"><i class="fa fa-tags"></i>&nbsp;Récemment visités</h4>
+	</div>
+	<div class="products-container-content">
+		<div class="loader-container" x-ng-if="isLoading">
+			<div class="loading loading--double" x-ng-show="isLoading"></div>
+		</div>
+		
+		<div class="products-flex-container" x-ng-if="!isLoading && entities.length" layout="column" layout-align="center">	
+			<default-article-widget article="entity" x-ng-repeat="entity in entities" />
+		</div>
+		
+		<div layout="column" layout-align="center center" x-ng-if="!isLoading && !entities.length">
+			<div flex="auto">
+				<h3 class="md-title text-mainge text-center"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Vous n'avez pas visité d'articles récemment</b></h3>
+			</div>
+       </div>
+	</div>
+</div>

@@ -1,0 +1,102 @@
+<div x-ba-panel x-ba-panel-title="Détails Commande #{{ entity.id }}" x-ba-panel-class="with-scroll">
+	<table class="table table-hover">
+		<tbody>
+			<tr>
+				<td class="header-cell">Id</td>
+				<td>{{ entity.id }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Date</td>
+				<td>{{ entity.regDate | date: 'medium' }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Auteur</td>
+				<td>{{ entity.buyer.username }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Statut</td>
+				<td><order-status x-status="entity.status" /></td>
+			</tr>
+			<tr x-ng-show="entity.deliveryDate != null">
+				<td class="header-cell">Date début livraison</td>
+				<td>{{ entity.deliveryDate | date: 'medium' }}</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<h4 class="special-header">Articles commandés</h4>
+	
+	<table class="table table-hovered">
+		<thead>
+			<tr>
+				<th colspan="2">Article</th>
+				<td class="text-right">Prix</td>
+				<td class="text-right">Quantité</td>
+				<td class="text-right">Total</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr x-ng-repeat="orderedArticle in entity.orderedArticles">
+				<td class="text-left">
+					<img x-ng-src="rest/article/fetchDefaultPic/{{ orderedArticle.article.id }}" style=" height: 128px;" class="img-responsive img-thumbnail center-block" />
+				</td>
+				<td style="vertical-align: middle;">
+					<b>{{ orderedArticle.article.name}}</b>
+					<p>
+						<span x-ng-repeat="orderedArticleFeature in orderedArticle.orderedArticleFeatures">
+							<label>{{ orderedArticleFeature.feature.label }}</label>
+							<span class="badge label-default" x-ng-repeat="featureValue in orderedArticleFeature.featureValues">
+									{{ featureValue.value }}
+							</span>
+						</span>
+					</p>
+				</td>
+				<td class="text-right" style="vertical-align: middle;">
+					{{ orderedArticle.article.price }} F CFA
+				</td>
+				<td class="text-right" style="vertical-align: middle;">
+					{{ orderedArticle.quantity }}
+				</td>
+				<td class="text-right" style="vertical-align: middle;">
+					{{ orderedArticle.article.price * orderedArticle.quantity }} F CFA
+				</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="4" class="text-right">
+					<b>Total</b>
+				</td>
+				<td class="text-right"><b>{{ entity.total }} F CFA</b></td>
+			</tr>
+		</tfoot>
+	</table>
+	
+	<div x-ng-show="entity.status == 'PAID'">
+		<h4 class="special-header">Livraison</h4>
+		<form>
+			<div layout="row">
+				<md-input-container flex>
+					<label>N° Du Colis</label>
+					<input type="text" required x-ng-model="entity.packageId" />
+				</md-input-container>
+				<span class="alert alert-dange" x-ng-show="formError.invalidPackageId">
+					Veuillez entrer un numéro de colis valide.
+				</span>
+			</div>
+		</form>
+	</div>
+	
+	<div style="margin-top: 32px;">
+		<div class="pull-left">
+			<md-button class="md-raised" x-ui-sref="root.orders">
+				<i class="fa fa-arrow-circle-left"></i> Retour
+			</md-button>
+		</div>
+		<div class="pull-right" x-ng-if="entity.status == 'PAID'">
+			<md-button class="md-raised md-primary" x-ng-click="deliverEntity()">
+				<span class="blink blink-infinite blink-furiously">Livrer</span> <i class="fa fa-truck"></i>
+			</md-button>
+		</div>
+	</div>
+</div>

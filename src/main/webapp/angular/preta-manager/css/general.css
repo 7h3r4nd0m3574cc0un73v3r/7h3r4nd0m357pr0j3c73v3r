@@ -1,0 +1,6 @@
+.ver-text-middle { vertical-align: middle !important; }
+/* Special forms */
+.full-width { width: 100% !important; }
+.partial-width { width: 28%; }
+.header-cell { width: 25% !important; text-align: left !important; }
+.special-header { margin-top: 16px; margin-bottom: 8px; font-weight: bold;}

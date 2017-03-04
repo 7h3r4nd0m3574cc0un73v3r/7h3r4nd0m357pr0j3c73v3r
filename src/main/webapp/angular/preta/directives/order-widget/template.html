@@ -1,0 +1,18 @@
+<div class="order-widget animated fadeIn">
+	<div>
+		<div class="order-label"><h4>Commande #{{order.buyerRelId}}</h4></div>
+		<div class="order-date pull-right">{{ order.regDate | date: 'yyyy-MM-dd HH:mm:ss' }}</div>
+	</div>
+	<div>
+		<div class="order-eshop" tooltip-placement="right" uib-tooltip="Coming Soon !"><b>Nombre d'articles:</b> {{ order.orderedArticles.length}}</div>
+		<div class="order-total pull-right"><b>Total:</b> <span class="text-mainge price">{{ order.total | number }}</span> F CFA</div>
+	</div>
+	<div>
+		<div class="order-status">
+			<span class="badge bg-mainge"><order-status-label status="order.status" /></span>
+		</div>
+		<div class="pull-right" style="margin-right: 2px;">
+			<a x-ui-sref="root.orders.show( { id: order.id })" class="btn p-btn-default btn-sm">Détails <i class="fa fa-folder-open"></i></a>
+		</div>
+	</div>
+</div>

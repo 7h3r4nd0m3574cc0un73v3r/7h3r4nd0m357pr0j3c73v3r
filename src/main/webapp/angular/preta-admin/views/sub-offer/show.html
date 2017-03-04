@@ -1,0 +1,34 @@
+<div x-ba-panel x-ba-panel-title="Détails Modèles d'Abonnement" x-ba-panel-class="with-scroll">
+	<table class="table table-hover">
+		<tbody>
+			<tr>
+				<td class="header-cell">Id</td>
+				<td>{{ entity.id }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Titre</td>
+				<td>{{ entity.title }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Statut conféré</td>
+				<td>{{ entity.shopStatus.title }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Durée</td>
+				<td><duration-label duration="entity.duration" duration-type="entity.durationType"></duration-label></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Activé</td>
+				<td class="text-left"><state-label is-enabled="entity.isEnabled"></state-label></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="pull-left">
+		<button x-ui-sref="root.subOffers" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span></button>
+	</div>
+
+	<button x-ui-sref="root.subOffer.edit({ id: entity.id})" class="btn btn-warning pull-right" x-ng-click="">
+		<span class="hidden-xs ">Modifier</span>&nbsp;<i class="fa fa-edit"></i>
+	</button>
+</div>

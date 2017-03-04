@@ -1,0 +1,122 @@
+<div x-ui-view>
+	<!-- New EShop Button -->
+  	<div x-ba-panel x-ba-panel-title="Ajouter une boutique">
+  		<div layout-gt-xs="row" layout-align-gt-xs="end center"
+  			 layout-xs="column" layout-align-xs="space-around center">
+			<md-button flex-xs="100" class="md-primary md-raised pull-right" x-ui-sref="root.e-shops.new" x-ng-disabled="!loggedUser.approved || loggedUser.profileCompletion < 100">
+				<i class="fa fa-plus-square"></i>&nbsp;<span class="blink blink-infinite">Nouvelle Boutique</span>
+			</md-button>
+  		</div>
+  	</div>
+  	
+	<div x-ba-panel x-ba-panel-title="E-Boutiques">
+		<div layout="column" layout-align="space-around center" x-ng-show="isListLoading">
+			<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+       	</div>
+       	
+	    <div layout="column" layout-align="center center" x-ng-if="!isListLoading && !entities.length">
+			<div flex="auto">
+				<h3 class="md-title text-primary"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Pas de boutique pour l'instant</b></h3>
+			</div>
+        </div>
+        
+	    <!-- Entities Loaded -->
+		<md-content layout-xs="column" layout-gt-xs="row" layout-wrap layout-align-gt-xs="start stretch"
+					x-ng-if="!isListLoading && entities.length">
+			 <md-card x-ng-repeat="entity in entities" flex="auto">
+		        <!-- <img x-ng-src="rest-api/e-shop/{{ entity.id}}/fetch-logo" class="md-card-image" alt="{{ entity.name }} Logo"> -->
+		        <img x-ng-src="https://drive.google.com/uc?id={{entity.logoGoogleId}}&export=download" class="md-card-image" alt="{{ entity.name }} Logo">
+		        <md-card-title>
+		          <md-card-title-text>
+		            <span class="md-headline">{{ entity.name }}</span>
+		          </md-card-title-text>
+		        </md-card-title>
+		        <md-card-content>
+		          <p x-ng-if="entity.description != null">
+		            {{ entity.description }}
+		          </p>
+		          <p>
+		          	<label>Complétion du profil</label>
+		          	<span>
+		          	<uib-progressbar max="100" value="entity.profileCompletion"><span style="color:white; white-space:nowrap;">{{ entity.profileCompletion }} %</span></uib-progressbar>
+		          	<md-tooltip>
+		          		Complétez les informations de la boutique pour activer votre boutique
+		          	</md-tooltip>
+		          	</span>
+		          </p>
+		          <p>
+		          	<label>Approuvée par Administrateur</label>
+		          	<span x-ng-class="{ 'badge label-success' : entity.isEnabled, 'badge label-danger': !entity.isEnabled}">
+		          		{{ entity.isEnabled ? 'Oui' : 'Non' }}
+		          		<md-tooltip>
+		          		Complétez les informations de la boutique pour activer votre boutique
+		          		</md-tooltip>
+		          	</span>
+		          </p>
+		          <div x-ng-if="entity.currentShopSub != null">
+		          	<label>Abonnement en cours</label>
+		          	<md-card>
+				        <md-card-title>
+				          <md-card-title-text>
+				            <span class="md-title">#{{ entity.currentShopSub.relId | number }} - {{ entity.currentShopSub.subOffer.title }}</span>
+				            <span class="md-subhead">
+				            	Limité à {{ entity.currentShopSub.subOffer.shopStatus.articleLimit | number }} article{{ entity.currentShopSub.subOffer.shopStatus.articleLimit > 1 ? 's' : '' }}
+				            </span>
+				          </md-card-title-text>
+				        </md-card-title>
+				        <md-card-content>
+				          <p>
+				          	<label>Valide du</label>
+				          	<span>{{ entity.currentShopSub.startDate | date }}</span>
+				          	<label>au</label>
+				          	<span>{{ entity.currentShopSub.endDate | date }}</span>
+				          </p>
+				          <p>
+				          	<label>Durée</label>
+				          	<span><duration-label duration="entity.currentShopSub.subOffer.duration" duration-type="entity.currentShopSub.subOffer.durationType" /></span>
+				          </p>
+				          <p>
+				          	<label>Statut</label>
+				          	<generic-status x-status="entity.currentShopSub.subStatus" />
+				          </p>
+				        </md-card-content>
+				      </md-card>
+		    		</div>
+		    		<p x-ng-if="entity.currentShopSub == null">
+		    			<label>Pas d'abonnement en cous</label>
+		    			<span>
+		    				Veuillez renseigner le profile de la boutique à 100 % et souscrire à un abonnement
+		    				pour pouvoir mettre en ligne vos articles.
+		    			</span>
+		    		</p>
+		        </md-card-content>
+		        <md-card-actions layout="row" layout-align="space-around center" aria-label="Détails">
+		          <md-button class="md-raised" x-ui-sref="root.e-shops.show({ eShopId: entity.id})">
+		          	<i class="fa fa-folder-open"></i> Détails</md-button>
+		          <md-button class="md-raised md-primary" x-ui-sref="root.e-shops.update( { eShopId: entity.id})" aria-label="Modifier">
+		          	<i class="fa fa-edit"></i> Modifier
+		          </md-button>
+		          <md-button class="md-raised md-accent" x-ui-sref="root.e-shops.show.shop-subs( { eShopId: entity.id})" aria-label="Abonnements">
+		          	<i class="fa fa-flag"></i> Abonnements
+		          </md-button>
+		          <md-button x-ng-disabled="entity.currentShopSub == null || !entity.isEnabled" class="md-raised md-warn" x-ui-sref="root.e-shops.show.articles( { eShopId: entity.id})" aria-label="Articles">
+		          	<i class="fa fa-cubes"></i> Articles
+		          	<md-tooltip x-ng-if="entity.currentShopSub == null || !entity.isEnabled">
+		    				Veuillez remplir les informations de la boutique à 100 % et souscrire à un abonnement
+		    				pour pouvoir mettre en ligne vos articles.
+		          	</md-tooltip>
+		          </md-button>
+		        </md-card-actions>
+		      </md-card>
+		</md-content>
+		
+		<!-- Pagination -->
+		<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+			<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+					num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+					total-items="pagination.itemsNumber" x-ng-change="changePage()"
+					previous-text="Précédent" next-text="Suivant">
+			</pagination>
+		</div>
+    </div>
+</div>

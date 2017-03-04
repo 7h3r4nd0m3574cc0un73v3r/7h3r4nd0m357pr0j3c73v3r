@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.1.xsd 
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd"
+	xmlns:s="http://www.springframework.org/schema/security">
+	
+	<bean id="datasource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver">
+		</property>
+		<property name="url" value="jdbc:mysql://172.30.99.226:3306/preta_db"></property>
+		<property name="username" value="preta"></property>
+		<property name="password" value="preta_password"></property>
+	</bean>
+	
+	<bean id="persistenceUnitManager"
+		class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
+		<property name="defaultDataSource" ref="datasource"></property>
+		<property name="persistenceXmlLocations">
+			<list>
+				<value>classpath*:META-INF/persistence.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitManager"
+			ref="persistenceUnitManager">
+		</property>
+		<property name="persistenceUnitName" value="Preta_PU"></property>
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory"
+			ref="entityManagerFactory">
+		</property>
+	</bean>
+	
+	<bean id="pretaDao" class="org.usayi.preta.dao.PretaDAO"></bean>
+	
+	<!-- Business Layers -->
+	<bean id="restBL" class="org.usayi.preta.buzlayer.RESTAPI">
+		<property name="pretaDao" ref="pretaDao"></property>
+	</bean>
+	<bean id="pRESTAPI" class="org.usayi.preta.buzlayer.PublicRESTAPI">
+		<property name="pretaDao" ref="pretaDao"></property>
+	</bean>
+	<bean id="aRESTAPI" class="org.usayi.preta.buzlayer.AdminRESTAPI">
+		<property name="pretaDao" ref="pretaDao"></property>
+	</bean>
+	<bean id="mRESTAPI" class="org.usayi.preta.buzlayer.ManagerRESTAPI">
+		<property name="pretaDao" ref="pretaDao"></property>
+	</bean>
+	
+	<!-- Business Layers End -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<context:annotation-config></context:annotation-config>
+	
+	<!-- Security -->
+ 	<s:http auto-config="true">
+		<s:form-login login-processing-url="/j_spring_security_check" 
+					  username-parameter="username"
+					  password-parameter="password" 
+					  login-page="/admin-login" />
+		
+		<s:intercept-url pattern="/admin/**"  access="hasRole('ROLE_ADMIN')" />
+		<s:intercept-url pattern="/preta-manager/**"  access="hasRole('ROLE_MANAGER')" />
+		<!-- <s:intercept-url pattern="/admin/**"  access="ROLE_ADMIN" /> -->
+		<!-- <s:intercept-url pattern="/categoryAdmin/**" access="ROLE_ADMIN_CAT" /> -->
+		
+        <s:session-management session-fixation-protection="migrateSession">
+            <s:concurrency-control max-sessions="1" session-registry-ref="sessionRegistry" session-registry-alias="sessionRegistry" />
+        </s:session-management>
+		
+		<s:csrf disabled="true" />
+	</s:http>
+	
+	<bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"></bean>
+	
+	<bean id="userAuthenticationProvider" class="org.usayi.preta.config.UserAuthenticationProvider"></bean>
+	
+	<s:authentication-manager>
+		<s:authentication-provider ref="userAuthenticationProvider" />
+	</s:authentication-manager>	
+	<!-- Scheduling -->
+	<bean class="org.usayi.preta.scheduling.ScheduledExpireTask" scope="prototype" >
+    	<property name="dao" ref="pretaDao"></property>
+	</bean>
+	
+	<!-- <context:load-time-weaver weaver-class="org.springframework.instrument.classloading.ReflectiveLoadTimeWeaver" aspectj-weaving="on"/> -->
+	
+	<!-- Spring Logger -->
+</beans>

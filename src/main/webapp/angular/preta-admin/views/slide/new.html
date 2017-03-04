@@ -1,0 +1,68 @@
+<div x-ba-panel x-ba-panel-title="Nouvelle slide d'accueil">
+	<form name="myForm">
+	
+<!--  		<div layout="row" layout-align="center">
+			<md-input-container class="md-block" flex>
+				<div class="userpic" flex>
+					<div class="userpic-wrapper">
+						<img ngf-thumbnail="test.file || 'angular/common/img/default-eshop.jpg'" 
+						     ng-src="angular/common/img/default-eshop.jpg"
+						     x-ng-click="selectPicture()" />
+					</div>
+					<a class="change-userpic" ng-click="selectPicture()">Ajouter une image</a>
+					<input type="file" ng-show="false" id="uploadFile"
+						   x-ngf-select x-ng-model="test.file" name="oldFile"    
+		             	   accept="image/*" x-ngf-max-size="4MB" />
+				</div>
+			  </md-input-container>
+		</div> -->
+		
+		<div layout="row">
+			<md-input-container class="md-block" flex>
+				<lf-ng-md-file-input name="myFile" id="myFile"
+					lf-files="form.file"
+					lf-remove-label="Annuler"
+					lf-browse-label="Parcourir ..." 
+					lf-drag-and-drop-label="Tirez ici !" 
+					lf-maxcount="1" lf-filesize="4MB"
+					lf-placeholder="Sélectionner une image"
+					lf-mimetype="image/*"
+					drag preview progress
+					required
+					/>
+					
+			    <div ng-messages="myForm.myFile.$error" style="color:red;">
+			        <div ng-message="required">This is required.</div>
+			        <div ng-message="maxcount">Too much files.</div>
+			        <div ng-message="filesize">File size too large.</div>
+			        <div ng-message="totalsize">Total size too large.</div>
+			        <div ng-message="mimetype">Mimetype error.</div>
+			    </div>
+			    
+		   </md-input-container>
+		</div>
+		
+		<div layout="row">
+          <md-input-container class="md-block" flex>
+            <label>Afficher à l'accueil</label>
+            <md-switch class="md-primary" x-ng-model="form.entity.displayed" aria-label="Afficher à l'accueil" ng-init="form.entity.displayed = true">
+			    {{ form.entity.displayed ? 'Oui' : 'Non' }}
+			</md-switch>
+          </md-input-container>
+		</div>
+		
+		<div layout="row">
+			<md-button class="md-raised" x-ng-click="root.slides">
+				<i class="fa fa-arrow-circle-left"></i> <span class="">&nbsp;Retour</span>
+			</md-button>
+			<span flex></span>
+			<md-button class="md-raised md-accent" x-ng-click="resetEntity()">
+				<span class="hidden-xs">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+			</md-button>
+			<md-button class="md-raised md-primary" x-ng-click="addEntity()"  ng-disabled="!myForm.$valid">
+				<span class="hidden-xs">Valider</span>&nbsp;<i class="fa fa-check"></i>
+			</md-button>
+		</div>
+		
+	</form>
+</div>

@@ -1,0 +1,64 @@
+<div class="col-lg-offset-3 col-md-offset-3 col-sm-offset-2 col-lg-6 col-md-6 col-sm-8 col-xs-12">
+
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="row">
+				<div class="container-fluid">
+					<div class="default-panel animated fadeIn">
+						<div class="default-panel-header">
+							<h4 class="title text-mainge"><i class="fa fa-unlock"></i>&nbsp;Récupération du mot de passe</h4>
+						</div>
+						
+						<div layout="column" layout-align="center center" x-ng-if="isLoading" layout-margin>
+							<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+			        	</div>
+						        	
+						<div layout="row" layout-wrap layout-padding x-ng-if="!done && !isLoading">
+							<div flex="100">
+								<p class="text-center">
+									Entrez votre adresse e-mail pour initier la procédure de changement de mot de passe.
+								</p>
+							</div>
+							<form flex="100" layout="row" layout-wrap>
+								<div flex="100">
+									<md-input-container flex class="md-block">
+										<label>Adresse E-Mail</label>
+										<input type="email" x-ng-model="form.email" required name="email" ng-pattern="/^.+@.+\..+$/" />
+										<div ng-messages="form.email.$error">
+											<div ng-message="required">
+												Champ requis.
+											</div>
+											<div ng-message="">
+											
+											</div>
+										</div>
+									</md-input-container>
+								</div>
+								<div flex="100" layout="row" layout-align="end">
+									<md-button class="md-raised md-primary" aria-label="Valider" x-ng-click="requestPassword()" type="submit">
+										Valider <i class="fa fa-check-circle"></i>
+									</md-button>
+								</div>
+							</form>
+						</div>
+						
+						<div layout="row" layout-wrap layout-padding x-ng-if="done && !isLoading">
+							<div flex="100">
+								<p class="text-center">
+									<i class="fa fa-check-square" style="font-size: 150%; color: #00B200;"></i>&nbsp;
+									Votre demande de récupération de mot de passe a bien été prise en compte.
+									Un mail de réinitialisation vous a été envoyé à l'adresse spécifiée. Merci de vous conformer
+									aux instructions y figurant pour terminer le processus de récupération.
+								</p>
+							</div>
+							<div flex="100" layout="row" layout-align="center">
+								<md-button class="md-raised md-primary" aria-label="Valider" x-ui-sref="root" x-ui-sref-options="{reload: true}">
+									<i class="fa fa-home"></i> Retour à l'accueil
+								</md-button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+</div>

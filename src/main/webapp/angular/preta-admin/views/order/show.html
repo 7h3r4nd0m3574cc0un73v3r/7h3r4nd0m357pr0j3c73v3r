@@ -1,0 +1,118 @@
+<div x-ba-panel x-ba-panel-title="Détails Commande #{{ entity.id }}" x-ba-panel-class="with-scroll">
+	<div layout="column" layout-align="space-around center" x-ng-show="isEntityLoading">
+		<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+     		</div>
+		
+    <div layout="column" layout-align="center center" x-ng-if="!isEntityLoading && entity == null">
+		<div flex="auto">
+			<h3 class="md-title text-success"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Désolé, pas de contenu à afficher</b></h3>
+		</div>
+    </div>
+    
+	<table class="table table-hover" x-ng-if="!isEntityLoading && entity != null">
+		<tbody>
+			<tr>
+				<td class="header-cell">Id</td>
+				<td>{{ entity.id | number }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Date</td>
+				<td>{{ entity.regDate | date: 'medium' }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Auteur</td>
+				<td>{{ entity.buyer.username }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Statut</td>
+				<td><order-status x-status="entity.status" /></td>
+			</tr>
+			<tr x-ng-show="entity.deliveryDate != null">
+				<td class="header-cell">Date de début livraison</td>
+				<td>{{ entity.deliveryDate | date: 'medium' }}</td>
+			</tr>
+			<tr x-ng-show="entity.packagedId != null">
+				<td class="header-cell">N° de colis</td>
+				<td>{{ entity.deliveryDate | date: 'medium' }}</td>
+			</tr>
+			<tr x-ng-show="entity.receptionDate != null">
+				<td class="header-cell">Date de livraison</td>
+				<td>{{ entity.receptionDate | date: 'medium' }}</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<h4 class="special-header">Articles commandés</h4>
+	
+	<table class="table table-hovered">
+		<thead>
+			<tr>
+				<th>Article</th>
+				<td class="text-right">Prix</td>
+				<td class="text-right">Quantité</td>
+				<td class="text-right">Total</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr x-ng-repeat="orderedArticle in entity.orderedArticles">
+				<td>
+					{{ orderedArticle.article.name}}
+				</td>
+				<td class="text-right">
+					{{ orderedArticle.article.price | number }} F CFA
+				</td>
+				<td class="text-right">
+					{{ orderedArticle.quantity | number }}
+				</td>
+				<td class="text-right">
+					{{ ( orderedArticle.article.price * orderedArticle.quantity) | number  }} F CFA
+				</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="3" class="text-right">
+					<b>Total</b>
+				</td>
+				<td class="text-right">{{ entity.total | number }} F CFA</td>
+			</tr>
+		</tfoot>
+	</table>
+	
+	<h4 class="special-header">Paiements</h4>
+	<table class="table table-hover">	
+		<thead>
+			<tr>
+				<th>#</th>
+				<td class="text-right">Montant</td>
+				<td class="text-center">Référence</td>
+				<td class="text-center">Statut</td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr x-ng-repeat="payment in entity.payments">
+				<td class="text-right">{{ payment.id | number }}</td>
+				<td class="text-right">{{ payment.amount | number }} F CFA</td>
+				<td class="text-center">{{ payment.paymentRef}}</td>
+				<td class="text-center"><payment-status status="payment.isValid" /></td>
+				<td>
+					<div class="pull-right" x-ng-show="payment.isValid == null">
+						<button x-ng-click="acceptPayment( payment.id)" class="btn btn-success btn-xs">Accepter</button>
+						<button x-ng-click="rejectPayment( payment.id)" class="btn btn-danger btn-xs">Rejeter</button>
+					</div>
+					<div class="pull-right" x-ng-show="payment.isValid != null">
+						<button class="btn btn-success btn-xs disabled">Accepter</button>
+						<button class="btn btn-danger btn-xs disabled">Rejeter</button>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<div style="margin-top: 32px;">
+		<div class="pull-left">
+			<button x-ui-sref="root.orders" x-ui-sref-options="{ reload: true}" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span></button>
+		</div>
+	</div>
+</div>

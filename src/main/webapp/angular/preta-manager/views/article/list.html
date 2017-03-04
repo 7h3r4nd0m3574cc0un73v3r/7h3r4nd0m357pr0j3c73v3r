@@ -1,0 +1,94 @@
+<div>
+	<div class="row">
+		<div class="col-md-12" x-ui-view>
+		  	<div x-ba-panel x-ba-panel-title="Ajouter un article">
+		  		<div layout-gt-xs="column" layout-align-gt-xs="end center"
+		  			 layout-xs="column" layout-align-xs="space-around center">
+		  			<p x-ng-if="activeEShop.currentShopSub.subOffer.shopStatus.articleLimit <= activeEShop.articlesCount" class="text-danger text-justify">
+		  				Vous avez atteint la limite maximale d'articles autorisée pour votre abonnement.
+		  				Veuillez optez pour un abonnement supérieur pour continuer à ajouter des articles.
+		  			</p>
+		  			<md-button aria-label="" class="md-raised md-primary" x-ui-sref="root.e-shops.show.articles.new" x-ng-disabled="activeEShop.currentShopSub.subOffer.shopStatus.articleLimit <= activeEShop.articlesCount">
+		  				<i class="fa fa-plus-square"></i>&nbsp;
+		  				<span x-ng-class="{'blink blink-infinite' : !(activeEShop.currentShopSub.subOffer.shopStatus.articleLimit <= activeEShop.articlesCount) }">Nouvel Article</span>
+		  			</md-button>
+		  		</div>
+		  	</div>
+		  	
+			<div x-ba-panel x-ba-panel-title="Articles - {{ activeEShop.name }}">
+			    <!-- Loading Screen -->
+			    <div layout="column" layout-align="center center" x-ng-show="isListLoading">
+   					<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+		        </div>
+		        
+				<!-- Entities Loaded -->
+				<div class="md-padding" layout-sm="column" layout-gt-sm="row" layout-wrap layout-align-gt-sm="start stretch"
+					x-ng-if="!isListLoading && entities.length">
+					<md-card x-ng-repeat="entity in entities" flex="auto">
+				        <md-card-title>
+				          <md-card-title-media>
+				            <div class="md-media-md card-media">
+				            	<!-- <img x-ng-src="rest/article/fetchDefaultPic/{{ entity.id }}" class="img-responsive center-block" /> -->
+				            	<img x-ng-src="https://drive.google.com/uc?id={{ entity.defaultPicture.googleId }}&export=download" class="img-responsive center-block" style="margin: -4px;"/>
+				            </div>
+				          </md-card-title-media>
+				          <md-card-title-text>
+				            <span class="md-headline">{{ entity.name | limitTo: 15}} {{ entity.name.length > 15 ? '...' : ''}}
+				              <md-tooltip>
+					            {{ entity.name }}
+					          </md-tooltip>
+		          			</span>
+				            <span class="md-subhead">
+				            	{{ entity.description | limitTo: 30 }} {{ entity.description.length > 30 ? '...' : '' }}
+				            	<md-tooltip x-ng-if="entity.description.length > 30">
+					            	{{ entity.description }}
+					          </md-tooltip>
+				            </span>
+				            <span class="md-body-2">
+				            	{{ entity.price | number }} F CFA
+				            </span>
+				            <span class="md-subhead">
+				            	{{ entity.stock | number }} articles restant{{ entity.stock > 1 ? 's' : '' }}
+				            </span>
+				          </md-card-title-text>
+				        </md-card-title>
+				        <md-card-actions layout="row" layout-align="end center">
+				          <md-button aria-label="Détails" class="md-primary md-raised md-icon-button" x-ui-sref="root.e-shops.show.articles.show({ id: entity.id })">
+				          	<i class="fa fa-folder-open"></i>
+				          	<md-tooltip md-direction="top">
+					          Détails
+					        </md-tooltip>
+				          </md-button>
+				          <md-button aria-label="Modifier" class="md-accent md-raised md-icon-button" x-ui-sref="root.e-shops.show.articles.update({ id: entity.id })">
+				          	<i class="fa fa-edit"></i>
+				          	<md-tooltip md-direction="top">
+					          Modifier
+					        </md-tooltip>
+				          </md-button>
+				          <md-button aria-label="Supprimer" class="md-warn md-raised md-icon-button" x-ng-click="showDeleteModal( entity.id)">
+				          	<i class="fa fa-remove"></i>
+				          	<md-tooltip md-direction="top">
+					          Supprimer
+					        </md-tooltip>
+				          </md-button>
+				        </md-card-actions>
+			       </md-card>
+				</div>
+				
+			    <div layout="column" layout-align="center center" x-ng-if="!isListLoading && !entities.length">
+   					<div flex="auto">
+   						<h3 class="md-title text-primary"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun article à afficher</b></h3>
+   					</div>
+		        </div>
+				
+				<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+					<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+							num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+							total-items="pagination.itemsNumber" x-ng-change="changePage()"
+							previous-text="Précédent" next-text="Suivant">
+					</pagination>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

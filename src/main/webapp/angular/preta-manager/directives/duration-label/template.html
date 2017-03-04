@@ -1,0 +1,20 @@
+<span>
+	{{ duration }}&nbsp;
+	<span x-ng-switch="durationType">
+		<span x-ng-switch-when="DAY">
+			<span x-ng-if="duration <= 1">jour</span>
+			<span x-ng-if="duration > 1">jours</span>
+		</span>
+		<span x-ng-switch-when="WEEK">
+			<span x-ng-if="duration <= 1">semaine</span>
+			<span x-ng-if="duration > 1">semaines</span>
+		</span>
+		<span x-ng-switch-when="MONTH">
+			mois
+		</span>
+		<span x-ng-switch-when="YEAR">
+			<span x-ng-if="duration <= 1">année</span>
+			<span x-ng-if="duration > 1">ans</span>
+		</span>
+	</span>
+</span>

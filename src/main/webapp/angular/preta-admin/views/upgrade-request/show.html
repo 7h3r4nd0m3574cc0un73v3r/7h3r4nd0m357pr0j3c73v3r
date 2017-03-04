@@ -1,0 +1,105 @@
+<div x-ba-panel x-ba-panel-title="Requête de Migration #{{ entity.id }}">
+	
+	<div layout="row" layout-sm="column" layout-align="space-around center" x-ng-if="isEntityLoading">
+		<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+    </div>
+    
+    <div x-ng-if="!isEntityLoading && entity != null">
+		<table class="table table-hover">
+			<tbody>
+				<tr>
+					<td class="header-cell">#</td>
+					<td>{{ entity.id }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Enregistrée le</td>
+					<td>{{ entity.regDate | date:'medium' }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Acheteur</td>
+					<td>{{ entity.buyer.username }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell"> Completion du profil</td>
+					<td>{{ entity.buyer.profileCompletion }} %</td>
+				</tr>
+				<tr>
+					<th colspan="2" class="text-center">
+						Détails du profil
+					</th>
+				</tr>
+				<tr>
+					<td class="header-cell">Prénoms</td>
+					<td>{{ entity.buyer.userInfo.firstName }}</td>
+				</tr>
+				<tr x-ng-if="entity.buyer.userInfo.middleName">
+					<td class="header-cell">Autres prénoms</td>
+					<td>{{ entity.buyer.userInfo.middleName }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Nom</td>
+					<td>{{ entity.buyer.userInfo.lastName }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Genre</td>
+					<td>
+						<span x-ng-if="entity.buyer.userInfo.gender == 'FEMALE'">Féminin</span>
+						<span x-ng-if="entity.buyer.userInfo.gender == 'MALE'">Masculin</span>
+						<span x-ng-if="entity.buyer.userInfo.gender == 'UNDEFINED'">Autre</span>
+						<span x-ng-if="entity.buyer.userInfo.gender == null">Non spécifié</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Date de naissance</td>
+					<td>{{ entity.buyer.userInfo.birthDay | date:'short' }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Pays</td>
+					<td> {{ entity.buyer.userInfo.country }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Departement</td>
+					<td>{{ entity.buyer.userInfo.department }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Ville</td>
+					<td>{{ entity.buyer.userInfo.city }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Arrondissement</td>
+					<td> {{ entity.buyer.userInfo.borough }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Quartier</td>
+					<td>{{ entity.buyer.userInfo.district }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Rue</td>
+					<td> {{ entity.buyer.userInfo.street }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">N° Maison</td>
+					<td>{{ entity.buyer.userInfo.homeNumber }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Adresse Complète</td>
+					<td>{{ entity.buyer.userInfo.fullAddress }}</td>
+				</tr>
+				<tr>
+					<td class="header-cell">Adresse E-Mail</td>
+					<td>{{ entity.buyer.userInfo.email }}</td>
+				</tr>
+				
+			</tbody>
+		</table>
+		
+		<div layout="row" layout-align="space-between center">
+			<md-button x-ui-sref="root.upgrade-requests" x-ui-sref-options="{ reload:true}" class="md-raised">
+				<i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour<span class="hidden-xs"> à la liste</span></span>
+			</md-button>
+			<md-button x-ng-click="approveRequest()" class="md-raised md-primary" x-ng-if="!entity.validated" >
+				Approuver <i class="fa fa-check-circle"></i>
+			</md-button>
+		</div>
+	</div>
+</div>

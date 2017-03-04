@@ -1,0 +1,181 @@
+<div class="wrapper">
+	<navbar-top></navbar-top>
+	<div class="main-container">
+		<div class="container-fluid">
+			<research-widget></research-widget>
+			
+			<div x-ui-view>
+				
+ 				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 hide-xs hide-sm" style="padding: 0 !important;">
+						<categories-menu x-categories="categories" />
+					</div>
+					
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+						<home-slides />
+					</div>
+	
+					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 hide-xs hide-sm" style="padding: 0 !important;">
+						<div class="row">
+							<div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-lg-11 col-ms-11 col-sm-11 col-xs-12">
+								<h4 class="text-mainge">N'hésitez plus !</h4>
+								<a x-ui-sref="root.registration" x-ng-show="loggedUser == null" class="btn btn-mainge btn-flat center-block" style="margin-bottom: 4px;">M'inscrire</a>
+								<!-- EShop Register -->
+								<a x-ui-sref="root.eshop-reg" class="btn btn-mainge btn-flat center-block" x-ng-show="loggedUser == null">Enregistrer ma boutique !</a>
+								<a x-ui-sref="root.upgrade-request" x-ng-show="loggedUser != null && !loggedUser.isManager" class="btn btn-mainge btn-flat center-block">Enregistrer ma Boutique</a>
+								<a href="preta-manager#/e-shops" x-ng-show="loggedUser != null && loggedUser.isManager" class="btn btn-mainge btn-flat center-block">Enregistrer ma Boutique</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Left Column -->
+				<div class="col-lg-3 col-md-2 col-sm-12 col-xs-12">
+					<!-- Advertisment -->
+					<div class="row hide-xs hide-sm">
+						<div class="container-fluid animated fadeInLeft">
+							<article-ads-column />
+						</div>
+					</div>
+					<!-- Recently Visited -->
+					<div class="row hide-xs hide-sm" x-ng-if="loggedUser">
+						<div class="container-fluid animated fadeInLeft">
+							<visited-articles-widget />
+						</div>
+					</div>
+				</div>
+				
+				<!-- Main Column -->
+				<div class="col-lg-9 col-md-10 col-sm-12 col-xs-12">
+					<!-- New Articles -->
+					<div class="row">
+						<div class="row">
+							<div class="container-fluid">
+								<div class="products-container animated fadeInRight">
+									<div class="products-container-header">
+										<h4 class="title text-mainge"><i class="fa fa-tags"></i>&nbsp;Nouveaux Articles</h4> <small class="hidden-xs">Les articles récents</small>
+										<a x-ui-sref="root.latest-articles-full" class="more-btn pull-right hidden-xs">Voir plus <i class="fa fa-cubes"></i></a>
+									</div>
+									<div class="products-container-content">
+										<div class="loader-container" x-ng-if="isLoading[2]">
+											<div class="loading loading--double" x-ng-show="isLoading[2]"></div>
+										</div>
+										
+										<div class="products-flex-container" x-ng-show="!isLoading[2]">
+											<default-article-widget article="article" x-ng-repeat="article in latestArticles" />
+										</div>
+											
+									    <div layout="column" layout-align="center center" x-ng-if="!isLoading[2] && !latestArticles.length">
+						   					<div flex="auto">
+						   						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun article à afficher</b></h3>
+						   					</div>
+								        </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--  Discounted -->
+					<div class="row">
+						<div class="row">
+							<div class="container-fluid">
+								<div class="products-container animated fadeInRight">
+									<div class="products-container-header">
+										<h4 class="title text-mainge"><i class="fa fa-star"></i>&nbsp;Promotions</h4> <small class="hidden-xs">Les articles en promotions</small>
+										<a class="more-btn pull-right hidden-xs">Voir plus <i class="fa fa-cubes"></i></a>
+									</div>
+									<div class="products-container-content">
+										<div class="loader-container" x-ng-if="isLoading[3]">
+											<div class="loading loading--double" x-ng-show="isLoading[3]"></div>
+										</div>
+										<div class="products-flex-container">
+											<default-article-widget article="article" x-ng-repeat="article in discountedArticles" />
+										</div>
+										
+									    <div layout="column" layout-align="center center" x-ng-if="!isLoading[3] && !discountedArticles.length" style="min-height: 200px;">
+						   					<div flex="auto">
+						   						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun article à afficher</b></h3>
+						   					</div>
+								        </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Publicité -->
+					<div class="row">
+						<div class="row">
+							<div class="container-fluid">
+								<article-ads-row />
+							</div>
+						</div>
+					</div>
+					<!-- Best Sellers -->
+					<div class="row">
+						<div class="row">
+							<div class="container-fluid">
+								<div class="products-container animated fadeInRight">
+									<div class="products-container-header">
+										<h4 class="title text-mainge"><i class="fa fa-truck"></i>&nbsp;Meilleures Ventes</h4> <small class="hidden-xs">Les produits les plus vendus</small>
+										<a x-ui-sref="root.best-sellers-full" class="more-btn pull-right hidden-xs">Voir plus <i class="fa fa-cubes"></i></a>
+									</div>
+									<div class="products-container-content">
+				
+										<div class="loader-container" x-ng-if="isLoading[0]">
+											<div class="loading loading--double" x-ng-show="isLoading[0]"></div>
+										</div>
+										
+										<div class="products-flex-container"  x-ng-if="!isLoading[0] && bestSellerArticles.length">	
+											<default-article-widget article="article" x-ng-repeat="article in bestSellerArticles" />
+										</div>
+										
+										
+									    <div layout="column" layout-align="center center" x-ng-if="!isLoading[0] && !bestSellerArticles.length" style="min-height: 200px;">
+						   					<div flex="auto">
+						   						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun article à afficher</b></h3>
+						   					</div>
+								        </div>
+								        
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--  Top Rated -->
+					<div class="row">
+						<div class="row">
+							<div class="container-fluid">
+								<div class="products-container animated fadeInRight">
+									<div class="products-container-header">
+										<h4 class="title text-mainge"><i class="fa fa-star"></i>&nbsp;Meilleurs Articles</h4> <small class="hidden-xs">Les produits les plus populaires</small>
+										<a x-ui-sref="root.top-rated-full" class="more-btn pull-right hidden-xs">Voir plus <i class="fa fa-cubes"></i></a>
+									</div>
+									<div class="products-container-content">
+										<div class="loader-container" x-ng-if="isLoading[1]">
+											<div class="loading loading--double" x-ng-show="isLoading[1]"></div>
+										</div>
+										<div class="products-flex-container">
+											<default-article-widget article="article" x-ng-repeat="article in topArticles" />
+										</div>
+										
+									    <div layout="column" layout-align="center center" x-ng-if="!isLoading[1] && !topArticles.length" style="min-height: 200px;">
+						   					<div flex="auto">
+						   						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun article à afficher</b></h3>
+						   					</div>
+								        </div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="footer" x-sticky-footer=".wrapper">
+	<page-footer />
+</div>

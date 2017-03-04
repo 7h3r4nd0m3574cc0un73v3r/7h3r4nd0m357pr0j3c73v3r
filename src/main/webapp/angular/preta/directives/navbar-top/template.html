@@ -1,0 +1,150 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="naviguation">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button ng-init="isNavCollapsed = true" ng-click="isNavCollapsed = !isNavCollapsed" type="button" class="navbar-toggle">
+				<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" x-ui-sref="root"><em><b><span class="text-mainge">Hôbossa</span></b></em></a>
+		</div>
+
+		<div collapse="isNavCollapsed" class="collapse navbar-collapse" uib-collapse="isNavCollapsed">
+			<ul class="nav navbar-nav nav-jusitifed">
+				<li role="presentation" x-ng-if="loggedUser != null && loggedUser.isManager">
+					<a href="preta-manager">Espace Vendeur</a>
+				</li>
+				
+				<li role="presentation" x-ng-if="loggedUser != null">
+					<a role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle">
+						<i class="fa fa-shopping-cart text-mainge"></i>&nbsp;Panier&nbsp;
+						<span class="badge bg-mainge" style="margin-top: -2px;">
+							<span x-ng-if="areCartItemsLoading">...</span>
+							<span x-ng-if="!areCartItemsLoading">{{ cartItemsCount | number }}</span>
+						</span>
+					</a>
+					<ul class="dropdown-menu" style="min-width: 260px;">
+						<li role="menuitem" x-ng-if="!cartItemsCount" flex>
+							<div layout="column" layout-align="center center">
+								<b>Aucun article à afficher</b>
+							</div>
+						</li>
+						<li role="menuitem" x-ng-repeat="entity in lastCartItems" x-ng-if="cartItemsCount" style="margin-top: 2px; margin-bottom: 2px;">
+							<div layout="row" layout-align="start" layout-padding>
+									<span flex="none">
+										<a x-ui-sref="root.article( { id: entity.article.id})">
+										<!-- <img x-ng-src="rest/article/fetchDefaultPic/{{ entity.article.id }}" 
+																class="img-circle center-block"
+																style="width: 32px; height: 32px;" /> -->																
+
+											<img x-ng-src="https://drive.google.com/uc?id={{ entity.article.pictures[0].googleId }}&export=download"
+																	class="img-circle center-block"
+																	style="width: 32px; height: 32px;" />	
+										</a>
+									</span>
+									<span flex layout="row" layout-align="start center">
+										<a x-ui-sref="root.article( { id: entity.article.id})" class="default-lnk"><b>{{ entity.article.name }}</b> &nbsp;x {{ entity.quantity | number }}</a>
+									</span>
+							</div>
+						</li>
+				        <li class="divider"></li>
+				        <li role="menuitem">
+				        	<div layout="column" layout-align="center center">
+				        		<a x-ui-sref="root.cart"><span class="text-mainge text-center"><b>Afficher tout</b></span></a>
+				        	</div>
+				        </li>
+					</ul>
+				</li>
+				
+				<li role="presentation" x-ng-if="loggedUser == null">
+					<a x-ui-sref="root.registration">Inscription</a>
+				</li>
+				<li role="presentation" x-ng-if="loggedUser != null">
+					<a x-ui-sref="root.upgrade-request" x-ng-show="loggedUser != null && !loggedUser.isManager" class="text-mainge blink blink-infinite">Créer ma Boutique</a>
+					<a href="preta-manager" x-ng-show="loggedUser != null && loggedUser.isManager" class="text-mainge blink blink-infinite">Créer ma Boutique</a>
+				</li>
+				<li role="presentation" x-ng-if="loggedUser == null">
+					<a x-ui-sref="root.e-shop-reg" x-ng-show="loggedUser == null" class="text-mainge blink blink-infinite">Inscription Boutique</a>
+				</li>
+				<li role="presentation"><a>Tracking de colis</a></li>
+				<li role="presentation"><a>Plan du site</a></li>
+				<li role="presentation"><a>Aide</a></li>
+			</ul>
+			
+			<ul class="nav navbar-nav navbar-right" x-ng-show="loggedUser != null">
+				<!-- Notifications -->
+				<li role="presentation" x-ng-if="loggedUser != null">
+					<a role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle" x-ng-click="readNotifications()">
+						<i class="fa fa-bell"></i>
+						<span class="badge bg-mainge" x-ng-show="unreadNotificationsCount > 0" style="margin-top: -2px;">
+							<span x-ng-if="areNotificationsLoading">...</span>
+							<span x-ng-if="!areNotificationsLoading">{{ unreadNotificationsCount | number }}</span>
+						</span>
+					</a>
+					<ul class="dropdown-menu" style="min-width: 320px;">
+						<li role="menuitem" x-ng-if="!notificationsCount" flex>
+							<div layout="column" layout-align="center center">
+								<b>Aucune notification à afficher</b>
+							</div>
+						</li>
+						<li role="menuitem" x-ng-repeat="entity in notifications" x-ng-if="notificationsCount" style="margin-top: 2px; margin-bottom: 2px;">
+							<notification entity="entity" />
+						</li>
+						<!--
+				        <li class="divider"></li>
+				        <li role="menuitem">
+				        	<div layout="column" layout-align="center center">
+				        		<a><span class="text-mainge text-center"><b>Afficher tout</b></span></a>
+				        	</div>
+				        </li>
+				        -->
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle btn btn-mainge pull-right">
+						{{ loggedUser.username }}
+						&nbsp;<i class="fa fa-user"><span class=""></span></i>
+					</button>
+					<ul class="dropdown-menu">
+						<li role="presentation" class="text-right">
+							<a x-ui-sref="root.orders-all">Mes commandes&nbsp;<i class="fa fa-inbox"></i></a>
+						</li>
+						<li role="presentation" class="text-right"><li role="presentation" class="text-right">
+							<a x-ui-sref="root.orders-delivering">Mes commandes en cours <i class="fa fa-truck"></i></a>
+						</li>
+						<li role="presentation" class="text-right">
+							<a x-ui-sref="root.orders-delivered">Mes commandes reçues&nbsp;<i class="fa fa-cubes"></i></a>
+						</li>
+						
+						<li role="separator" class="divider"></li>
+						<li role="presentation" class="text-right">
+							<a x-ui-sref="root.cart">Mon panier&nbsp;<i class="fa fa-shopping-cart"></i></a>
+						</li>
+						<li role="separator" class="divider"></li>
+						<li role="presentation" class="text-right">
+							<a x-ui-sref="root.ratings">Articles à noter&nbsp;<i class="fa fa-star-half-full"></i></a>
+						</li>
+						<li role="presentation" class="text-right">
+							<a x-ui-sref="root.last-visited">Mes dernières consultations&nbsp;<i class="fa fa-cubes"></i></a>
+						</li>
+						<li role="separator" class="divider"></li>
+						<li role="presentation" class="text-right">
+							<a x-ui-sref="root.favorites-e-shops">Boutiques favorites&nbsp;<i class="fa fa-opencart"></i></a>
+						</li>
+						<li role="separator" class="divider"></li>
+						<li role="presentation" class="text-right">
+							<a x-ui-sref="root.profile">Mon profil&nbsp;<i class="fa fa-cogs"></i></a>
+						</li>
+						<li role="separator" class="divider"></li>
+						<li role="presentation" class="text-center">
+							<a x-ui-sref="root.logout">Déconnexion&nbsp;<i class="fa fa-sign-out"></i></a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+
+			<ul class="nav navbar-nav nav-jusitifed pull-right" x-ng-show="loggedUser == null">
+				<li><button x-ui-sref="root.login" class="btn btn-mainge navbar-btn">Connexion&nbsp;<i class="fa fa-sign-in"></i></button></li>
+			</ul>
+		</div>
+	</div>
+</nav>

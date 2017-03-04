@@ -1,0 +1,81 @@
+<div class="row" style="margin-top: 16px;">
+	<div class="col-lg-offset-3 col-md-offset-3  col-lg-9 col-md-9 col-sm-12 col-xs-12">
+		<div class="row">
+	        <div class="container-fuild">
+		        <div class="default-panel animated fadeIn">
+					<div class="default-panel-header">
+						<h4 class="title text-mainge"><i class="fa fa-cogs"></i>&nbsp;Recherche avancée</h4>
+					</div>
+					<div class="default-panel-content">
+						<div class="container-fluid">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+								
+								<div class="loader-container" x-ng-if="isLoadingPrice[O] && isLoadingPrice[1]">
+									<div class="loading loading--double"></div>&nbsp;<span class="default-text text-mainge">Chargement en cours ...</span>
+								</div>
+						
+								<!-- <ion-slider type="double"
+						                  grid="true"
+						                  min="searchParams.minPrice"
+						                  max="searchParams.maxPrice"
+						                  from="10"
+						                  to="10000"
+						                  step="100"
+						                  disable="false">
+						        </ion-slider> -->
+						        <div class="loader-container" x-ng-if="!isLoadingPrice[O] && !isLoadingPrice[1]">
+							    	<rzslider
+								      rz-slider-model="priceSlider.minValue"
+								      rz-slider-high="priceSlider.maxValue"
+								      rz-slider-options="priceSlider.options"
+								    ></rzslider>
+								</div>
+    
+						        <div class="pull-right" style="margin: 10px;">
+						        	<a class="btn p-btn-default">Valider <i class="fa fa-check"></i></a>
+						        </div>
+						    </div>
+					    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row" style="margin-top: 16px;">
+	<div class="col-lg-offset-3 col-md-offset-3  col-lg-9 col-md-9 col-sm-12 col-xs-12">
+		<div class="row">
+	        <div class="container-fuild">
+		        <div class="products-container animated fadeIn">
+					<div class="products-container-header">
+						<h4 class="title text-mainge"><i class="fa fa-search"></i>&nbsp;Résultat de la recherche</h4>
+					</div>
+					<div class="products-container-content" layout="row" layout-align="start center">
+						<div layout="column" layout-align="center center" x-ng-show="isLoading" layout-margin flex>
+							<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+			        	</div>
+						
+						<div class="products-flex-container" x-ng-if="!isLoading && entities.length">
+							<default-article-widget article="entity" x-ng-repeat="entity in entities" />
+						</div>
+						
+						<div layout="column" layout-align="center center" x-ng-if="!isLoading && !entities.length" flex>
+							<div flex="auto">
+								<h3 class="md-title text-mainge text-center"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Désolé! Aucun article trouvé.</b></h3>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+				<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+						num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+						total-items="pagination.itemsNumber" x-ng-change="changePage()"
+						previous-text="Précédent" next-text="Suivant">
+				</pagination>
+			</div>
+		</div>
+	</div>
+</div>

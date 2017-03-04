@@ -1,0 +1,53 @@
+
+<div class="row" style="margin-top: 16px;">
+	<div class="col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-lg-9 col-md-9 col-sm-9 col-xs-12">
+		<div class="row">
+			<div class="row">
+		        <div class="container-fluid">
+			        <div class="products-container animated fadeInRight">
+						<div class="products-container-header">
+							<h4 class="title text-mainge"><i class="{{ view.icon }}"></i>&nbsp;{{ view.title }}</h4>&nbsp;<small>{{ view.description }}</small>
+						</div>
+						<div class="products-container-content">
+						
+							<div class="loader-container" x-ng-if="isListLoading">
+								<div class="loading loading--double"></div>&nbsp;<span class="default-text text-mainge">Chargement en cours ...</span>
+							</div>
+							
+							<div class="products-flex-container" x-ng-if="!isListLoading && entities.length">
+								<!-- <product-rating-widget ordered-article="entity" x-ng-repeat="entity in entities" /> -->
+								<div class="product-container animated fadeIn" x-ng-repeat="entity in entities">
+									<a x-ui-sref="root.article( { id: entity.article.id } )">
+										<img x-ng-src="rest/article/fetchDefaultPic/{{ entity.article.id }}" class="img-responsive product-img" />
+									</a>
+									<div class="product-name" tooltip-placement="bottom" uib-tooltip="{{ entity.article.name }}">
+										<a x-ui-sref="root.article( { id: entity.article.id } )">{{ entity.article.name | limitTo: 23 }} {{ entity.article.name.length > 23 ? '...' : '' }}</a>
+									</div>
+									<div class="product-rating text-center">
+										<span uib-rating x-ng-model="entity.rating" min="0" max="5" class="text-mainge" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['1', '2', '3', '4', '5']" aria-labelledby="default-rating"></span>
+									</div>
+									<div class="product-name" tooltip-placement="top" uib-tooltip="Commande #{{ entity.articleOrder.id }}, passée le {{ entity.articleOrder.regDate | date: 'short' }} ">
+										<a x-ui-sref="root.orders.show( {id: entity.articleOrder.id })">Commande #{{ entity.articleOrder.id }} ( {{ entity.articleOrder.regDate | date:'short' }})</a>
+									</div>
+									<div style="margin: 2px 2px 6px 2px; padding: 0px 4px 0px 4px;">
+										<a x-ng-click="rateOrderedArticle( entity.id, entity.rating)" class="btn p-btn-default btn-sm center-block">Noter&nbsp;<i class="fa fa-check"></i></a>
+									</div>
+								</div>
+							</div>
+							
+							<h3 class="no-content-text" x-ng-if="!isListLoading && !entities.length"><i class="fa fa-smile-o"></i> Yay, plus aucun article à noter !</h3>
+						</div>
+					</div>
+				</div>
+				
+				<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+					<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+							num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+							total-items="pagination.itemsNumber" x-ng-change="changePage()"
+							previous-text="Précédent" next-text="Suivant">
+					</pagination>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

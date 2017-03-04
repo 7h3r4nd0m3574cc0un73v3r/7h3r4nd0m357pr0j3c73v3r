@@ -1,0 +1,192 @@
+<div x-ba-panel x-ba-panel-title="Modifier Article">
+	<md-content layout-padding style="background-color: inherit;">
+		<form class="form-horizontal">
+			 <div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Nom</label>
+	            <input ng-model="entity.name" required>
+	          </md-input-container>
+			</div>
+			 <div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Description</label>
+	            <textarea ng-model="entity.description" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+	          </md-input-container>
+			</div>
+			 <div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Mots clés</label>
+					 <md-chips flex required
+					        ng-model="entity.keywords"
+					        md-removable="true"
+					        placeholder="Ajouter un mot clé ..."
+					        delete-button-label="Supprimer le mot clé"
+					        delete-hint="Supprimer mot clé"
+					        secondary-placeholder="Ajouter mot clé" />
+				     </md-chips>
+	          </md-input-container>
+			</div>
+			 <div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Prix</label>
+	            <input ng-model="entity.price" required numbers-only min="0" class="text-right">
+	          </md-input-container>
+			</div>
+			 <div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label flex>Mettre en promotion ?</label>
+	            <md-switch class="md-primary" ng-model="entity.isDiscounted" aria-label="Discounted">
+				    {{ entity.isDiscounted ? 'Oui' : 'Non' }}
+				</md-switch>
+	          </md-input-container>
+	         </div>
+	         <div layout="row">
+	          <md-input-container class="md-block" flex x-ng-if="entity.isDiscounted">
+	            <label>Prix réduit</label>
+	            <input ng-model="entity.discountPrice" required numbers-only min="0" class="text-right">
+	          </md-input-container>
+			</div>
+			 <div layout="row" layout-wrap>
+	          <md-input-container flex-xs="100" flex-gt-xs="30">
+	            <label flex>Mode de livraison</label>
+	            <md-select x-ng-model="entity.deliveryMode">
+	            	<md-option x-ng-value="'FREE'">
+	            		Gratuit
+	            	</md-option>
+	            	<md-option x-ng-value="'CHARGED'">
+	            		Payant
+	            	</md-option>
+	            </md-select>
+	          </md-input-container>
+	          <md-input-container flex-xs="100" flex-gt-xs="70" x-ng-if="entity.deliveryMode == 'CHARGED'">
+	            <label>Frais de livraison</label>
+	            <input ng-model="entity.deliveryFee" required numbers-only min="1" class="text-right">
+	          </md-input-container>
+			</div>
+			 <div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Conditions de livraison</label>
+	            <textarea ng-model="entity.deliveryTerms" md-maxlength="200" rows="5" md-select-on-focus></textarea>
+	          </md-input-container>
+			</div>
+			 <div layout="row" layout-wrap>
+	          <md-input-container flex-gt-xs="70" flex-xs="100">
+	            <label>Stock</label>
+	            <input ng-model="entity.stock" required numbers-only min="0" class="text-right">
+	          </md-input-container>
+	          <md-input-container flex-gt-xs="30" flex-xs="100">
+	            <label>Seuil d'alerte</label>
+	            <input ng-model="entity.threshold" required numbers-only min="0" class="text-right">
+	          </md-input-container>
+			</div>
+			 <div layout="row">
+	          <md-input-container flex>
+	            <label>Afficher sur le site ?</label>
+	            <md-switch class="md-primary" ng-model="entity.isDisplayed" aria-label="Afficher ?">
+				    {{ entity.isDisplayed ? 'Oui' : 'Non' }}
+				</md-switch>
+	          </md-input-container>
+			</div>
+			
+			<div layout="row" layout-align="start center" layout-wrap
+				 x-ng-repeat="articleFeature in dummy.articleFeatures track by $index">
+			 <label flex-gt-xs="17" flex-xs="100">{{ articleFeature.feature.label }}</label>
+			 <md-chips flex-gt-xs flex-xs="100" required
+			        ng-model="articleFeature.unparsedValues"
+			        readonly="ctrl.readonly"
+			        md-removable="true"
+			        placeholder="Ajouter une valuer"
+			        delete-button-label="Supprimer caractéristique"
+			        delete-hint="Appuyez sur Supprimer pour enlever cette valeur"
+			        secondary-placeholder="Ajouter">
+		     </md-chips>
+		     <md-button class="md-warn md-raised" flex-gt-xs="1" flex-xs="100" x-ng-click="removeArticleFeature( $index)" aria-label="Supprimer Caractéristique">
+		     	<i class="fa fa-remove"></i>
+		     </md-button>
+			</div>
+			
+			<div layout="row" layout-align="start center">
+	          <md-input-container flex>
+	            <label>Nom de la caractéristique</label flex>
+	            <input ng-model="dummy.featureLabel" flex>
+		        <md-button class="md-raised" x-ng-click="addArticleFeature()" flex>
+		            <i class="fa fa-plus"></i>&nbsp;Ajouter
+		        </md-button>
+	          </md-input-container>
+			</div>
+			
+		     <div layout="row" x-ng-if="entity.selectedCategories.length">
+		     	<label>Catégories</label>
+				<multi-select-tree data-input-model="entity.selectedCategories"
+								   multi-select="true"
+                        	       data-default-label="Sélectionner une à plusieurs catégories ..." flex />
+		     </div>
+			
+			<h3>Images</h3>
+			
+			<div layout="row" layout-align="space-around center" layout-wrap
+				 layout-xs="column" layout-align-gt-xs="center center">
+				 
+				<div class="userpic" flex="nogrow">
+					<div class="userpic-wrapper">
+						<img ngf-thumbnail=" file0 || 'angular/common/img/default-article.jpg'" ng-src="angular/common/img/default-article.jpg" x-ng-click="selectPicture(0)" x-ng-show="entity.pictures[0] == undefined">
+						<img ng-src="rest/article/fetch-picture/{{ entity.pictures[0].id }}" x-ng-click="selectPicture(0)" x-ng-show="entity.pictures[0] != undefined">
+					</div>
+					<i class="ion-ios-close-outline" ng-click="removePicture( entity.pictures[0].id)" ng-if="entity.pictures[0] != undefined"></i>
+					<a class="change-userpic" ng-click="selectPicture(0)">Ajouter une image</a>
+					<input type="file" ng-show="false" id="uploadFile0" x-ngf-select x-ng-model="file0" name="file0"    
+		             		accept="image/*" x-ngf-max-size="2MB">
+				</div>
+		
+				<div class="userpic" flex="nogrow">
+					<div class="userpic-wrapper">
+						<img ngf-thumbnail=" file1 || 'angular/common/img/default-article.jpg'" ng-src="angular/common/img/default-article.jpg" x-ng-click="selectPicture(1)" x-ng-show="entity.pictures[1] == undefined">
+						<img ng-src="rest/article/fetch-picture/{{ entity.pictures[1].id }}" x-ng-click="selectPicture(1)" x-ng-show="entity.pictures[1] != undefined">
+					</div>
+					<i class="ion-ios-close-outline" ng-click="removePicture( entity.pictures[1].id)" ng-if="entity.pictures[1] != undefined"></i>
+					<a class="change-userpic" ng-click="selectPicture(1)">Ajouter une image</a>
+					<input type="file" ng-show="false" id="uploadFile1" x-ngf-select x-ng-model="file1" name="file1"    
+		             		accept="image/*" x-ngf-max-size="2MB">
+				</div>
+				
+				<div class="userpic" flex="nogrow">
+					<div class="userpic-wrapper">
+						<img ngf-thumbnail=" file2 || 'angular/common/img/default-article.jpg'" ng-src="angular/common/img/default-article.jpg" x-ng-click="selectPicture(2)" x-ng-show="entity.pictures[2] == undefined">
+						<img ng-src="rest/article/fetch-picture/{{ entity.pictures[2].id }}" x-ng-click="selectPicture(0)" x-ng-show="entity.pictures[2] != undefined">
+					</div>
+					<i class="ion-ios-close-outline" ng-click="removePicture( entity.pictures[2].id)" ng-if="entity.pictures[2] != undefined"></i>
+					<a class="change-userpic" ng-click="selectPicture(2)">Ajouter une image</a>
+					<input type="file" ng-show="false" id="uploadFile2" x-ngf-select x-ng-model="file2" name="file2"    
+		             		accept="image/*" x-ngf-max-size="2MB">
+				</div>
+				
+				<div class="userpic" flex="nogrow">
+					<div class="userpic-wrapper">
+						<img ngf-thumbnail=" file3 || 'angular/common/img/default-article.jpg'" ng-src="angular/common/img/default-article.jpg" x-ng-click="selectPicture(3)" x-ng-show="entity.pictures[3] == undefined">
+						<img ng-src="rest/article/fetch-picture/{{ entity.pictures[3].id }}" x-ng-click="selectPicture(3)" x-ng-show="entity.pictures[3] != undefined">
+					</div>
+					<i class="ion-ios-close-outline" ng-click="removePicture( entity.pictures[3].id)" ng-if="entity.pictures[3] != undefined"></i>
+					<a class="change-userpic" ng-click="selectPicture(3)">Ajouter une image</a>
+					<input type="file" ng-show="false" id="uploadFile3" x-ngf-select x-ng-model="file3" name="file3"    
+		             		accept="image/*" x-ngf-max-size="2MB">
+				</div>
+			</div>
+			
+			<div class="pull-left">
+				<md-button class="md-raised" x-ui-sref="root.e-shops.show.articles" >
+					<i class="fa fa-arrow-circle-left"></i> <span class="hidden-xs">&nbsp;Retour à la liste</span>
+				</md-button>
+			</div>
+	
+			<!-- <div class="pull-right btn-group"> -->
+			<div class="pull-right">
+				<md-button class="md-raised md-accent"  x-ng-click="resetEntity()">
+					<span class="hidden-xs">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+				</md-button>
+				<md-button class="md-raised md-primary" x-ng-click="updateEntity( file0, file1, file2, file3)">
+					<span class="hidden-xs">Valider</span>&nbsp;<i class="fa fa-check"></i>
+				</md-button>
+			</div>
+		</form>
+	</md-content>
+</div>

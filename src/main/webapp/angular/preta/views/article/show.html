@@ -1,0 +1,228 @@
+<div x-ui-view>
+	<!-- EShop Display -->
+	<div class="row" style="margin-top: 16px;">
+		<div class="col-lg-offset-3 col-md-offset-3 col-lg-9 col-md-9 col-sm-12 col-xs-12">
+			<div class="row">
+				<div class="row">
+					<div class="container-fluid">
+	
+						<div class="default-panel animated fadeInRight">
+							<div class="default-panel-content">
+								
+								<div class="loader-container" x-ng-if="isEntityLoading">
+									<div class="loading loading--double"></div>&nbsp;<span class="default-text text-mainge">Chargement de l'article en cours ...</span>
+								</div>
+								
+								<div class="default-panel-content animated fadeIn" x-ng-if="!isEntityLoading">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="row">
+												<!-- Slides -->
+												<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+													<div uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+														<div uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+															<img ng-src="{{ slide.image }}" style="margin: auto; width: 100% !important;">
+														</div>
+													</div>
+													<div layout="row" layout-align="center space-around" layout-margin> 
+														<div flex="25" x-ng-repeat="slide in slides">
+															<img ng-src="{{ slide.image }}" />
+														</div>
+													</div>
+												</div>
+												<!-- Article Info -->
+												<div class="col-lg-7 col-md-7 col-sm-7 col-xs-12">
+													<div style="border: 1px solid #F7F7F0; width: 100%; padding: 24px;">
+														<h2>{{ entity.name }}</h2>
+														<p class="text-muted">
+															<small>{{ entity.description }}</small>
+														</p>
+														
+														<span style="font-size: 32px;" uib-rating x-ng-model="entity.rating" max="5" class="text-mainge disable-outline" read-only=true on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></span>
+										    			
+										    			<div class="form-group form-inline">
+										    				<div style="display: inline-block; width: 100%; margin-top: 4px; margin-bottom: 4px;">
+											    				<h4 class="text-muted" x-ng-show="entity.isDiscounted" style="text-decoration: line-through; display: inline;">{{ entity.price | number }}</h4>
+											    				<h3 class="text-mainge" style="font-weight: bold; display: inline;" x-ng-show="!entity.isDiscounted">{{ entity.price | number}} <small>F CFA</small></h3>
+											    				<h3 class="text-mainge" style="font-weight: bold; display: inline;" x-ng-show="entity.isDiscounted">{{ entity.discountPrice | number}} <small>F CFA</small></h3>
+											    				<span class="text-mainge blink blink-infinite" x-ng-if="entity.isDiscounted"><b>En promotion</b></span>
+										    				</div>
+											    			<label for="quantity">Quantité</label>
+											    			<div class="input-group" style="width: 150px;">
+											    				<span class="input-group-btn">
+											    					<button class="btn btn-default btn-flat" x-ng-click="decQuantity()" x-ng-disabled="quantity <= 1"><i class="fa fa-minus"></i></button>
+											    				</span>
+											    				<input id="quantity" x-ng-model="quantity" class="form-control text-right" type="text" numbers-only readonly />
+											    				<span class="input-group-btn">
+											    					<button class="btn btn-default btn-flat" x-ng-click="incQuantity()"><i class="fa fa-plus"></i></button>
+											    				</span>
+											    			</div>
+										    			</div>
+										    			
+										    			<div style="margin-top: 16px;">
+												   			<p class="text-left"><b>Disponibilité</b>
+												   				<span ng-class="{ 'badge label-danger': entity.stock == 0, 'badge label-info': entity.stock <= entity.threshold, 'badge label-success': entity.stock > entity.threshold}">
+												   					<span x-ng-if="entity.stock == 0">Stock épuisé</span>
+												   					<span x-ng-if="entity.stock <= entity.threshold">Stock faible</span>
+												   					<span x-ng-if="entity.stock > entity.threshold">En stock</span>
+												   				</span>
+												   			</p>
+												   			<p class="text-left"><b>Condition</b> <span class="badge bg-mainge">{{ entity.state == 'NEW' ? 'Neuf' : ' Occasion'}}</span></p>
+										    			</div>
+										    			
+										    			<div style="margin-top: 16px;">
+										    				<p class="text-left">
+										    					<label>Livraison</label>
+										    					<span class="badge bg-mainge">
+										    						{{ entity.deliveryMode == 'FREE' ? 'Gratuit' : 'Payante' }}
+										    					</span>
+										    				</p>
+										    			</div>
+										    			
+										    			<div style="margin-top: 16px;" x-ng-if="entity.deliveryMode == 'CHARGED'">
+										    				<p class="text-left">
+										    					<label>Frais de livraison</label>
+										    					<span>
+										    						{{ entity.deliveryFee | number }} F CFA / unité
+										    					</span>
+										    				</p>
+										    			</div>
+										    			
+										    			<div style="margin-top: 16px;" x-ng-if="entity.deliveryTerms != null">
+										    				<p class="text-left">
+										    					<label>Conditions de livraison</label>
+										    				</p>
+										    				<p class="text-justify">
+										    					{{ entity.deliveryTerms }}
+										    				</p>
+										    			</div>
+										    			
+										    			<div style="margin-top: 16px;" x-ng-show="entity.features.length">
+										    				<span class="text-left"><b>Sélectionnez les caractéristiques</b></span>
+										    				<div x-ng-repeat="arfeat in entity.features">
+										    					<span class="text-left">{{ arfeat.feature.label}}</span>
+															    <!-- <button type="button" class="btn btn-default art-feat" x-ng-model="featVal.isSelected" uib-btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false" x-ng-repeat="featVal in arfeat.values">
+															        {{ featVal.value }}
+															    </button> -->
+															    
+															    <div class="btn-group">
+															        <label class="btn btn-default art-feat" x-ng-repeat="featVal in arfeat.values" ng-model="arfeat.selectedFeatureValue" uib-btn-radio="{{ featVal}}">{{ featVal.value }}</label>
+															    </div>
+										    				</div>
+										    			</div>
+										    			
+										    			<div style="margin-top: 16px;" x-ng-show="entity.categories.length">
+										    				<span class="text-left"><b>Catégories</b></span>
+									    					<span class="badge bg-info" style="margin: 4px;" x-ng-repeat="category in entity.categories">{{ category.label }}</span>
+										    			</div>
+										    			
+										    			<div style="margin-top: 16px;" x-ng-show="entity.eShop != null">
+										    				<span class="text-left"><b>Boutique</b></span>
+									    					<span>
+									    						<a x-ui-sref="root.e-shop({ id: entity.eShop.id })" class="default-lnk">
+									    						{{ entity.eShop.name }}
+									    						</a>
+									    					</span>
+										    			</div>
+										    			
+										    			<br />
+										    			<button x-ng-click="addToCart()" class="btn p-btn-default btn-flat"><i class="fa fa-cart-plus"></i> Ajouter au panier</button>
+										    			<button x-ng-click="orderArticle()" class="btn p-btn-default btn-flat"><i class="fa fa-truck"></i> Commander</button>
+										    			
+										    			<!-- <button x-ng-if="loggedUser == null" x-ui-sref="root.login" class="btn p-btn-default btn-flat"><i class="fa fa-shopping-cart"></i> Ajouter au panier</button>
+										    			<button x-ng-if="loggedUser == null" x-ui-sref="root.login" class="btn p-btn-default btn-flat" x-ng-click="orderArticle()"><i class="fa fa-truck"></i> Commander</button> -->
+										    			
+													</div>
+												</div>
+												
+												<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right" style="margin-top: 48px; margin-bottom: 24px;">
+
+													<!-- <a x-ui-sref="root.e-shop({ id: entity.eShop.id})" class="btn btn-lg btn-mainge">Visiter la boutique <i class="fa fa-opencart"></i></a> -->
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+									
+							    <div layout="column" layout-align="center center" x-ng-if="!isEntityLoading && entity == null">
+				   					<div flex="auto">
+				   						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b> Désolé, aucun contenu à afficher</b></h3>
+				   					</div>
+						        </div>
+						        
+							</div>
+						</div>
+					
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row" style="margin-top: 16px;">
+		<div class="row">
+			<div class="col-lg-offset-3 col-md-offset-2 col-lg-9 col-md-10 col-sm-12 col-xs-12">
+				<div class="row">
+					<div class="container-fluid">
+						<div class="products-container animated fadeInRight">
+							<div class="products-container-header">
+								<h4 class="title text-mainge"><i class="fa fa-opencart"></i>&nbsp;Articles de {{ entity.eShop.name | limitTo: 70 }}</h4>  <small class="hidden-xs">Les articles de la même boutique</small>
+								<a x-ui-sref="root.e-shop.latest-articles( { id: entity.eShop.id })" class="more-btn pull-right hidden-xs">Voir plus <i class="fa fa-cubes"></i></a>
+							</div>
+							<div class="products-container-content">
+		
+								<div class="loader-container" x-ng-if="isSiblingsLoading">
+									<div class="loading loading--double" x-ng-show="isSiblingsLoading"></div>
+								</div>
+								
+								<div class="products-flex-container"  x-ng-if="!isSiblingsLoading && siblings.length">	
+									<e-shop-product-widget article="article" x-ng-repeat="article in siblings" />
+								</div>
+								
+							    <div layout="column" layout-align="center center" x-ng-if="!isSiblingsLoading && !siblings.length" style="min-height: 200px;">
+				   					<div flex="auto">
+				   						<h3 class="md-title text-mainge text-center"><i class="fa fa-circle-o-notch"></i>&nbsp;<b> Désolé, aucun contenu à afficher</b></h3>
+				   					</div>
+						        </div>
+						        
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Top Rated -->
+	<div class="row">
+		<div class="row">
+			<div class="col-lg-offset-3 col-md-offset-2 col-lg-9 col-md-10 col-sm-12 col-xs-12">
+				<div class="row">
+					<div class="container-fluid">
+						<div class="products-container animated fadeInRight">
+							<div class="products-container-header">
+								<h4 class="title text-mainge"><i class="fa fa-cubes"></i>&nbsp;Articles Similaires</h4> <small class="hidden-xs">Les produits semblables à celui ci</small>
+								<!-- <a x-ui-sref="root.e-shop.top-rated" class="more-btn pull-right hidden-xs">Voir plus <i class="fa fa-cubes"></i></a> -->
+							</div>
+							<div class="products-container-content">
+								<div class="loader-container" x-ng-if="isSimilarLoading">
+									<div class="loading loading--double" x-ng-show="isSimilarLoading"></div>
+								</div>
+								<div class="products-flex-container">
+									<default-article-widget article="article" x-ng-repeat="article in similar" />
+								</div>
+								
+							    <div layout="column" layout-align="center center" x-ng-if="!isSimilarLoading && !similar.length" style="min-height: 200px;">
+				   					<div flex="auto">
+				   						<h3 class="md-title text-mainge text-center"><i class="fa fa-circle-o-notch"></i>&nbsp;<b> Désolé, aucun contenu à afficher</b></h3>
+				   					</div>
+						        </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>

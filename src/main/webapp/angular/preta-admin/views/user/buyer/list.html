@@ -1,0 +1,41 @@
+<div>
+	<div class="row">
+		<div class="col-md-12" x-ui-view>
+			<div x-ba-panel x-ba-panel-title="Acheteurs" x-ba-panel-class="with-scroll">
+				<div class="">
+					<table class="table" st-table="entities" st-safe-src="safeEntities">
+						<thead>
+							<tr class="sortable ">
+								<th class="table-id" x-st-sort="userInfo.id" st-sort-default="true">#</th>
+								<th st-sort="username">Nom d'utilisateur</th>
+								<th st-sort="email">Adresse mail</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr x-ng-repeat="entity in entities">
+								<td class="table-id">{{entity.userInfo.id}}</td>
+								<td class="text-left">{{entity.username}}</td>
+								<td class="text-left">{{entity.userInfo.email}}</td>
+								<td>
+									<button class="btn btn-sm btn-default" x-ui-sref="root.buyers.show({ id: entity.userInfo.id})">
+										<i class="fa fa-folder-open"></i>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="6" class="text-center">
+									<div st-pagination="" st-items-by-page="smartTablePageSize" st-displayed-pages="5"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

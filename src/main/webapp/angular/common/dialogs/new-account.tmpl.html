@@ -1,0 +1,42 @@
+<md-dialog aria-label="Nouveau Compte Monnaie Numérique">
+  <!-- <form ng-cloak> -->
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Ajout d'un Compte de Monnaie Numérique</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()" aria-label="Annuler">
+          <i class="fa fa-remove"></i>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+	<form>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+       	<div layout="row" layout-align="start" layout-wrap>
+		   <md-input-container flex="100" class="md-block">
+			<label>Numéro du compte</label>
+		   	<input type="text" x-ng-model="form.newEAccount.account" numbers-only required />
+		   </md-input-container>
+	       <md-input-container flex="100" class="md-block">
+	           <label>Par défaut</label>
+	           <md-switch class="md-primary" x-ng-model="form.newEAccount.isDefault" aria-label="Par défaut">
+	  			{{ form.newEAccount.isDefault ? 'Oui' : 'Non' }}
+	  			</md-switch>
+       		</md-input-container>
+		</div>
+      </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <md-button ng-click="answer( false)" aria-label="Annuler">
+       <i class="fa fa-undo"></i> Annuler
+      </md-button>
+      <span flex></span>
+      <md-button class="md-primary" ng-click="answer( true)" aria-label="Valider">
+        Valider <i class="fa fa-check-circle"></i>
+      </md-button>
+    </md-dialog-actions>
+    </form>
+  <!-- </form> -->
+</md-dialog>

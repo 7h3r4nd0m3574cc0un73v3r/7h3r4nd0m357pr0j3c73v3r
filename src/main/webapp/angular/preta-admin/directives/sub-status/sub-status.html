@@ -1,0 +1,6 @@
+<span x-ng-switch on="status">
+	<span class="label label-danger" x-ng-switch-when="PENDING_PAYMENT">Attente du paiement</span>
+	<span class="label label-warning" x-ng-switch-when="PENDING_PAYMENT_CONFIRMATION">Confirmer paiement</span>
+	<span class="label label-default" x-ng-switch-when="CANCELLED">Annulée</span>
+	<span class="label label-default" x-ng-switch-when="PAID">Payé</span>
+</span>

@@ -1,0 +1,279 @@
+<div x-ba-panel x-ba-panel-title="Ajouter une boutique" x-ba-panel-class="with-scroll">
+	<div class="container-fluid">
+		<form class="form-horizontal" name="dummy.myForm">
+		
+			<h3 class="text-primary"><b>Informations de base</b></h3>
+			
+			<div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Nom de la boutique</label>
+	            <input ng-model="form.entity.eShop.name" required md-minlength="4" name="name" id="name">
+			    <div ng-messages="myForm.name.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+			</div>
+			
+		    <div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Présentation</label>
+	            <textarea ng-model="form.entity.eShop.description" md-maxlength="1500" rows="5" md-select-on-focus required name="description"></textarea>
+			    <div ng-messages="myForm.description.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+		    </div>
+		    
+			<div layout="row">
+				<md-input-container class="md-block" flex>
+					<lf-ng-md-file-input name="myFile" id="myFile"
+						lf-files="form.file"
+						lf-remove-label="Annuler"
+						lf-browse-label="Parcourir ..." 
+						lf-drag-and-drop-label="Tirez ici !" 
+						lf-maxcount="1" lf-filesize="4MB"
+						lf-placeholder="Sélectionner une image"
+						lf-mimetype="image/*"
+						drag preview progress
+						/>
+						
+				    <div ng-messages="myForm.myFile.$error" style="color:red;">
+				        <div ng-message="required">This is required.</div>
+				        <div ng-message="maxcount">Too much files.</div>
+				        <div ng-message="filesize">File size too large.</div>
+				        <div ng-message="totalsize">Total size too large.</div>
+				        <div ng-message="mimetype">Mimetype error.</div>
+				    </div>
+				    
+			   </md-input-container>
+			</div>
+		
+			<div layout-gt-sm="row" layout-sm="column">
+	          <md-input-container class="md-block" flex-sm="100" flex-gt-sm>
+	            <label>IFU</label>
+	            <input ng-model="form.entity.eShop.ifu" md-maxlength="13" md-minlength="13" numbers-only required name="ifu"/>
+			    <div ng-messages="myForm.ifu.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+	          
+	          <md-input-container class="md-block" flex-sm="100" flex-gt-sm>
+	            <label>Registre de Commerce</label>
+	            <input ng-model="form.entity.eShop.rc" required name="rc">
+			    <div ng-messages="myForm.rc.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+			</div>
+			
+			<div layout-sm="column" layout-gt-sm="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Marché de la place</label>
+	            <md-switch class="md-primary" ng-model="form.entity.eShop.isInMarket" aria-label="Switch 1">
+				    {{ form.entity.eShop.isInMarket ? 'Oui' : 'Non' }}
+				</md-switch>
+	          </md-input-container>
+	          <md-input-container class="md-block" flex>
+	            <label>Type de boutique</label>
+	            <md-select x-ng-model="form.entity.eShop.shopType" required>
+	            	<md-option x-ng-value="'LOCAL'">
+	            		Locale
+	            	</md-option>
+	            	<md-option x-ng-value="'NOT_LOCAL'">
+	            		Non locale
+	            	</md-option>
+	            </md-select>
+	          </md-input-container>
+			</div>
+			
+			<h3 class="text-primary"><b>Contacts</b></h3>
+			
+			<div layout-sm="column" layout-gt-sm="row">
+				<md-input-container class="md-block" flex>
+					<label>Service client</label>
+					<md-icon style="display:inline-block;"><i class="fa fa-phone"></i></md-icon>
+					<input x-ng-model="form.entity.eShop.customerNum" required name="customerNum"/>
+				    <div ng-messages="myForm.customerNum.$error" style="color:red;">
+				        <div ng-message="required">Champ requis.</div>
+				    </div>
+				</md-input-container>
+			</div>
+			
+			<div layout="row">
+				<md-input-container class="md-block" flex>
+					<label>Adresse E-Mail</label>
+					<md-icon style="display:inline-block;"><i class="fa fa-envelope"></i></md-icon>
+					<input x-ng-model="form.entity.eShop.email" required name="email" />
+				    <div ng-messages="myForm.email.$error" style="color:red;">
+				        <div ng-message="required">Champ requis.</div>
+				    </div>
+				</md-input-container>
+			</div>
+			
+			<h3 class="text-primary"><b>Localisation</b></h3>
+			 <div layout-gt-sm="row">
+				 <md-input-container class="md-block" flex-gt-sm>
+		            <label>Pays</label>
+		            <md-select ng-model="form.entity.eShop.country" required name="country">
+		            	<md-option ng-repeat="country in countries" ng-value="country.code" ng-disabled="country.code != 'BJ'">
+		            		{{ country.name }}
+		            	</md-option>
+		            </md-select>
+				    <div ng-messages="myForm.country.$error" style="color:red;">
+				        <div ng-message="required">Champ requis.</div>
+				    </div>
+	         	 </md-input-container>
+	                    
+		          <md-input-container class="md-block" flex-gt-sm>
+		            <label>Département</label>
+		            <input ng-model="form.entity.eShop.department" type="text" required name="department" />
+				    <div ng-messages="myForm.department.$error" style="color:red;">
+				        <div ng-message="required">Champ requis.</div>
+				    </div>
+		          </md-input-container>
+		          
+		          <md-input-container class="md-block" flex-gt-sm>
+		            <label>Ville</label>
+		            <input ng-model="form.entity.eShop.city" type="text" required name="city" />
+				    <div ng-messages="myForm.city.$error" style="color:red;">
+				        <div ng-message="required">Champ requis.</div>
+				    </div>
+		          </md-input-container>
+	          </div>
+	          
+	        <div layout-gt-sm="row">
+	          <md-input-container class="md-block" flex-gt-sm>
+	            <label>Arrondissement</label>
+	            <input ng-model="form.entity.eShop.borough" type="text" required name="borough" />
+			    <div ng-messages="myForm.borough.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+	          <md-input-container class="md-block" flex-gt-sm>
+	            <label>Quartier</label>
+	            <input ng-model="form.entity.eShop.district" type="text" required name="district" />
+			    <div ng-messages="myForm.district.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+	          <md-input-container class="md-block" flex-gt-sm>
+	            <label>Rue</label>
+	            <input ng-model="form.entity.eShop.street" type="text" required name="street" />
+			    <div ng-messages="myForm.street.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+	        </div>
+	        
+		    <div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Adresse complète</label>
+	            <textarea ng-model="form.entity.eShop.fullAddress" md-maxlength="150" rows="5" md-select-on-focus required name="fullAddress"></textarea>
+			    <div ng-messages="myForm.fullAddress.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+		    </div>
+			
+			<h3 class="text-primary"><b>Abonnement initial</b></h3>
+			
+			<div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Modèle d'abonnement</label>
+	            <md-select x-ng-model="form.entity.shopSub.subOffer" required name="shopSub">
+	            	<md-option x-ng-value="subOffer" x-ng-repeat="subOffer in subOffers" >
+	            		{{ subOffer.title }}
+	            	</md-option>
+	            </md-select>
+			    <div ng-messages="myForm.shopSub.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+			</div>
+			
+			<div class="form-group" x-ng-show="form.entity.shopSub.subOffer">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<p>
+						<b>Statut de boutique conféré</b> {{ form.entity.shopSub.subOffer.shopStatus.title }}
+					</p>
+					<p>
+						<b>Durée</b> <duration-label x-duration="form.entity.shopSub.subOffer.duration" x-duration-type="form.entity.shopSub.subOffer.durationType" />
+					</p>
+					<p>
+						<b>Limite d'article</b> Au plus {{ form.entity.shopSub.subOffer.shopStatus.articleLimit }} articles
+					</p>
+					<p>
+						<b>Prix</b> {{ form.entity.shopSub.subOffer.price }} F CFA
+					</p>
+				</div>
+			</div>	
+			
+			<div x-ng-if="form.entity.shopSub.subOffer.price > 0">
+			
+				<div layout="row" layout-margin>
+			        <md-input-container class="md-block" flex>
+			          <label>Sélectionnez un compte pour le paiement</label>
+			            <md-select ng-model="form.entity.payment.eAccount" required>
+			              <md-option x-ng-repeat="eAccount in loggedUser.eAccounts" x-ng-value="eAccount">
+			                {{ eAccount.account }}
+			              </md-option>
+			            </md-select>
+			        </md-input-container>
+				</div>
+				
+				<div layout="column" layout-align="start center" x-ng-if="form.entity.payment.eAccount" class="animated fadeIn" layout-margin>
+					<p flex="100">
+						<h4 class="text-center"><b>Veuillez adresser votre paiement au compte suivant, puis entrez la référence du paiement dans le champ approprié</b></h4>
+					<p>
+					
+					<div flex="100">
+						<md-card>
+					        <md-card-title>
+					          <md-card-title-media>
+					            <div class="md-media-sm card-media">
+					            	<img ng-src="rest-api/e-money-provider/{{ selectedAdminEAccount.emp.id }}/fetch-logo" class="img-responsive" style="max-height: 100px; max-width: 100px;" />
+					            </div>
+					          </md-card-title-media>
+					          <md-card-title-text>
+					            <span class="md-headline">{{ selectedAdminEAccount.emp.name }}</span>
+					            <span class="md-subhead">Compte du virement</span>
+					          </md-card-title-text>
+					        </md-card-title>
+					        <md-card-content>
+					        	<p class="text-left">
+					        		<label>Numéro</label>
+					        		<span class="text-mainge" style="font-weight: bold; font-size: 120%">
+					        			{{ selectedAdminEAccount.account }}
+					        		</span>
+					        	</p>
+					        </md-card-content>
+				      </md-card>
+				    </div>
+				</div>
+				
+			    <div layout="row" x-ng-if="form.entity.payment.eAccount">
+		          <md-input-container class="md-block" flex>
+		            <label>Référence du paiement</label>
+		            <input ng-model="form.entity.payment.paymentRef" type="text" required>
+		          </md-input-container>
+				</div>
+		
+			</div>
+		
+	
+			<div layout="row" layout-align="start center">
+				<md-button class="md-raised" x-ui-sref="root.e-shops">
+					<i class="fa fa-arrow-circle-left"></i> <span class="">&nbsp;Retour à la liste</span>
+				</md-button>
+				<span flex></span>
+				<md-button class="md-raised md-accent" x-ng-click="resetEntity()" type="reset">
+					<i class="fa fa-eraser"></i> <span class="">&nbsp;Réinitialiser</span>
+				</md-button>
+				<md-button class="md-raised md-primary" x-ng-click="addEntity()" type="submit">
+					<i class="fa fa-eraser"></i> <span class="">&nbsp;Valider</span>
+				</md-button>
+			</div>
+			
+		</form>
+	</div>
+</div>

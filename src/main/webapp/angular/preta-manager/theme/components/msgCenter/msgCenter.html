@@ -1,0 +1,87 @@
+<ul class="al-msg-center clearfix">
+	<li uib-dropdown>
+		<a uib-dropdown-toggle> <i class="fa fa-bell"></i><span>{{ unreadNotificationsCount }}</span>
+			<span class="notification-ring"></span>
+		</a>
+	
+		<div uib-dropdown-menu class="top-dropdown-menu">
+			
+			<div layout="column" layout-align="space-around center" x-ng-show="areNotificationsLoading">
+				<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+       		</div>
+       		
+		    <div layout="column" layout-align="center center" x-ng-if="!areNotificationsLoading && !notifications.length">
+				<div flex="auto">
+					<h5 class="md-title text-success">Aucune notification à afficher</h5>
+				</div>
+	        </div>
+		        
+       		<div x-ng-if="!areNotificationsLoading && notifications.length">
+				<i class="dropdown-arr"></i>
+				<div class="header clearfix">
+					<strong>Notifications</strong>
+				</div>
+				<div class="msg-list">
+					<div layout="column" layout-align="start" style="border-bottom: 1px solid #ddd; margin: 3px; width: 100%;" layout-padding ng-repeat="entity in notifications track by $index">
+						<span layout="row" layout-align="start center" flex="100" x-ng-switch on="entity.nType">
+							<span x-ng-switch-when="APPROVED" x-ng-switch on="entity.entType" flex>
+								<span x-ng-switch-when="PROFILE">
+									Votre profil a été validé par l'administration.
+								</span>
+								<span x-ng-switch-when="ESHOP">
+									Votre boutique #{{ entity.entRelId}} a été approuvée par l'administration.
+								</span>
+							</span>
+							<span x-ng-switch-when="ALTERED_PAYMENT" x-ng-switch on="entity.entType" flex>
+								<span x-ng-switch-when="ORDER">
+									<a x-ui-sref="root.orders.show({ id: entity.entAbsId})">La commande #{{ entity.entRelId}} a été payée et est prête pour livraison.</a>
+								</span>
+							</span>
+							<span x-ng-switch-when="DELIVERED_ORDER" x-ng-switch on="entity.entType" flex>
+								<span x-ng-switch-when="ORDER">
+									<a x-ui-sref="root.orders.show({ id: entity.entAbsId})">La commande #{{ entity.entRelId }} a été reçue par le client.</a>
+								</span>
+							</span>
+							<span x-ng-switch-when="EXPIRED" x-ng-switch on="entity.entType" flex>
+								<span x-ng-switch-when="AD">
+									<a ng-click="read( $index)">La publicité #{{ entity.entRelId }} est expirée.</a>
+								</span>
+								<span x-ng-switch-when="SUB">
+									
+								</span>
+							</span>
+							<span x-ng-switch-when="EXPIRING" x-ng-switch on="entity.entType" flex>
+								<span x-ng-switch-when="AD">
+									<a ng-click="read( $index)">La publicité #{{ entity.entRelId }} expire bientôt.</a>
+								</span>
+								<span x-ng-switch-when="SUB">
+									
+								</span>
+							</span>
+						</span>
+						<!-- Date -->
+						<span layout="row" layout-align="end center" class="text-right" flex>
+							<span flex>
+								<small>{{ entity.regDate | date:'short' }}</small>
+							</span>
+						</span>
+					</div>
+				</div>
+				
+				<!-- <div class="msg-list">
+			        <a x-ui-sref="root.orders.show( { id: articleOrder.id })" class="clearfix" ng-repeat="articleOrder in notifications">
+			          <span class="img-area"><b>#{{ articleOrder.id | number }}</b></span>
+			          <span class="msg-area">
+			            <span><b>{{ articleOrder.eShop.name | limitTo: 16}}{{ articleOrder.eShop.name.Length > 16 ? '...' : '' }}</b> ({{ articleOrder.total | number }} F CFA)</span>
+			            <span>le {{ articleOrder.regDate | date: 'short' }}</span>
+			          </span>
+			        </a>
+				</div> -->
+				<!-- <div layout="column" layout-align="center center">
+					<a flex x-ui-sref="root.orders-paid"><b>Afficher tout</b></a>
+				</div> -->
+       		</div>
+       		
+		</div>
+	</li>
+</ul>

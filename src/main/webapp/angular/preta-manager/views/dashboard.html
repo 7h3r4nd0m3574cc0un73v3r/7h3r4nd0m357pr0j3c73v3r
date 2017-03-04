@@ -1,0 +1,170 @@
+<div x-ui-view>
+	<div layout="row" layout-wrap>
+		<div ba-panel ba-panel-title="Urgent - Remplissez votre profil utilisateur" flex="100" x-ng-if="loggedUser.profileCompletion < 100 || !loggedUser.approved">
+			
+			<div layout="column" layout-align="space-around center" x-ng-show="isComputingProfComp">
+				<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+	      	</div>
+	       
+	       <div x-ng-if="loggedUser.profileCompletion < 100 || !loggedUser.approved">
+				<h3 style="color: #fb5520;" class="text-center" x-ng-if="!loggedUser.approved && loggedUser.profileCompletion < 100">
+					<i class="fa fa-warning"></i>&nbsp;<span class="blink blink-infinite"><b>Profil Utilisateur Incomplet</b></span>
+				</h3>
+				<h3 style="color: #fb5520;" class="text-center" x-ng-if="!loggedUser.approved && loggedUser.profileCompletion == 100">
+					<i class="fa fa-hourglass"></i>&nbsp;<span class="blink blink-infinite"><b>Profil en cours de validation</b></span>
+				</h3>
+				
+				<br />
+				<p class="text-center" style="font-size: 125%; font-stretch: condensed;">
+					<span x-ng-if="loggedUser.ProfileCompletion < 100">Votre profil n'est complet qu'à {{ loggedUser.profileCompletion }} % !<br /><br /></span>
+					<span x-ng-if="!loggedUser.approved && loggedUser.profileCompletion < 100">
+						Veuillez renseigner les informations nécessaire sur le formulaire suivant pour débloquer toutes les fonctionnalités du système.
+					</span>
+					<span x-ng-if="!loggedUser.approved && loggedUser.profileCompletion == 100">
+						Veuillez patientez pendant que l'administration vérifie votre profil et le valide.
+					</span>
+				</p>
+				<div layout="row" layout-align="center center" x-ng-if="loggedUser.profileCompletion < 100">
+					<md-button class="md-raised md-warn" flex="nogrow" x-ui-sref="root.profile">
+						Formulaire à remplir <i class="fa fa-edit"></i>
+					</md-button>
+				</div>
+	       </div>
+		</div>
+		
+		<div ba-panel ba-panel-title="Mes Boutiques Récentes" flex="100">
+			
+			<div layout="column" layout-align="space-around center" x-ng-show="areEShopsLoading">
+				<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+	      	</div>
+		      	
+		    <div layout="column" layout-align="center center" x-ng-if="!areEShopsLoading && !eShops.length">
+				<div flex="auto">
+					<h3 class="md-title text-primary"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Pas de boutique pour l'instant</b></h3>
+				</div>
+				<div layout="row" layout-align="center center">
+					<md-button flex-xs="100" class="md-primary md-raised pull-right" x-ui-sref="root.e-shops.new">
+						<i class="fa fa-plus-square"></i>&nbsp;<span class="blink blink-infinite">Créez votre première boutique !!!</span>
+					</md-button>
+				</div>
+	       </div>
+	       
+			<div layout="row" layout-align="start" x-ng-if="!areEShopsLoading && eShops.length" layout-wrap>
+				<md-card x-ng-repeat="entity in eShops" flex="auto">
+			        <md-card-title>
+			          <md-card-title-media>
+			            <div class="md-media-md card-media">
+					        <!-- <img x-ng-src="rest-api/e-shop/{{ entity.id}}/fetch-logo" class="md-card-image" alt="{{ entity.name }} Logo"> -->
+					        <img x-ng-src="https://drive.google.com/uc?id={{entity.logoGoogleId}}&export=download" class="md-card-image" alt="{{ entity.name }} Logo">
+			            </div>
+			          </md-card-title-media>
+			          <md-card-title-text style="padding-left: 4px;">
+			            <span class="md-headline"> {{ entity.name | limitTo: 30 }}{{ entity.name.length > 30 ? '...' : '' }}</span>
+			            <span class="md-subhead">{{ entity.isEnabled ? 'Activée' : 'Désactivée' }}</span>
+			            <span class="md-subhead">{{ entity.articlesCount | number }} / {{ entity.currentShopSub.subOffer.shopStatus.articleLimit | number }} articles</span>
+			          </md-card-title-text>
+			        </md-card-title>
+			        <md-card-actions layout="row" layout-align="end center">
+			          <md-button class="md-icon-button md-raised md-primary" x-ui-sref="root.e-shops.show( { eShopId: entity.id})">
+			          	<i class="fa fa-folder-open"></i>
+			          	<md-tooltip>
+			          		Détails
+			          	</md-tooltip>
+			          </md-button>
+			          <md-button class="md-icon-button md-raised md-accent" x-ui-sref="root.e-shops.show.shop-subs( { eShopId: entity.id})">
+			          	<i class="fa fa-flag"></i>
+			          	<md-tooltip>
+			          		Abonnements
+			          	</md-tooltip>
+			          </md-button>
+			          <md-button class="md-icon-button md-raised md-warn" x-ui-sref="root.e-shops.show.articles({ eShopId: entity.id})" x-ng-disabled="entity.currentShopSub == null || !entity.isEnabled">
+			          	<i class="fa fa-cubes"></i>
+			          	<md-tooltip>
+			          		Articles
+			          	</md-tooltip>
+			          </md-button>
+			        </md-card-actions>
+			    </md-card>
+				
+				<div layout="row" layout-align="end" x-ng-if="!areEShopsLoading && eShops.length" flex="100">
+					<md-button class="md-raised md-primary" flex="nogrow" x-ui-sref="root.e-shops">
+						Toutes mes boutiques
+					</md-button>
+				</div>
+			</div>
+			
+		</div>
+		
+		<div ba-panel ba-panel-title="Commandes à livrer" flex="100">
+			
+			<div layout="column" layout-align="space-around center" x-ng-show="arePendingOrdersLoading">
+				<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+	      	</div>
+		      	
+		    <div layout="column" layout-align="center center" x-ng-if="!arePendingOrdersLoading && !pendingOrders.length">
+				<div flex="auto">
+					<h3 class="md-title text-primary"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Pas de commandes à livrer</b></h3>
+				</div>
+	       </div>
+	       
+			<div layout="row" layout-align="start" x-ng-if="!arePendingOrdersLoading && pendingOrders.length" layout-wrap>
+				<div flex="100" style="margin-bottom: 8px;">
+					<h3 style="color: #fb5520;" class="text-center"><i class="fa fa-warning"></i>&nbsp;<span class="blink blink-infinite"><b>Vous avez des commandes en attente de livraison</b></span></h3>
+					<p class="text-center" style="font-size: 125%; font-stretch: condensed;">
+						<b>
+							<br />
+							Pour la bonne marche du système et la satisfaction maximale de vos client, merci de bien vouloir satisfaire activement les commandes
+							qui vous sont adressées.
+						</b>
+					</p>
+				</div>
+				
+				 <md-card x-ng-repeat="entity in pendingOrders" flex="auto">
+			        <md-card-title>
+			          <md-card-title-text>
+			            <span class="md-title">Commande #{{ entity.id | number }} - {{ entity.eShop.name }}</span>
+			            <span class="md-subhead">
+			            	Date Commande: {{ entity.regDate | date : 'medium'}}
+			            </span>
+			          </md-card-title-text>
+			        </md-card-title>
+			        <md-card-content>
+			          <p>
+			          	<label>Client</label>
+			          	<span>{{ entity.buyer.userInfo.firstName }}  {{ entity.buyer.userInfo.lastName }} : {{ entity.buyer.username }}</span>
+			          </p>
+			          <p>
+			          	<label>Statut</label>
+			          	<span><order-status status="entity.status" /></span>
+			          </p>
+			          <p>
+			          	<label>Nombre d'articles</label>
+			          	<span>
+			          		{{ entity.articleCount | number }}
+			          	</span>
+			          	;
+			          	<label>Total</label>
+			          	<span>
+			          		{{ entity.total | number }} F CFA
+			          	</span>
+			          </p>
+			        </md-card-content>
+			        <md-card-actions layout="row" layout-align="end center">
+			          <md-button class="md-primary md-raised md-icon-button" aria-label="Détails" x-ui-sref="root.orders.show( { id: entity.id })">
+			            <i class="fa fa-folder-open"></i>
+			          	<md-tooltip md-direction="top">
+				          Détails
+				        </md-tooltip>
+			          </md-button>
+			      </md-card>
+			      
+				<div layout="row" layout-align="end" x-ng-if="!areEShopsLoading && eShops.length" flex="100">
+					<md-button class="md-raised md-primary" flex="nogrow" x-ui-sref="root.orders-paid">
+						Toutes les commandes à livrer <i class="fa fa-truck"></i>
+					</md-button>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>

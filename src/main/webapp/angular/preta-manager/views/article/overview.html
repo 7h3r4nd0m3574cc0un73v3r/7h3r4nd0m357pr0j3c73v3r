@@ -1,0 +1,38 @@
+<div x-ui-view>
+	<div class="row">
+		<div class="col-lg-6 col-md-12" x-ng-repeat="entity in overviewEntities">
+			<div x-ba-panel x-ba-panel-title="Articles - {{ entity.name }}" x-ba-panel-class="with-scroll">
+				<div>
+					<button x-ng-click="newEntity( entity.id)" class="btn btn-primary pull-right"><i class="fa fa-plus-square"></i> Ajouter</button>
+					<br />
+					
+					<p class="text-danger text-center"  x-ng-show="!entity.articles.length">
+						Aucun article dans cette boutique
+					</p>
+					
+					<table x-ng-show="entity.articles.length" class="table table-responsive">
+						<thead>
+							<tr>
+								<th class="table-id">#</th>
+								<th>Nom</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr x-ng-repeat="article in entity.articles">
+								<td class="table-id">{{article.id}}</td>
+								<td class="text-left">{{article.name}}</td>
+								<td>
+									<div class="btn-group pull-right">
+										
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,156 @@
+<div>
+	<div class="row">
+		<div class="col-md-12" x-ui-view>
+		  	<div x-ba-panel x-ba-panel-title="Ajouter une slide">
+		  		<div layout-gt-xs="row" layout-align-gt-xs="end center"
+		  			 layout-xs="column" layout-align-xs="space-around center">
+					<md-button flex-xs="100" class="md-primary md-raised pull-right" x-ui-sref="root.slides.new">
+						<i class="fa fa-plus-square"></i> Nouvelle Slide
+					</md-button>
+		  		</div>
+		  	</div>
+		  	
+		  	<!-- List -->
+			<div x-ba-panel x-ba-panel-title="Slides d'accueil affichées">
+				<div layout="column" layout-align="space-around center" x-ng-show="isListLoading">
+					<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+	       		</div>
+				
+			    <div layout="column" layout-align="center center" x-ng-if="!isListLoading && !entities.length">
+   					<div flex="auto">
+   						<h3 class="md-title text-success"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucune slide à afficher</b></h3>
+   					</div>
+		        </div>
+		        
+				 <!-- Entities Loaded -->
+				<md-content layout="row" layout-wrap layout-align="start" x-ng-if="!isListLoading && entities.length" layout-padding>
+				     <div flex="38" x-ng-repeat="entity in entities">
+					     <md-card>
+					       <!-- <img ng-src="rest-api/slide/{{entity.id}}/fetch-picture" class="md-card-image" alt="Slide {{ entity.id }}" /> -->
+					       <img ng-src="https://drive.google.com/uc?id={{entity.googleId}}&export=download" class="md-card-image" alt="Slide {{ entity.id }}" />
+					        <md-card-title>
+					          <md-card-title-text>
+					            <span class="md-headline"># {{ entity.id }}</span>
+					            <span class="md-body-2">Ordre d'apparition: {{ entity.displayOrder }}</span>
+					          </md-card-title-text>
+					        </md-card-title>
+					        <md-card-content>
+					          <p>
+					            <label>Affiché</label>
+					            <state-label is-enabled="entity.displayed" />
+					          </p>
+					        </md-card-content>
+					       <md-card-actions layout="row" layout-align="end center">
+					         <md-button class="md-icon-button" aria-label="Move Up" x-ng-disabled="entity.displayOrder == 1 || !entity.displayed" x-ng-click="moveEntity( entity.id, true)">
+					           <i class="fa fa-arrow-circle-up"></i>
+					          	<md-tooltip>
+				    				Monter
+					          	</md-tooltip>
+					         </md-button>
+					         <md-button class="md-icon-button" aria-label="Move Down" x-ng-disabled="entity.displayeOrder == maxDispOrder || !entity.displayed" x-ng-click="moveEntity( entity.id, false)">
+					           <i class="fa fa-arrow-circle-down"></i>
+					          	<md-tooltip>
+				    				Descendre
+					          	</md-tooltip>
+					         </md-button>
+					         <md-button class="md-icon-button" aria-label="Hide" x-ng-click="changeDisplayed( entity.id)">
+					           <i class="fa fa-check-square" x-ng-if="!entity.displayed"></i>
+					           <i class="fa fa-square-o" x-ng-if="entity.displayed"></i>
+					          	<md-tooltip x-ng-if="entity.displayed">
+				    				Cacher
+					          	</md-tooltip>
+					          	<md-tooltip x-ng-if="!entity.displayed">
+				    				Afficher
+					          	</md-tooltip>
+					         </md-button>
+					         <md-button class="md-icon-button" aria-label="Hide" x-ng-click="deleteEntity( entity.id)">
+					           <i class="fa fa-trash"></i>
+					          	<md-tooltip x-ng-if="!entity.displayed">
+				    				Supprimer
+					          	</md-tooltip>
+					         </md-button>
+					       </md-card-actions>
+					     </md-card>
+				     </div>
+				</md-content>
+				
+				
+				<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+					<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+							num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+							total-items="pagination.itemsNumber" x-ng-change="changePage()"
+							previous-text="Précédent" next-text="Suivant">
+					</pagination>
+				</div>
+				
+			</div>
+			
+			<!-- List -->
+			<div x-ba-panel x-ba-panel-title="Slides d'accueil cachées">
+				<div layout="column" layout-align="space-around center" x-ng-show="isListLoading">
+					<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+	       		</div>
+				
+			    <div layout="column" layout-align="center center" x-ng-if="!isListLoading && !undisplayedEntities.length">
+   					<div flex="auto">
+   						<h3 class="md-title text-success"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucune slide à afficher</b></h3>
+   					</div>
+		        </div>
+		        
+				 <!-- Entities Loaded -->
+				<md-content layout="row" layout-wrap layout-align="start" x-ng-if="!isListLoading && undisplayedEntities.length" layout-padding>
+				     <div flex="38" x-ng-repeat="entity in undisplayedEntities">
+					     <md-card>
+					       <!-- <img ng-src="rest-api/slide/{{entity.id}}/fetch-picture" class="md-card-image" alt="Slide {{ entity.id }}" /> -->
+					       <img ng-src="https://drive.google.com/uc?id={{entity.googleId}}&export=download" class="md-card-image" alt="Slide {{ entity.id }}" />
+					        <md-card-title>
+					          <md-card-title-text>
+					            <span class="md-headline"># {{ entity.id }}</span>
+					            <span class="md-body-2">Ordre d'apparition: {{ entity.displayOrder }}</span>
+					          </md-card-title-text>
+					        </md-card-title>
+					        <md-card-content>
+					          <p>
+					            <label>Affiché</label>
+					            <state-label is-enabled="entity.displayed" />
+					            {{ entity.displayOrder }}
+					            {{ maxDispOrder }}
+					          </p>
+					        </md-card-content>
+					       <md-card-actions layout="row" layout-align="end center">
+					         <md-button class="md-icon-button" aria-label="Move Up" x-ng-disabled="entity.displayOrder == 1 || !entity.displayed" x-ng-click="moveEntity( entity.id, true)">
+					           <i class="fa fa-arrow-circle-up"></i>
+					          	<md-tooltip>
+				    				Monter
+					          	</md-tooltip>
+					         </md-button>
+					         <md-button class="md-icon-button" aria-label="Move Down" x-ng-disabled="entity.displayeOrder == maxDispOrder || !entity.displayed" x-ng-click="moveEntity( entity.id, false)">
+					           <i class="fa fa-arrow-circle-down"></i>
+					          	<md-tooltip>
+				    				Descendre
+					          	</md-tooltip>
+					         </md-button>
+					         <md-button class="md-icon-button" aria-label="Hide" x-ng-click="changeDisplayed( entity.id)">
+					           <i class="fa fa-check-square" x-ng-if="!entity.displayed"></i>
+					           <i class="fa fa-square-o" x-ng-if="entity.displayed"></i>
+					          	<md-tooltip x-ng-if="entity.displayed">
+				    				Cacher
+					          	</md-tooltip>
+					          	<md-tooltip x-ng-if="!entity.displayed">
+				    				Afficher
+					          	</md-tooltip>
+					         </md-button>
+					         <md-button class="md-icon-button" aria-label="Hide" x-ng-click="deleteEntity( entity.id)">
+					           <i class="fa fa-trash"></i>
+					          	<md-tooltip x-ng-if="!entity.displayed">
+				    				Supprimer
+					          	</md-tooltip>
+					         </md-button>
+					       </md-card-actions>
+					     </md-card>
+				     </div>
+				</md-content>
+			</div>
+		</div>
+	</div>
+</div>

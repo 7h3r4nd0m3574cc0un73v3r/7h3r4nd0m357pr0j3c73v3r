@@ -1,0 +1,17 @@
+<div class="product-container animated fadeIn">
+	<a x-ui-sref="root.orderedArticle( { id: orderedArticle.id} )">
+		<img x-ng-src="rest/article/fetchDefaultPic/{{ orderedArticle.article.id }}" class="img-responsive product-img" />
+	</a>
+	<div class="product-name" tooltip-placement="bottom" uib-tooltip="{{ orderedArticle.article.name }}">
+		<a x-ui-sref="root.article( { id: orderedArticle.article.id } )">{{ orderedArticle.article.name | limitTo: 23 }} {{ orderedArticle.article.name.length > 23 ? '...' : '' }}</a>
+	</div>
+	<div class="product-rating text-center">
+		<span uib-rating x-ng-model="entity.rating" min="0" max="5" class="text-mainge" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['1', '2', '3', '4', '5']" aria-labelledby="default-rating"></span>
+	</div>
+	<div class="product-name" tooltip-placement="top" uib-tooltip="{{ orderedArticle.article.name }}">
+		<a x-ui-sref="root.orders.show( {id: orderedArticle.articleOrder.id })">Commande #{{ orderedArticle.articleOrder.id }} ( {{ orderedArticle.articleOrder.regDate | date:'medium' }})</a>
+	</div>
+	<div style="margin: 2px 2px 6px 2px; padding: 0px 4px 0px 4px;">
+		<a x-ng-click="rateOrderedArticle( orderedArticle.id, orderedArticle.rating)" class="btn p-btn-default btn-sm center-block">Noter&nbsp;<i class="fa fa-check"></i></a>
+	</div>
+</div>

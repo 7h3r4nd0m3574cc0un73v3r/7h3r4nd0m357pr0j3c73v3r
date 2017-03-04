@@ -1,0 +1,29 @@
+<div class="product-container animated fadeIn">
+	<a x-ui-sref="root.article( { id: article.id} )">
+		<img x-ng-src="https://drive.google.com/uc?id={{ article.pictures[0].googleId }}&amp;export=download" class="img-responsive product-img" />
+		<!-- <img x-ng-src="rest/article/fetchDefaultPic/{{ article.id }}" class="img-responsive product-img" /> -->
+		<!-- <img x-ng-src="https://drive.google.com/uc?id={{ article.pictures[0].googleId }}&export=download" class="img-responsive product-img" /> -->
+	</a>
+	<div class="product-price">
+		<small x-ng-if="article.isDiscounted" style="text-decoration: line-through;">{{ article.price | number }}</small>
+		<span class="price-value text-mainge" x-ng-show="article.isDiscounted">{{ article.discountPrice | number }}</span>
+		<span class="price-value text-mainge" x-ng-show="!article.isDiscounted">{{ article.price | number }}</span>
+		<span class="text-mainge">F CFA</span>
+	</div>
+	<div class="product-sales" tooltip-placement="left" uib-tooltip="{{ article.saleNumber }} vente{{ article.saleNumber > 1 ? 's' : ''}}">
+		{{ article.saleNumber }} <i class="fa fa-shopping-cart"></i>
+	</div>
+	<div class="product-name" tooltip-placement="bottom" uib-tooltip="{{ article.name }}">
+		<a x-ui-sref="root.article( { id: article.id } )">{{ article.name | limitTo: 23 }} {{ article.name.length > 23 ? '...' : '' }}</a>
+	</div>
+	<div class="product-rating text-center">
+		<span uib-rating x-ng-model="article.rating" max="5" class="text-mainge disable-outline" read-only=true on-hover="hoveringOver(value)" 
+			  on-leave="overStar = null" titles="['Un','Deux','Trois', 'Quatre', 'Cinq']" aria-labelledby="default-rating"></span>
+	</div>
+	<div class="product-eshop">
+		<a x-ui-sref="root.e-shop({ id: article.eShop.id })" tooltip-placement="top-left" uib-tooltip="{{ article.eShop.name }}">{{ article.eShop.name }}</a>
+	</div>
+	<span class="product-eshop-city" tooltip-placement="top-right" uib-tooltip="{{ article.eShop.city }}">
+		{{ article.eShop.city | limitTo: 5 }} {{ article.eShop.city.length > 5 ? '...' : '' }}
+	</span>
+</div>

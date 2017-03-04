@@ -1,0 +1,195 @@
+<div x-ui-view>
+	<div class="row">
+		<div class="col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-lg-9 col-md-9 col-sm-9 col-xs-12">
+			<div class="row">
+				<div class="row">
+				
+					<div class="container-fluid">
+						<div class="default-panel animated fadeIn">
+						
+							<div class="default-panel-header">
+								<h4 class="title text-mainge"><i class="fa fa-truck"></i>&nbsp;Commander</h4> <small>Passez votre commande</small>
+							</div>
+				        	
+							<div class="default-panel-content">
+								
+								<div layout="column" layout-align="center center" x-ng-if="isLoading">
+									<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+					        	</div>
+					        	
+					        	<div layout="column" layout-align="center center" x-ng-if="!isLoading && !grouped.length">
+									<p>
+										Erreur détectée. Veuillez suivre le processus d'achat correctement.
+									</p>
+					        	</div>
+				        	
+								<div class="row" x-ng-if="!isLoading && grouped.length">
+									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" x-ng-repeat="articleOrder in grouped">
+										<h4><b>Résumé Commande #{{ articleOrder.id }}</b></h4>
+										<p>
+											<label>Boutique concernée</label>
+											{{ articleOrder.eShop.name }}
+										</p>
+										<div class="table-responsive cart-info">
+											<table class="table table-condensed">
+												<tr class="cart-menu">
+													<td class="image">Article</td>
+													<td class="description"></td>
+													<td class="price text-right">Prix</td>
+													<td class="quantity text-right">Quantité</td>
+													<td class="total text-right">Total</td>
+												</tr>
+												<tbody>
+													<tr x-ng-repeat="entity in articleOrder.orderedArticles">
+														<td>
+															<a x-ui-sref="root.article({ id: entity.article.id})">
+																<img x-ng-src="https://drive.google.com/uc?id={{ entity.article.defaultPicture.googleId }}&export=download"
+																	 class="img-responsive img-thumbnail center-block"
+																	 style="width: 100px; height: 100px;" />
+															</a>
+														</td>
+														<td>
+															<h4 class="text-left">
+																<a x-ui-sref="root.article({ id: entity.article.id})" class="default-lnk">
+																	<b>{{ entity.article.name }}</b>
+																</a>
+															</h4>
+															<div layout="row" layout-align="start" layout-wrap>
+																<span flex="shrink" x-ng-repeat="arfeat in entity.orderedArticleFeatures">
+																	{{ arfeat.feature.label }}
+																	<span class="badge label-default" style="margin-top: -2px;" x-ng-repeat="featVal in arfeat.featureValues">
+																		 {{ featVal.value }}
+																	</span>
+																</span>
+															</div>
+															<div layout="row" layout-align="start">
+																<p>
+																	<label>Livraison:</label>
+																	<span x-ng-if="entity.article.deliveryMode == 'FREE'" class="badge bg-mainge">Gratuite</span>
+																	<span x-ng-if="entity.article.deliveryMode == 'CHARGED'">
+																		<small><b class="text-mainge">{{ (entity.article.deliveryFee * entity.quantity) | number }} F CFA</b> ( {{ entity.article.deliveryFee | number }} F CFA / unité)</small>
+																	</span>
+																</p>
+															</div>
+														</td>
+														<td class="text-right"><span class="article-price"><b>{{ entity.article.price | number }}</b></span> <small>F CFA</small></td>
+														<td class="text-right">
+															{{ entity.quantity | number }}
+														</td>
+														<td class="text-right">
+															<h4><b><span class="article-price text-right"> {{ (entity.article.price * entity.quantity) | number }}</span><small> F CFA</small></b></h4>
+														</td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<tr style="border-top: 2px solid #ff4810">
+														<td colspan="4" class="text-right"><h4><b>Total Commande</b></h4></td>
+														<td class="text-right"><h4 class="article-price"><b>{{ articleOrder.total | number }}</b> <small>F CFA</small></h4></td>
+													</tr>
+												</tfoot>
+											</table>
+										</div>
+										</div>
+										
+										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<h4><b>Livraison</b></h4>
+											
+											<div layout="row" layout-margin>
+									          <md-input-container class="md-block" flex>
+									            <label>Adresse de livraison par défaut ?</label>
+									            <md-switch class="md-primary" ng-model="form.useDefaultDeliveryAddress" aria-label="Adresse par défaut" ng-init="form.useDefaultDeliveryAddress = true">
+												    {{ form.useDefaultDeliveryAddress ? 'Oui' : 'Non' }}
+												</md-switch>
+									          </md-input-container>
+											</div>
+											
+											<div layout="row" layout-margin x-ng-if="form.useDefaultDeliveryAddress">
+									          <md-input-container class="md-block" flex>
+									            <label>Adresse de livrasion</label>
+									            <input ng-model="form.deliveryAddress" type="text" ng-value="loggedUser.userInfo.fullAddress" readonly>
+									          </md-input-container>
+											</div>
+											
+											<div layout="row" layout-margin x-ng-if="!form.useDefaultDeliveryAddress">
+									          <md-input-container class="md-block" flex>
+									            <label>Adresse de livrasion</label>
+									            <input ng-model="form.deliveryAddress" type="text" required>
+									          </md-input-container>
+											</div>
+										
+											<h4><b>Paiement</b></h4>
+										
+											<div layout="row" layout-align="space-between" layout-margin>
+												<span flex>
+													<label>Montant total</label>
+												</span>
+												<span class="text-mainge" flex><b>{{ total | number}}</b>  F CFA</span>
+											</div>
+										
+											<form>
+												<div layout="row" layout-margin>
+											        <md-input-container class="md-block" flex>
+											          <label>Sélectionnez un compte pour le paiement</label>
+											            <md-select ng-model="form.eAccount" required>
+											              <md-option x-ng-repeat="eAccount in loggedUser.eAccounts" x-ng-value="eAccount">
+											                {{ eAccount.account }}
+											              </md-option>
+											            </md-select>
+											        </md-input-container>
+												</div>
+												
+												<div layout="column" layout-align="start center" x-ng-if="form.eAccount != null" class="animated fadeIn" layout-margin>
+													<p flex="100">
+														<h4 class="text-center"><b>Veuillez adresser votre paiement au compte suivant, puis entrer la référence du paiement dans le champ approprié</b></h4>
+													<p>
+													
+													<div flex="100">
+														<md-card>
+													        <md-card-title>
+													          <md-card-title-media>
+													            <div class="md-media-sm card-media">
+													            	<img ng-src="rest-api/e-money-provider/{{ selectedAdminEAccount.emp.id }}/fetch-logo" class="img-responsive" style="max-height: 100px; max-width: 100px;" />
+													            </div>
+													          </md-card-title-media>
+													          <md-card-title-text>
+													            <span class="md-headline">{{ selectedAdminEAccount.emp.name }}</span>
+													            <span class="md-subhead">Compte du virement</span>
+													          </md-card-title-text>
+													        </md-card-title>
+													        <md-card-content>
+													        	<p class="text-left">
+													        		<label>Numéro</label>
+													        		<span class="text-mainge" style="font-weight: bold; font-size: 120%">
+													        			{{ selectedAdminEAccount.account }}
+													        		</span>
+													        	</p>
+													        </md-card-content>
+												      </md-card>
+												    </div>
+												</div>
+												
+												<div layout="row" layout-margin x-ng-if="form.eAccount != null" class="animated fadeIn">
+										          <md-input-container class="md-block" flex>
+										            <label>Référence du paiement</label>
+										            <input ng-model="form.paymentRef" type="text" numbers-only required>
+										          </md-input-container>
+												</div>
+												
+												<div layout="row" layout-align="end" layout-margin>
+													<md-button class="md-raised md-primary" x-ng-click="placeOrder()" x-ng-disabled="form.paymentRef == null || form.eAccount == null || form.paymentRef.length < 10 || total <= 0">
+														Commander <i class="fa fa-truck"></i>
+													</md-button>
+												</div>
+											</form>
+										</div>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

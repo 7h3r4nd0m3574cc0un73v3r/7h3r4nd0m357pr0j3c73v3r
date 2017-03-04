@@ -1,0 +1,60 @@
+<div x-ba-panel x-ba-panel-title="Modifier Modèle d'abonnement" x-ba-panel-class="with-scroll">
+	<form>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Titre</span>
+				<input type="text" x-ng-model="entity.title" class="form-control">
+			</div>
+		</div>
+		<div class="alert bg-danger" x-ng-show="formErrors.conflict">
+			<strong><i class="fa fa-ban"></i> Ce modèle d'abonnement existe déjà</strong>
+		</div>
+
+		<div class="input-group">
+			<span class="input-group-addon addon-left partial-width">Statut de boutique</span>
+			<select class="form-control" x-ng-model="entity.shopStatus">
+				<option x-ng-repeat="shopStatus in shopStatuses" value="{{shopStatus}}">{{ shopStatus.title }}</option>
+			</select>
+		</div>
+		
+		<div class="input-group">
+			<span class="input-group-addon addon-left partial-width">Prix</span>
+			<input type="number" x-ng-model="entity.price" class="form-control">
+		</div>
+		
+		<div class="input-group">
+			<span class="input-group-addon addon-left partial-width">Unité de durée</span>
+			<select class="form-control" x-ng-model="entity.durationType">
+				<option value="DAY">Jour</option>
+				<option value="WEEK">Semaine</option>
+				<option value="MONTH">Mois</option>
+				<option value="YEAR">Année</option>
+			</select>
+		</div>
+		
+		<div class="input-group">
+			<span class="input-group-addon addon-left partial-width">Durée</span>
+			<input type="number" x-ng-model="entity.duration" class="form-control">
+		</div>
+		
+		<div class="input-group">
+			<span class="input-group-addon addon-left partial-width">Activer</span>
+			
+			<div class="switches clearfix">
+				<switch color="primary" x-ng-model="entity.isEnabled"></switch>
+			</div>
+		</div>
+
+		<div class="pull-left">
+			<a x-ui-sref="root.subOffers" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span></a>
+		</div>
+		<!-- <div class="pull-right btn-group"> -->
+		<button class="btn btn-primary pull-right" x-ng-click="editEntity()">
+			<span class="hidden-xs">Valider</span>&nbsp;<i class="fa fa-check"></i>
+		</button>
+		<button class="btn btn-warning pull-right" x-ng-click="resetEntity()">
+			<span class="hidden-xs">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+		</button>
+		<!-- </div> -->
+	</form>
+</div>

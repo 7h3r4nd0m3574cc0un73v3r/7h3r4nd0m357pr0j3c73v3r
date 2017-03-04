@@ -1,0 +1,18 @@
+<div class="product-container animated fadeIn" flex="100">
+	<a x-ui-sref="root.article( { id: article.id} )">
+		<!-- <img x-ng-src="rest/article/fetchDefaultPic/{{ article.id }}" class="img-responsive product-img" /> -->
+		<img x-ng-src="https://drive.google.com/uc?id={{ article.pictures[0].googleId }}&export=download" class="img-responsive product-img" />
+	</a>
+	<div class="product-price">
+		<small x-ng-if="article.isDiscounted" style="text-decoration: line-through;">{{ article.price | number }}</small>
+		<span class="price-value text-mainge" x-ng-show="article.isDiscounted">{{ article.discountPrice | number }}</span>
+		<span class="price-value text-mainge" x-ng-show="!article.isDiscounted">{{ article.price | number }}</span>
+		<span class="text-mainge">F CFA</span>
+	</div>
+	<div class="product-sales" tooltip-placement="left" uib-tooltip="{{ article.saleNumber }} vente{{ article.saleNumber > 1 ? 's' : ''}}">
+		{{ article.saleNumber }} <i class="fa fa-shopping-cart"></i>
+	</div>
+	<div class="product-name" tooltip-placement="top" uib-tooltip="{{ article.name }}">
+		<a x-ui-sref="root.article( { id: article.id } )">{{ article.name | limitTo: 23 }} {{ article.name.length > 23 ? '...' : '' }}</a>
+	</div>
+</div>

@@ -1,0 +1,32 @@
+<div x-ba-panel x-ba-panel-title="Détails Fournisseur Monnaie Numérique" x-ba-panel-class="with-scroll">
+	<table class="table table-hover">
+		<tbody>
+			<tr>
+				<td class="header-cell">Id</td>
+				<td>{{ entity.id }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Désignation</td>
+				<td>{{ entity.name }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Logo</td>
+				<td>
+					<img x-ng-show="entity.hasLogo" class="img-thumbnail center-block" style="max-height: 256px; max-width: 256px;" x-ng-src="http://localhost:8080/preta/rest/emoney-provider/fetchlogofile/{{ entity.id}}" />
+				</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Préfixes</td>
+				<td>{{ entity.name }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="pull-left">
+		<a x-ui-sref="root.emps" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span></a>
+	</div>
+
+	<button class="btn btn-warning pull-right" x-ui-sref="root.emps.edit( { id: entity.id})">
+		<span class="hidden-xs">Modifier</span>&nbsp;<i class="fa fa-edit"></i>
+	</button>
+</div>

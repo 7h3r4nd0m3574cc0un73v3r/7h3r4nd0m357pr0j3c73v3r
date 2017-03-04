@@ -1,0 +1,41 @@
+<div class="row" style="margin-top: 16px;">
+	<div class="row">
+		<div class="row">
+			<div class="col-lg-offset-3 col-md-offset-3 col-lg-9 col-md-9 col-sm-12 col-xs-12">
+				<div class="row">
+			        <div class="container-fluid">
+				        <div class="products-container animated fadeInRight">
+							<div class="products-container-header">
+								<h4 class="title text-mainge"><i class="{{ view.icon }}"></i>&nbsp;{{ view.title }}</h4>&nbsp;<small>{{ view.description }}</small>
+							</div>
+							<div class="products-container-content">
+							
+								<div class="loader-container" x-ng-if="isLoading">
+									<div class="loading loading--double"></div>&nbsp;<span class="default-text text-mainge">Chargement en cours ...</span>
+								</div>
+								
+								<div class="products-flex-container" x-ng-if="!isLoading && entities.length">
+									<default-article-widget article="entity" x-ng-repeat="entity in entities" />
+								</div>
+								
+							    <div layout="column" layout-align="center center" x-ng-if="!isLoading && !entities.length" style="min-height: 200px;">
+				   					<div flex="auto">
+				   						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun article à afficher</b></h3>
+				   					</div>
+						        </div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+						<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+								num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+								total-items="pagination.itemsNumber" x-ng-change="changePage()"
+								previous-text="Précédent" next-text="Suivant">
+						</pagination>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

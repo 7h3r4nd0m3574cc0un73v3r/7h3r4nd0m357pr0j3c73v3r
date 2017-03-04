@@ -1,0 +1,56 @@
+<ul class="al-msg-center clearfix">
+	<li uib-dropdown>
+		<a uib-dropdown-toggle> <i class="fa fa-bell"></i><span>{{ unreadNotificationsCount }}</span>
+			<span class="notification-ring"></span>
+		</a>
+	
+		<div uib-dropdown-menu class="top-dropdown-menu">
+			
+			<div layout="column" layout-align="space-around center" x-ng-show="areNotificationsLoading">
+				<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+       		</div>
+       		
+		    <div layout="column" layout-align="center center" x-ng-if="!areNotificationsLoading && !notifications.length">
+				<div flex="auto">
+					<h5 class="md-title text-success">Aucune notification à afficher</h5>
+				</div>
+	        </div>
+		        
+       		<div x-ng-if="!areNotificationsLoading && notifications.length">
+				<i class="dropdown-arr"></i>
+				<div class="header clearfix">
+					<strong>Notifications</strong>
+				</div>
+				<div class="msg-list">
+					<div layout="column" layout-align="start" style="border-bottom: 1px solid #ddd; margin: 3px; width: 100%;" layout-padding ng-repeat="entity in notifications">
+						<span layout="row" layout-align="start center" flex="100" x-ng-switch on="entity.nType">
+							<span x-ng-switch-when="APPROVAL_READY" x-ng-switch on="entity.entType" flex>
+								<span x-ng-switch-when="PROFILE">
+									<a x-ui-sref="root.buyers.show({ id: entity.entAbsId})">Le profil de l'utilisateur #{{ entity.entAbsId }} est prêt pour validation.</a>
+								</span>
+								<span x-ng-switch-when="ESHOP">
+									<a x-ui-sref="root.e-shops.show({ id: entity.entAbsId})">La boutique #{{ entity.entAbsId }} est prête pour validation.</a>
+								</span>
+							</span>
+							<span x-ng-switch-when="CONFIRMATION_READY" x-ng-switch on="entity.entType" flex>
+								<span x-ng-switch-when="ORDER">
+									<a x-ui-sref="root.orders.show({ id: entity.entAbsId})">La commande #{{ entity.entRelId }} est prête pour validation.</a>
+								</span>
+							</span>
+						</span>
+						<!-- Date -->
+						<span layout="row" layout-align="end center" class="text-right" flex>
+							<span flex>
+								<small>{{ entity.regDate | date:'short' }}</small>
+							</span>
+						</span>
+					</div>
+				</div>
+				<!-- <div layout="column" layout-align="center center">
+					<a flex x-ui-sref="root.orders-paid"><b>Afficher tout</b></a>
+				</div> -->
+       		</div>
+       		
+		</div>
+	</li>
+</ul>

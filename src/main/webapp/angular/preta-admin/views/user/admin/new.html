@@ -1,0 +1,82 @@
+<div x-ba-panel x-ba-panel-title="Nouvel Administrateur" x-ba-panel-class="with-scroll">
+	<form>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Nom d'utilisateur</span>
+				<input type="text" x-ng-model="form.username" class="form-control" />
+			</div>
+		</div>
+		<div class="alert bg-danger" x-ng-show="formErrors.conflict">
+			<strong><i class="fa fa-ban"></i> Ce nom d'utilisateur existe déjà</strong>
+		</div>
+
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Mot de passe</span>
+				<input type="password" x-ng-model="form.password" class="form-control" />
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Confirmer mot de passe</span>
+				<input type="password" x-ng-model="form.confirmPassword" class="form-control" />
+			</div>
+		</div>
+		
+		<div class="alert bg-danger" x-ng-show="formErrors.passwordMismatch">
+			<strong><i class="fa fa-ban"></i> Les mots de passes ne correspondent pas</strong>
+		</div>
+		
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Adresse mail</span>
+				<input type="email" x-ng-model="form.userInfo.email" class="form-control" />
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Téléphone</span>
+				<input type="tel" x-ng-model="form.mobile" class="form-control" />
+			</div>
+		</div>
+		
+		<hr />
+		
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Prénom</span>
+				<input type="text" x-ng-model="form.userInfo.firstName" class="form-control" />
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Autres prénoms</span>
+				<input type="text" x-ng-model="form.userInfo.middleName" class="form-control" />
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Nom</span>
+				<input type="text" x-ng-model="form.userInfo.lastName" class="form-control" />
+			</div>
+		</div>
+		
+		<div class="pull-left">
+			<a x-ui-sref="root.admins" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i>
+			<span class="hidden-xs">&nbsp;Retour à la liste</span></a>
+		</div>
+
+		<!-- <div class="pull-right btn-group"> -->
+		<button class="btn btn-primary pull-right" x-ng-click="addEntity()">
+			<span class="hidden-xs">Valider</span>&nbsp;<i class="fa fa-check"></i>
+		</button>
+		<button type="reset" class="btn btn-warning pull-right" x-ng-click="resetEntity()">
+			<span class="hidden-xs">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+		</button>
+		<!-- </div> -->
+	</form>
+</div>

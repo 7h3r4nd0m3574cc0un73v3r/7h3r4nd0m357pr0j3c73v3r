@@ -1,0 +1,194 @@
+<div x-ba-panel x-ba-panel-title="Ajouter un article">
+	<div layout="column" layout-align="center">
+		
+	    <!-- Loading Screen -->
+	    <div layout="column" layout-align="center center" x-ng-show="isEntityLoading">
+			<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+        </div>
+        
+		<form class="form-horizontal" x-ng-if="!isEntityLoading" flex>
+			<md-content layout-padding style="background-color: inherit;">
+				 <div layout="row">
+		          <md-input-container class="md-block" flex>
+		            <label>Nom</label>
+		            <input ng-model="form.name" required>
+		          </md-input-container>
+				</div>
+				 <div layout="row">
+		          <md-input-container class="md-block" flex>
+		            <label>Description</label>
+		            <textarea ng-model="form.description" md-maxlength="150" rows="5" md-select-on-focus></textarea>
+		          </md-input-container>
+				</div>
+				 <div layout="row">
+		          <md-input-container class="md-block" flex>
+		            <label>Mots clés</label>
+					 <md-chips flex required
+					        ng-model="form.keywords"
+					        md-removable="true"
+					        placeholder="Ajouter un mot clé ..."
+					        delete-button-label="Supprimer le mot clé"
+					        delete-hint="Supprimer mot clé"
+					        secondary-placeholder="Ajouter mot clé" />
+				     </md-chips>
+		          </md-input-container>
+				</div>
+				 <div layout="row">
+		          <md-input-container class="md-block" flex>
+		            <label>Prix</label>
+		            <input ng-model="form.price" required numbers-only min="0" class="text-right">
+		          </md-input-container>
+				</div>
+				 <div layout="row">
+		          <md-input-container class="md-block" flex>
+		            <label flex>Mettre en promotion ?</label>
+		            <md-switch class="md-primary" ng-model="form.isDiscounted" aria-label="Discounted">
+					    {{ form.isDiscounted ? 'Oui' : 'Non' }}
+					</md-switch>
+		          </md-input-container>
+		         </div>
+		         <div layout="row">
+		          <md-input-container class="md-block" flex x-ng-if="form.isDiscounted">
+		            <label>Prix réduit</label>
+		            <input ng-model="form.discountPrice" required numbers-only min="0" class="text-right">
+		          </md-input-container>
+				</div>
+				 <div layout="row" layout-wrap>
+		          <md-input-container flex-xs="100" flex-gt-xs="30">
+		            <label flex>Mode de livraison</label>
+		            <md-select x-ng-model="form.deliveryMode" required>
+		            	<md-option x-ng-value="'FREE'">
+		            		Gratuit
+		            	</md-option>
+		            	<md-option x-ng-value="'CHARGED'">
+		            		Payant
+		            	</md-option>
+		            </md-select>
+		          </md-input-container>
+		          <md-input-container flex-xs="100" flex-gt-xs="70" x-ng-if="form.deliveryMode == 'CHARGED'">
+		            <label>Frais de livraison</label>
+		            <input ng-model="form.deliveryFee" required numbers-only min="1" class="text-right">
+		          </md-input-container>
+				</div>
+				 <div layout="row">
+		          <md-input-container class="md-block" flex>
+		            <label>Conditions de livraison</label>
+		            <textarea ng-model="form.deliveryTerms" md-maxlength="200" rows="5" md-select-on-focus></textarea>
+		          </md-input-container>
+				</div>
+				 <div layout="row" layout-wrap>
+		          <md-input-container flex-gt-xs="70" flex-xs="100">
+		            <label>Stock</label>
+		            <input ng-model="form.stock" required numbers-only min="0" class="text-right">
+		          </md-input-container>
+		          <md-input-container flex-gt-xs="30" flex-xs="100">
+		            <label>Seuil d'alerte</label>
+		            <input ng-model="form.threshold" required numbers-only min="0" class="text-right">
+		          </md-input-container>
+				</div>
+				 <div layout="row">
+		          <md-input-container flex>
+		            <label>Afficher dans la boutique ?</label>
+		            <md-switch class="md-primary" ng-model="form.isDisplayed" aria-label="Discounted">
+					    {{ form.isDisplayed ? 'Oui' : 'Non' }}
+					</md-switch>
+		          </md-input-container>
+				</div>
+				
+				<div layout="row" layout-align="start center" layout-wrap
+					 x-ng-repeat="articleFeature in dummy.articleFeatures track by $index">
+					 <label flex-gt-xs="17" flex-xs="100">{{ articleFeature.feature.label }}</label>
+					 <md-chips flex-gt-xs flex-xs="100" required
+					        ng-model="articleFeature.unparsedValues"
+					        readonly="ctrl.readonly"
+					        md-removable="true"
+					        placeholder="Ajouter une valeur"
+					        delete-button-label="Supprimer caractéristique"
+					        delete-hint="Cliquez sur Supprimer pour enlever cette valeur"
+					        secondary-placeholder="Ajouter">
+				     </md-chips>
+				     <md-button class="md-warn md-raised" flex-gt-xs="1" flex-xs="100" x-ng-click="removeArticleFeature( $index)" aria-label="Supprimer Caractéristique">
+				     	<i class="fa fa-remove"></i>
+				     </md-button>
+				</div>
+				
+				<div layout="row" layout-align="start center">
+		          <md-input-container flex>
+		            <label>Nom de la caractéristique</label flex>
+		            <input ng-model="dummy.featureLabel" flex>
+			        <md-button class="md-raised" x-ng-click="addArticleFeature()" flex>
+			            <i class="fa fa-plus"></i>&nbsp;Ajouter
+			        </md-button>
+		          </md-input-container>
+				</div>
+			     
+			     <div layout="row" x-ng-if="categories.length">
+			     	<label>Catégories</label>
+					<multi-select-tree data-input-model="form.selectedCategories"
+									   multi-select="true"
+	                        	       data-default-label="Sélectionner une à plusieurs catégories ..." flex />
+			     </div>
+				
+				<h3>Images</h3>
+				
+				<div layout="row" layout-align="space-around center" layout-wrap
+					 layout-xs="column" layout-align-gt-xs="center center">
+					 
+					<div class="userpic" flex="nogrow">
+						<div class="userpic-wrapper">
+							<img ngf-thumbnail="file0 || 'angular/common/img/default-article.jpg'" ng-src="angular/common/img/default-article.jpg" x-ng-click="selectPicture(0)">
+						</div>
+						<a class="change-userpic" ng-click="selectPicture(0)">Ajouter une image</a>
+						<input type="file" ng-show="false" id="uploadFile0" x-ngf-select x-ng-model="file0" name="file0"    
+			             		accept="image/*" x-ngf-max-size="2MB">
+					</div>
+			
+					<div class="userpic" flex="nogrow">
+						<div class="userpic-wrapper">
+							<img ngf-thumbnail=" file1 || 'angular/common/img/default-article.jpg'" ng-src="angular/common/img/default-article.jpg" x-ng-click="selectPicture(1)">
+						</div>
+						<a class="change-userpic" ng-click="selectPicture(1)">Ajouter une image</a>
+						<input type="file" ng-show="false" id="uploadFile1" x-ngf-select x-ng-model="file1" name="file1"    
+			             		accept="image/*" x-ngf-max-size="2MB">
+					</div>
+					
+					<div class="userpic" flex="nogrow">
+						<div class="userpic-wrapper">
+							<img ngf-thumbnail="file2 || 'angular/common/img/default-article.jpg'" ng-src="angular/common/img/default-article.jpg" x-ng-click="selectPicture(2)">
+						</div>
+						<a class="change-userpic" ng-click="selectPicture(2)">Ajouter une image</a>
+						<input type="file" ng-show="false" id="uploadFile2" x-ngf-select x-ng-model="file2" name="file2"    
+			             		accept="image/*" x-ngf-max-size="2MB">
+					</div>
+					
+					<div class="userpic" flex="nogrow">
+						<div class="userpic-wrapper">
+							<img ngf-thumbnail="file3 || 'angular/common/img/default-article.jpg'" ng-src="angular/common/img/default-article.jpg" x-ng-click="selectPicture(3)">
+						</div>
+						<a class="change-userpic" ng-click="selectPicture(3)">Ajouter une image</a>
+						<input type="file" ng-show="false" id="uploadFile3" x-ngf-select x-ng-model="file3" name="file3"    
+			             		accept="image/*" x-ngf-max-size="2MB">
+					</div>
+				</div>
+				</md-content>
+				
+				<br /><br />
+				<div class="pull-left">
+					<md-button class="md-raised" x-ui-sref="root.e-shops.show.articles" >
+						<i class="fa fa-arrow-circle-left"></i> <span class="hidden-xs">&nbsp;Retour à la liste</span>
+					</md-button>
+				</div>
+		
+				<!-- <div class="pull-right btn-group"> -->
+				<div class="pull-right">
+					<md-button class="md-raised md-accent"  x-ng-click="resetEntity()">
+						<span class="hidden-xs">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+					</md-button>
+					<md-button class="md-raised md-primary" x-ng-click="addEntity( file0, file1, file2, file3)">
+						<span class="hidden-xs">Valider</span>&nbsp;<i class="fa fa-check"></i>
+					</md-button>
+				</div>
+				<!-- </div> -->
+		</form>
+	</div>
+</div>

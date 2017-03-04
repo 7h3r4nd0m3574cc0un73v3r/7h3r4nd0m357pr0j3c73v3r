@@ -1,0 +1,47 @@
+<div x-ui-view>
+	<div class="row">
+		<div class="col-lg-offset-3 col-md-offset-3 col-lg-9 col-md-9 col-sm-12 col-xs-12">
+			<div class="row">
+				<div class="row">
+				
+					<div class="container-fluid">
+						<div class="default-panel animated fadeIn">
+						
+							<div class="default-panel-header">
+								<h4 class="title text-mainge"><i class="fa fa-truck"></i>&nbsp;{{ view.title }}</h4>&nbsp;<small>{{ view.description }}</small>
+							</div>
+							
+							<div class="default-panel-content">
+								<div layout="column" layout-align="center center" x-ng-if="isListLoading" layout-margin>
+									<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+					        	</div>
+								
+								<div class="order-panel-content" x-ng-if="!isListLoading && orders.length">
+									<order-widget order="entity" x-ng-repeat="entity in orders" />
+								</div>
+								
+							    <div layout="column" layout-align="center center" x-ng-if="!isListLoading && !orders.length" layout-margin>
+				  					<div flex="auto">
+				  						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Pas de commande à afficher</b></h3>
+				  					</div>
+						        </div>
+							</div>
+							
+							<div class="default-panel-footer" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+								<div class="text-center">
+									<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+											num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+											total-items="pagination.itemsNumber" x-ng-change="changePage()"
+											previous-text="Précédent" next-text="Suivant">
+									</pagination>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

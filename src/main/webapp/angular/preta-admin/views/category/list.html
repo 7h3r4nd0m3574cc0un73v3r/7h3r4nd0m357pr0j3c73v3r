@@ -1,0 +1,49 @@
+<div>
+	<div class="row">
+		<div layout="row" layout-align="start">
+			<div ba-panel ba-panel-title="Catégories d'articles" ba-panel-class="tree-panel" flex>
+					<div class="col-lg-6 col-md-6 col-sm-4 col-xs-12">
+						<form>
+							<label>Nouvelle catégorie</label>
+							<div layout="row">
+								<md-input-container class="md-block" flex>
+						            <label>Titre</label>						            
+						            <input ng-model="form.label" type="text" required name="label" />
+								    <div ng-messages="form.label.$error" multiple md-auto-hide="false">
+								      <div ng-message="required">
+							            Champ requis.
+							          </div>
+								      <div x-ng-if="formErrors.label.conflict">
+								      	Ce titre existe déjà.
+								      </div>
+									</div>
+					        	</md-input-container>
+					        </div>
+							<div layout="row">
+								<md-input-container class="md-block" flex>
+						            <label>Description</label>
+						            <input ng-model="form.description" type="text" required name="description" />
+								    <div ng-messages="form.description.$error" multiple md-auto-hide="false">
+								      <div ng-message="required">
+							            Champ requis.
+							          </div>
+									</div>
+					        	</md-input-container>
+					        </div>
+						</form>
+						
+						<div class="control-side text-center">
+							<div>
+								<button class="btn btn-primary" ng-click="addEntity()">Ajouter</button>
+								<button class="btn btn-danger" ng-click="removeEntity()">Supprimer</button>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-lg-6 col-md-6 col-sm-8 col-xs-12">
+						<div js-tree="basicConfig" x-ng-model="entities" tree="basicTree" tree-events="changed:changedCB"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

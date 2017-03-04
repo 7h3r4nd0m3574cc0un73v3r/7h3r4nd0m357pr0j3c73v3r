@@ -1,0 +1,73 @@
+<div x-ba-panel x-ba-panel-title="Abonnement #{{ entity.relId }} - Boutique {{ activeEShop.name }}" x-ba-panel-class="with-scroll">
+	
+	<div layout="row" layout-sm="column" layout-align="space-around center" x-ng-if="isEntityLoading">
+		<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+    </div>
+
+	<table class="table table-hover" x-ng-if="!isEntityLoading && entity != null">
+		<tbody>
+			<tr>
+				<td class="header-cell">Modèle d'abonnement</td>
+				<td>{{ entity.subOffer.title }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Boutique concernée</td>
+				<td>{{ activeEShop.name }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Statut conféré</td>
+				<td>{{ entity.subOffer.shopStatus.title }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Prix</td>
+				<td>{{ entity.subOffer.price }} F CFA</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Date début</td>
+				<td>{{ entity.startDate | date: 'medium' }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Durée</td>
+				<td><duration-label x-duration="entity.subOffer.duration" x-duration-type="entity.subOffer.durationType" /></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Date fin</td>
+				<td>{{ entity.endDate | date: 'medium' }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Etat</td>
+				<td><generic-status x-status="entity.subStatus" /></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<div x-ng-if="payments.length">
+	<br />
+	<h4>Paiements</h4>
+		<table class="table table-responsive table-hovered">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th class="text-center">Montant</th>
+					<th class="text-center">Référence</th>
+					<th class="text-center">Statut</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr x-ng-repeat="payment in entity.payments">
+					<td class="text-right">{{ payment.id}}</td>
+					<td class="text-right">{{ payment.amount}} F CFA</td>
+					<td class="text-center">{{ payment.paymentRef}}</td>
+					<td class="text-center"><payment-status x-status="payment.isValid" /></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<br />
+	
+	<div class="pull-left">
+		<md-button x-ui-sref="root.e-shops.show.shop-subs" class="md-raised">
+			<i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour<span class="hidden-xs"> à la liste</span></span>
+		</md-button>
+	</div>
+</div>

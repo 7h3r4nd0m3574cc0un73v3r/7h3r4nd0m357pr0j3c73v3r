@@ -1,0 +1,39 @@
+<div x-ba-panel x-ba-panel-title="Modifier Fournisseur EMoney" x-ba-panel-class="with-scroll">
+	<form>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Désignation</span>
+				<input type="text" x-ng-model="entity.name" class="form-control">
+			</div>
+		</div>
+		<div class="alert bg-danger" x-ng-show="formErrors.conflict">
+			<strong><i class="fa fa-ban"></i> Ce nom existe déjà</strong>
+		</div>
+
+		<div class="input-group">
+			<span class="input-group-addon addon-left partial-width">Logo</span>		
+			<input class="form-control" type="file" x-ngf-select x-ng-model="file" name="file" accept="image/*" x-ngf-max-size="2MB">
+		</div>
+		<div class="input-group">
+			<!-- <img x-ng-show="entity.hasLogo" class="img-thumbnail center-block" style="max-height: 256px; max-width: 256px;" x-ng-src="rest-api/e-money-provider/{{ entity.id}}/fetch-logo" /> -->
+			<img class="img-thumbnail" style="max-height: 128px; max-width: 128px;" x-ng-src="https://drive.google.com/uc?id={{ entity.logoGoogleId}}&export=download" />
+		</div>
+		
+		<div class="input-group">
+			<span class="input-group-addon addon-left partial-width">Préfixes</span>
+			<input type="text" x-ng-model="entity.numPattern" class="form-control">
+		</div>
+
+		<div class="pull-left">
+			<a x-ui-sref="root.emps" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span></a>
+		</div>
+		<!-- <div class="pull-right btn-group"> -->
+		<button class="btn btn-primary pull-right" x-ng-click="updateEntity( file)">
+			<span class="hidden-xs">Valider</span>&nbsp;<i class="fa fa-check"></i>
+		</button>
+		<button class="btn btn-warning pull-right" x-ng-click="resetEntity()">
+			<span class="hidden-xs">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+		</button>
+		<!-- </div> -->
+	</form>
+</div>

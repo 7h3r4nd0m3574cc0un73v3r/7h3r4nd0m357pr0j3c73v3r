@@ -1,0 +1,46 @@
+<div>
+	<div class="row">
+		<div class="col-md-12" x-ui-view>
+			<div x-ba-panel x-ba-panel-title="{{ ncyBreadCrumb }}" x-ba-panel-class="with-scroll">
+				<div class="">
+					<div class="text-center" x-ng-show="!entities.length">
+						<h4 class="special-header">Aucun abonnement à afficher</h4>
+					</div>
+					<table x-ng-show="entities.length" class="table" st-table="entities" st-safe-src="safeEntities">
+						<thead>
+							<tr class="sortable ">
+								<th class="table-id" x-st-sort="id" st-sort-default="true">#</th>
+								<th st-sort="title">Modèle Abo.</th>
+								<th st-sort="price">Boutique</th>
+								<th st-sort="subStatus">Etat</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr x-ng-repeat="entity in entities">
+								<td class="table-id">{{entity.id}}</td>
+								<td class="text-left">{{entity.subOffer.title}}</td>
+								<td class="text-left">{{entity.eShop.name}}</td>
+								<td class="text-center"><sub-status x-status="entity.subStatus" /></td>
+								<td>
+									<div class="btn-group pull-right">
+										<button x-ui-sref="root.shop-subs.show({ id: entity.id })" class="btn btn-sm btn-default"><i class="fa fa-file-text"></i><span class="hidden-xs"> Afficher</span></button>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="6" class="text-center">
+									<div st-pagination="" st-items-by-page="smartTablePageSize" st-displayed-pages="5"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

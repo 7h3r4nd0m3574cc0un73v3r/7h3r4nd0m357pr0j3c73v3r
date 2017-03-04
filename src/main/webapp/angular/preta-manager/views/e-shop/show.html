@@ -1,0 +1,139 @@
+<div x-ui-view>
+	<div x-ba-panel x-ba-panel-title="Boutique : {{ entity.name |limitTo: 30 }}" x-ba-panel-class="with-scroll">
+
+		<div layout="column">
+			<div flex>
+				<!-- <img x-ng-src="rest-api/e-shop/{{ entity.id }}/fetch-logo" class="img-responsive img-thumbnail center-block" /> -->
+				<img x-ng-src="https://drive.google.com/uc?id={{ entity.logoGoogleId }}&export=download" class="img-responsive img-thumbnail center-block" />
+			</div>
+			<br />
+			<div flex layout="row">
+				<div flex>
+					<label>Complétion du profil</label>
+					<uib-progressbar max="100" value="entity.profileCompletion"><span style="color:white; white-space:nowrap;">{{ entity.profileCompletion }} %</span></uib-progressbar>
+				</div>
+			</div>
+			
+			<div flex layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Nom de la boutique</label>
+	            <input ng-model="entity.name" readonly>
+	          </md-input-container>
+			</div>
+			
+		    <div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Présentation</label>
+	            <textarea ng-model="entity.description" rows="5" readonly name="description"></textarea>
+	          </md-input-container>
+		    </div>
+		    
+		    <div layout-gt-sm="row" layout-sm="column">
+	          <md-input-container class="md-block" flex-sm="100" flex-gt-sm>
+	            <label>IFU</label>
+	            <input ng-model="entity.ifu" readonly name="ifu"/>
+	          </md-input-container>
+	          
+	          <md-input-container class="md-block" flex-sm="100" flex-gt-sm>
+	            <label>Registre de Commerce</label>
+	            <input ng-model="entity.rc" readonly name="rc">
+	          </md-input-container>
+			</div>
+		    
+		    <div layout-sm="column" layout-gt-sm="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Marché de la place</label>
+	            <input readonly ng-value="entity.isInMarket ? 'Oui' : 'Non'" />
+	          </md-input-container>
+	          
+	          <md-input-container class="md-block" flex>
+	            <label>Type de boutique</label>
+	            <md-select x-ng-model="entity.shopType" ng-disabled="true">
+	            	<md-option x-ng-value="'LOCAL'">
+	            		Locale
+	            	</md-option>
+	            	<md-option x-ng-value="'NOT_LOCAL'">
+	            		Non locale
+	            	</md-option>
+	            </md-select>
+	          </md-input-container>
+			</div>
+			
+			<h3 class="text-primary"><b>Contacts</b></h3>
+			
+			<div layout-sm="column" layout-gt-sm="row">
+				<md-input-container class="md-block" flex>
+					<label>Service client</label>
+					<md-icon style="display:inline-block;"><i class="fa fa-phone"></i></md-icon>
+					<input x-ng-model="entity.customerNum" readonly name="customerNum"/>
+				</md-input-container>
+			</div>
+			
+			<div layout="row">
+				<md-input-container class="md-block" flex>
+					<label>Adresse E-Mail</label>
+					<md-icon style="display:inline-block;"><i class="fa fa-envelope"></i></md-icon>
+					<input x-ng-model="entity.email" readonly name="email" />
+				</md-input-container>
+			</div>
+			
+			<h3 class="text-primary"><b>Localisation</b></h3>
+			
+			<div layout-gt-sm="row">
+				 <md-input-container class="md-block" flex-gt-sm>
+		            <label>Pays</label>
+		            <input ng-value="entity.country" readonly />
+	         	 </md-input-container>
+	                    
+		          <md-input-container class="md-block" flex-gt-sm>
+		            <label>Département</label>
+		            <input ng-model="entity.department" type="text" readonly name="department" />
+		          </md-input-container>
+		          
+		          <md-input-container class="md-block" flex-gt-sm>
+		            <label>Ville</label>
+		            <input ng-model="entity.city" type="text" readonly name="city" />
+		          </md-input-container>
+	        </div>
+	          
+	        <div layout-gt-sm="row">
+	          <md-input-container class="md-block" flex-gt-sm>
+	            <label>Arrondissement</label>
+	            <input ng-model="entity.borough" type="text" readonly name="borough" />
+	          </md-input-container>
+	          
+	          <md-input-container class="md-block" flex-gt-sm>
+	            <label>Quartier</label>
+	            <input ng-model="entity.district" type="text" readonly name="district" />
+	          </md-input-container>
+	          
+	          <md-input-container class="md-block" flex-gt-sm>
+	            <label>Rue</label>
+	            <input ng-model="entity.street" type="text" readonly name="street" />
+	          </md-input-container>
+	          
+	        </div>
+	        
+		    <div layout="row">
+	          <md-input-container class="md-block" flex>
+	            <label>Adresse complète</label>
+	            <textarea ng-model="entity.fullAddress" rows="5" readonly name="fullAddress"></textarea>
+	          </md-input-container>
+		    </div>
+		</div>
+		
+		<div layout="row">
+			<md-button class="md-raised" x-ui-sref="root.e-shops" aria-label="Retour">
+				<i class="fa fa-arrow-circle-left"></i> <span class="">&nbsp;Retour à la liste</span>
+			</md-button>
+			<span flex></span>
+			
+			<md-button class="md-raised md-accent" x-ui-sref="root.e-shops.show.shop-subs( { eShopId: entity.id})">
+				<span class="hidden-xs">Abonnements</span>&nbsp;<i class="fa fa-flag"></i>
+			</md-button>
+			<md-button class="md-raised md-primary" x-ui-sref="root.e-shops.update( { eShopId: entity.id})">
+				<span class="hidden-xs">Modifier</span>&nbsp;<i class="fa fa-edit"></i>
+			</md-button>
+		</div>
+	</div>
+</div>

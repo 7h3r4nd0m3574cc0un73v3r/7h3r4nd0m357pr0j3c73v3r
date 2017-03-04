@@ -1,0 +1,8 @@
+<li>
+	<a x-ui-sref="root.articles-by-categories({ id: category.id })">
+		<i class="fa fa-angle-right"></i><strong>{{ category.label }}</strong><small></small>
+	</a>
+	<ul>
+		<sub-category x-ng-repeat="entity in category.leaves" x-category="entity" />
+	</ul>
+</li>

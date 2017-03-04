@@ -1,0 +1,70 @@
+<div>
+	<div class="row">
+		<div class="col-md-12" x-ui-view>
+			<div x-ba-panel x-ba-panel-title="{{ boxTitle }}">
+	
+				<div layout="column" layout-align="space-around center" x-ng-show="isListLoading">
+					<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+	       		</div>
+					
+			    <div layout="column" layout-align="center center" x-ng-if="!isListLoading && !entities.length">
+   					<div flex="auto">
+   						<h3 class="md-title text-primary"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucune commande à afficher</b></h3>
+   					</div>
+		        </div>
+		        
+		        <!-- Entities Loaded -->
+				<md-content layout-sm="column" layout-gt-sm="row" layout-wrap layout-align-gt-sm="start stretch"
+							x-ng-if="!isListLoading && entities.length">
+					 <md-card x-ng-repeat="entity in entities" flex="auto">
+				        <md-card-title>
+				          <md-card-title-text>
+				            <span class="md-title">Commande #{{ entity.id | number }} - {{ entity.eShop.name }}</span>
+				            <span class="md-subhead">
+				            	Date Commande: {{ entity.regDate | date : 'medium'}}
+				            </span>
+				          </md-card-title-text>
+				        </md-card-title>
+				        <md-card-content>
+				          <p>
+				          	<label>Client</label>
+				          	<span>{{ entity.buyer.userInfo.firstName }}  {{ entity.buyer.userInfo.lastName }} : {{ entity.buyer.username }}</span>
+				          </p>
+				          <p>
+				          	<label>Statut</label>
+				          	<span><order-status status="entity.status" /></span>
+				          </p>
+				          <p>
+				          	<label>Nombre d'articles</label>
+				          	<span>
+				          		{{ entity.articleCount | number }}
+				          	</span>
+				          	;
+				          	<label>Total</label>
+				          	<span>
+				          		{{ entity.total | number }} F CFA
+				          	</span>
+				          </p>
+				        </md-card-content>
+				        <md-card-actions layout="row" layout-align="end center">
+				          <md-button class="md-primary md-raised md-icon-button" aria-label="Détails" x-ui-sref="root.orders.show( { id: entity.id })">
+				            <i class="fa fa-folder-open"></i>
+				          	<md-tooltip md-direction="top">
+					          Détails
+					        </md-tooltip>
+				          </md-button>
+				      </md-card>
+				</md-content>
+				
+				<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+					<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+							num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+							total-items="pagination.itemsNumber" x-ng-change="changePage()"
+							previous-text="Précédent" next-text="Suivant">
+					</pagination>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>

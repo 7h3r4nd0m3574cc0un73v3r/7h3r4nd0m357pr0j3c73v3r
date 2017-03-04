@@ -1,0 +1,78 @@
+<div x-ba-panel x-ba-panel-title="Modifier Option de Publicité" x-ba-panel-class="with-scroll">
+	<div class="conrainer-fluid">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label for="title" class="col-lg-2 col-md-2 control-label text-justify">Titre</label>
+				<div class="col-lg-10 col-md-10">
+					<input type="text" x-ng-model="entity.title" id="title" class="form-control" />
+					<br />
+					<div class="alert bg-danger" x-ng-show="formErrors.title.notNull">
+						<i class="fa fa-exclamation-circle"></i> Champ requis
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="price" class="col-lg-2 col-md-2 control-label text-justify">Prix</label>
+				<div class="col-lg-10 col-md-10">
+					<input type="number" x-ng-model="entity.price" id="price" min="1" class="form-control text-right"/>
+					<br />
+					<div class="alert bg-danger" x-ng-show="formErrors.price.notNull">
+						<i class="fa fa-exclamation-circle"></i> Champ requis
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="durationType" class="col-lg-2 col-md-2 control-label text-justify">Unité de durée</label>
+				<div class="col-lg-10 col-md-10">
+					<select class="form-control" id="durationType" x-ng-model="entity.durationType">
+						<option value="DAY">Jour</option>
+						<option value="WEEK">Semaine</option>
+						<option value="MONTH">Mois</option>
+						<option value="YEAR">Année</option>
+					</select>
+					<br />
+					<div class="alert bg-danger" x-ng-show="formErrors.durationType.notNull">
+						<i class="fa fa-exclamation-circle"></i> Champ requis
+					</div>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="duration" class="col-lg-2 col-md-2 control-label text-justify">Durée</label>
+				<div class="col-lg-10 col-md-10">
+					<input type="number" x-ng-model="entity.duration" id="duration" class="form-control text-right"/>
+					<br />
+					<div class="alert bg-danger" x-ng-show="formErrors.duration.notNull">
+						<i class="fa fa-exclamation-circle"></i> Champ requis
+					</div>
+				</div>
+			</div>
+						
+			<div class="form-group">
+				<label for="duration" class="col-lg-2 col-md-2 control-label text-justify">Activer</label>
+				<div class="col-lg-10 col-md-10">
+					<div class="switches clearfix">
+						<switch color="primary" x-ng-model="entity.isEnabled"></switch>
+					</div>
+				</div>
+			</div>
+	
+			<div class="pull-left">
+				<button x-ui-sref="root.adv-options" class="btn btn-default">
+					<i class="fa fa-arrow-circle-left"></i>
+					<span class="hidden-xs hidden-sm">&nbsp;Retour à la liste</span>
+				</button>
+			</div>
+			<!-- <div class="pull-right btn-group"> -->
+			<button class="btn btn-primary pull-right" x-ng-click="editEntity()">
+				<span class="hidden-xs hidden-sm">Valider</span>&nbsp;<i class="fa fa-check"></i>
+			</button>
+			<button class="btn btn-warning pull-right" x-ng-click="resetEntity()">
+				<span class="hidden-xs hidden-sm">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+			</button>
+			<!-- </div> -->
+		</form>
+	</div>
+</div>

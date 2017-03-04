@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd ">
+  <persistence-unit name="Preta_PU" transaction-type = "RESOURCE_LOCAL" >
+  	<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+  	<properties>
+  		<property name="hibernate.show_sql" value="true" />
+  		<property name="hibernate.hbm2ddl.auto" value="update" />
+  		<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+  		<property name="hibernate.connection.charset" value="utf8" />
+        <property name="hibernate.connection.characterEncoding" value="utf8" />
+        <property name="hibernate.connection.useUnicode" value="true" />
+  		<!-- Hibernate Envers Config -->
+ 	  	<property name="org.hibernate.envers.audit_table_suffix" value="_aud" />
+  		<property name="org.hibernate.envers.audit_table_prefix" value=""/>
+  		<property name="org.hibernate.envers.revision_field_name" value="rev"/>
+  		<property name="org.hibernate.envers.revision_type_field_name" value="revtype"/>
+  		<property name="org.hibernate.envers.revision_on_collection_change" value="true"/>
+  		<property name="org.hibernate.envers.do_not_audit_optimistic_locking_field" value="true"/>
+  		<property name="org.hibernate.envers.store_data_at_delete" value="true"/>
+  		<property name="org.hibernate.envers.default_schema" value=""/>
+  		<property name="org.hibernate.envers.default_catalog" value=""/>
+  		<property name="org.hibernate.envers.global_with_modified_flag" value="true" />
+  		<!-- <property name="org.hibernate.envers.audit_strategy" value="org.hibernate.envers.strategy.DefaultAuditStrategy"/> -->
+  		<property name="hibernate.generate_statistics" value="true" />
+  		<property name="org.hibernate.envers.audit_strategy" value="org.hibernate.envers.strategy.ValidityAuditStrategy"/>
+  		<property name="org.hibernate.envers.audit_strategy_validity_end_rev_field_name" value="REVEND"/>
+  		<property name="org.hibernate.envers.audit_strategy_validity_store_revend_timestamp" value="true"/>
+  		<property name="org.hibernate.envers.audit_strategy_validity_revend_timestamp_field_name" value="REVEND_TSTMP"/>
+  	
+  		<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+        <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/preta_db"/>
+        <property name="javax.persistence.jdbc.user" value="preta_app" />
+        <property name="javax.persistence.jdbc.password" value="preta_app_password" />
+        
+        <!-- <property name="hibernate.connection.handling_mode" value="" /> -->
+		  
+ 		<property name="hibernate.c3p0.min_size" value="0" />
+		<property name="hibernate.c3p0.max_size" value="250" />
+		<property name="hibernate.c3p0.timeout" value="15" />
+		<property name="hibernate.c3p0.max_statements" value="500" />
+		<property name="hibernate.c3p0.idle_test_period" value="30" />
+  	</properties>
+  </persistence-unit>
+</persistence>

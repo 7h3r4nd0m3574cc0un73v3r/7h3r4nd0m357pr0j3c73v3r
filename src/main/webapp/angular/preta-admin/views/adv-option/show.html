@@ -1,0 +1,35 @@
+<div x-ba-panel x-ba-panel-title="Détails Statut de Boutique" x-ba-panel-class="with-scroll">
+	<table class="table table-hover">
+		<tbody>
+			<tr>
+				<td class="header-cell">Id</td>
+				<td>{{ entity.id }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Titre</td>
+				<td>{{ entity.title }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Description</td>
+				<td>{{ entity.description }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Durée</td>
+				<td><duration-label x-duration="entity.duration" x-duration-type="entity.durationType" /></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Activé</td>
+				<td class="text-center"><state-label is-enabled="entity.isEnabled"></state-label></td>
+			</tr>
+		</tbody>
+	</table>
+	<br />
+	
+	<div class="pull-left">
+		<a x-ui-sref="root.adv-options" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span></a>
+	</div>
+
+	<a x-ui-sref="root.adv-options.edit({ id: entity.id})" class="btn btn-warning pull-right" x-ng-click="">
+		<span class="hidden-xs ">Modifier</span>&nbsp;<i class="fa fa-edit"></i>
+	</a>
+</div>

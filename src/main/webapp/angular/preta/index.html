@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html x-ng-app="pretaApp">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Hôbossa - Accueil</title>
+		<link rel="shortcut icon" type="image/x-icon" href="angular/common/img/hobossa-tmp-fav.ico" />
+		<!-- Lib Styles --> 
+		<link rel="stylesheet" href="angular/lib/ionicons.css" >
+		<link rel="stylesheet" href="angular/lib/angular-toastr.css" >
+		<link rel="stylesheet" href="angular/lib/animate.css" >
+		<link rel="stylesheet" href="angular/lib/bootstrap.css" >
+		<link rel="stylesheet" href="angular/lib/bootstrap-select.css" >
+		<link rel="stylesheet" href="angular/lib/bootstrap-switch.css" >
+		<link rel="stylesheet" href="angular/lib/bootstrap-tagsinput.css" >
+		<link rel="stylesheet" href="angular/lib/font-awesome.css" >
+		<link rel="stylesheet" href="angular/lib/angular-progress-button-styles.min.css" >
+		<link rel="stylesheet" href="angular/lib/ion.rangeSlider.css" >
+		<link rel="stylesheet" href="angular/plugins/angular-responsive-tables/angular-responsive-tables.min.css">
+		<link rel="stylesheet" href="angular/plugins/angular-slider/rzslider.min.css">
+		<!-- <link rel="stylesheet" href="angular/lib/ion.rangeSlider.skinFlat.css" > -->
+		<link rel="stylesheet" href="angular/plugins/angular-material/angular-material.min.css" >
+		<!-- End Lib Stymes -->
+		
+		<!-- Custom Styles -->
+		<link rel="stylesheet" type="text/css" href="angular/preta/css/hr.css" />
+		<link rel="stylesheet" type="text/css" href="angular/preta/css/blink.css" />
+		<link rel="stylesheet" type="text/css" href="angular/preta/css/general.css" />
+		<link rel="stylesheet" type="text/css" href="angular/common/alert/alert.css" />
+		<link rel="stylesheet" type="text/css" href="angular/preta/css/ws-style.css" />
+		<link rel="stylesheet" type="text/css" href="angular/preta/css/mcd-menu.css" />
+		<link rel="stylesheet" type="text/css" href="angular/common/css/box-component.css" />
+		<!-- End Custom Styles -->
+	</head>
+
+	<body>
+		<div x-ui-view>
+			<!--
+			<div class="loader" class="animated bounceInDown">
+				  <div class="circle one"></div>
+				  <div class="circle two"></div>
+				  <div class="circle three"></div>
+			</div>
+			-->
+		</div>
+		
+		<!-- Libs & Plugins -->
+		<script src="angular/plugins/jquery/dist/jquery.js"></script>
+		<script src="angular/plugins/angular/angular.min.js"></script>
+		<script src="angular/plugins/angular-route/angular-route.js"></script>
+		<script src="angular/plugins/slimScroll/jquery.slimscroll.js"></script>
+		<script src="angular/plugins/angular-slimscroll/angular-slimscroll.js"></script>
+		<script src="angular/plugins/angular-smart-table/dist/smart-table.js"></script>
+		<script src="angular/plugins/angular-toastr/dist/angular-toastr.tpls.js"></script>
+		<!-- <script src="angular/plugins/angular-touch/angular-touch.js"></script> -->
+		<script src="angular/plugins/angular-responsive-tables/angular-responsive-tables.min.js"></script>
+		<script src="angular/plugins/jquery-ui/jquery-ui.js"></script>
+		<script src="angular/plugins/angular-ui-sortable/sortable.js"></script>
+		<script src="angular/plugins/bootstrap/js/dropdown.js"></script>
+		<script src="angular/plugins/bootstrap-select/dist/js/bootstrap-select.js"></script>
+		<script src="angular/plugins/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
+		<script src="angular/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+		<script src="angular/plugins/jquery.easing/js/jquery.easing.js"></script>
+		<script src="angular/plugins/angular-progress-button-styles/dist/angular-progress-button-styles.min.js"></script>
+		<script src="angular/plugins/angular-ui-router/release/angular-ui-router.js"></script>
+		<script src="angular/plugins/ionrangeslider/js/ion.rangeSlider.min.js"></script>
+		<script src="angular/plugins/ionrangeslider/js/ionic-range-slider.js"></script>
+		<script src="angular/plugins/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+		<script src="angular/plugins/angular-animate/angular-animate.js"></script>
+		<!-- ngFileUpload -->
+		<script src="angular/plugins/file-upload/ng-file-upload-all.min.js"></script>
+		<!-- End Custom BlurAdmin Import -->
+		<!-- Angular Breadcrumb -->
+		<script src="angular/plugins/angular-breadcrumb/angular-breadcrumb.min.js"></script>
+		<!-- Angular Phone Number Input -->
+		<script src="angular/plugins/intl-tel-input/ng-intl-tel-input.min.js"></script>
+		<script src="angular/plugins/intl-tel-input/utils.js"></script>
+		<script src="angular/plugins/intl-tel-input/intlTelInput.min.js"></script>
+		<script src="angular/plugins/intl-tel-input/ng-intl-tel-input.provider.js"></script>
+		<script src="angular/plugins/intl-tel-input/ng-intl-tel-input.directive.js"></script>
+		<!-- Angular Material -->
+		<script src="angular/plugins/angular-aria/angular-aria.min.js"></script>
+		<script src="angular/plugins/angular-messages/angular-messages.min.js"></script>
+		<script src="angular/plugins/angular-material/angular-material.min.js"></script>
+		<!-- Angular Stomp -->
+		<script src="angular/plugins/angular-stomp/sockjs.min.js"></script>
+		<script src="angular/plugins/angular-stomp/stomp.min.js"></script>
+		<script src="angular/plugins/angular-stomp/ng-stomp.min.js"></script>
+		<!-- Angular Sounds -->
+		<script src="angular/plugins/angular-audio/angular.audio.js"></script>
+		<!-- Angular Slider -->
+		<script src="angular/plugins/angular-slider/rzslider.min.js"></script>
+		<!-- End Libs & Plugins -->
+		
+		<script src="angular/preta/app.js"></script>
+		<!-- Custom Directives -->
+			<!-- Reseach Widget -->
+			<script src="angular/preta/directives/research-widget/directive.js"></script>
+			<!-- Navbar -->
+			<script src="angular/preta/directives/navbar-top/directive.js"></script>
+			<!-- Navbar -->
+			<script src="angular/preta/directives/page-footer/directive.js"></script>
+			<!-- Simple Article Display -->
+			<script src="angular/preta/directives/simple-article/directive.js"></script>
+			<!--  Rated Article Display -->
+			<script src="angular/preta/directives/rated-article/directive.js"></script>
+			<!-- Order Status Label -->
+			<script src="angular/preta/directives/order-status-label/directive.js"></script>
+			<!-- Payment Status Label -->
+			<script src="angular/common/directives/payment-status/directive.js"></script>
+			<!-- Loading Animation -->
+			<script src="angular/common/directives/loading-animation/directive.js"></script>
+			<!--  ION Slider -->
+			<script src="angular/common/directives/ion-slider/directive.js"></script>
+			<!-- Categories Menu -->
+			<script src="angular/preta/directives/categories-menu/directive.js"></script>
+			<script src="angular/preta/directives/categories-menu/item.directive.js"></script>
+			<script src="angular/preta/directives/categories-menu/sub-category.directive.js"></script>
+			<!--  Sticky Footer Directive -->
+			<script src="angular/preta/directives/sticky-footer/directive.js"></script>
+			<!-- Default Article Widget -->
+			<script src="angular/preta/directives/default-article-widget/directive.js"></script>
+			<!-- Advertised Article Widget -->
+			<script src="angular/preta/directives/ad-article-widget/directive.js"></script>
+			<!-- Eshop Product Widget -->
+			<script src="angular/preta/directives/e-shop-product-widget/directive.js"></script>
+			<!-- Order Widget -->
+			<script src="angular/preta/directives/order-widget/directive.js"></script>
+			<!-- Default Products Container -->
+			<script src="angular/preta/directives/default-products-container/directive.js"></script>
+			<!--  Article Rating Widget -->
+			<script src="angular/preta/directives/product-rating-widget/directive.js"></script>
+			<!--  Visited Articles  Widget -->
+			<script src="angular/preta/directives/visited-articles-widget/directive.js"></script>
+			<!--  Article Ads -->
+			<script src="angular/preta/directives/article-ads-column/directive.js"></script>
+			<script src="angular/preta/directives/article-ads-row/directive.js"></script>
+			<!-- Eshop Card -->
+			<script src="angular/preta/directives/e-shop-card/directive.js"></script>
+			<!-- Notification -->
+			<script src="angular/preta/directives/notification/directive.js"></script>
+			<!-- Home Slides -->
+			<script src="angular/preta/directives/home-slides/directive.js"></script>
+		<!-- End Custom Directives -->
+		
+		<!-- Buyers -->
+		<script src="angular/preta/controllers/LoginController.js"></script>
+		<script src="angular/preta/controllers/UserController.js"></script>
+		<script src="angular/preta/controllers/BuyerRegistrationController.js"></script>
+		<script src="angular/preta/controllers/EShopRegistrationController.js"></script>
+		<script src="angular/preta/controllers/PWResetController.js"></script>
+		<script src="angular/preta/controllers/PWRecoveryController.js"></script>
+		<script src="angular/preta/controllers/AccountValidationController.js"></script>
+		<script src="angular/preta/controllers/UpgradeRequestController.js"></script>
+		<script src="angular/preta/services/UserService.js"></script>
+		<script src="angular/preta/services/RegistrationService.js"></script>
+		<script src="angular/preta/controllers/OrderController.js"></script>
+		<script src="angular/preta/controllers/HomeController.js"></script>
+		<script src="angular/preta/controllers/RatingController.js"></script>
+		<script src="angular/preta/controllers/ArticleController.js"></script>
+		<script src="angular/preta/controllers/ArticleByCategoryController.js"></script>
+		<script src="angular/preta/controllers/LastVisitedController.js"></script>
+		<script src="angular/preta/controllers/EShopController.js"></script>
+		<script src="angular/preta/controllers/SearchController.js"></script>
+		<script src="angular/preta/controllers/CartController.js"></script>
+		<script src="angular/preta/controllers/CheckoutController.js"></script>
+		<script src="angular/preta/services/OrderService.js"></script>
+		<script src="angular/preta/services/ArticleService.js"></script>
+		<script src="angular/preta/services/EShopService.js"></script>
+		<script src="angular/preta/services/CategoryService.js"></script>
+		<script src="angular/preta/services/SoundService.js"></script>
+		<script src="angular/preta/services/ToastService.js"></script>
+		<script src="angular/common/services/StompService.js"></script>
+		<script src="angular/preta/services/NotificationService.js"></script>
+		<script src="angular/preta/services/SlideService.js"></script>
+		<!-- End Buyers -->
+	</body>
+</html>

@@ -1,0 +1,70 @@
+<div>
+	<div class="row">
+		<div class="col-md-12" x-ui-view>
+		  	
+			<div x-ba-panel x-ba-panel-title="Profils à valider">
+				<div layout-sm="column" layout-align="center center" x-ng-if="isListLoading" layout-margin>
+					<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+	        	</div>
+	        	
+			    <div layout="column" layout-align="center center" x-ng-if="!isListLoading && !entities.length" layout-margin>
+   					<div flex="auto">
+   						<h3 class="md-title text-success"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun profil à valider</b></h3>
+   					</div>
+		        </div>
+			        
+				<!-- Entities Loaded -->
+				<md-content layout-sm="column" layout-gt-sm="row" layout-wrap layout-align-gt-sm="start stretch"
+							x-ng-if="!isListLoading && entities.length">
+					 <md-card x-ng-repeat="entity in entities" flex="auto">
+				        <md-card-title>
+				          <md-card-title-text>
+				            <span class="md-title"><b>{{ entity.username }}</b></span>
+				            <span class="md-subhead">
+				            	
+				            </span>
+				          </md-card-title-text>
+				        </md-card-title>
+				        <md-card-content>
+				          <p>
+				          	<label>Nom complet</label>
+				          	<span>
+				          		{{ entity.userInfo.firstName }} {{ entity.userInfo.middleName }}, {{ entity.userInfo.lastName }}
+				          	</span>
+				          </p>
+				          <p>
+				          	<label>Complétion du profil</label>
+				          	<span>
+				          		{{ entity.profileCompletion | number }} %
+				          	</span>
+				          </p>
+				        </md-card-content>
+				        <md-card-actions layout="row" layout-align="end center">
+				          <md-button class="md-primary md-raised md-icon-button" aria-label="Afficher" x-ui-sref="root.buyers.show( {id: entity.userInfo.id})">
+				            <i class="fa fa-folder-open"></i>
+				          	<md-tooltip md-direction="top">
+					          Afficher
+					        </md-tooltip>
+				          </md-button>
+				          <md-button class="md-accent md-raised md-icon-button" aria-label="Valider" x-ng-click="validateProfile( entity.userInfo.id)" x-ng-disabled="entity.approved">
+				            <i class="fa fa-arrow-circle-up"></i>
+				          	<md-tooltip md-direction="top">
+					          Valider
+					        </md-tooltip>
+				          </md-button>
+				        </md-card-actions>
+				      </md-card>
+				</md-content>
+				
+				<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+					<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+							num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+							total-items="pagination.itemsNumber" x-ng-change="changePage()"
+							previous-text="Précédent" next-text="Suivant">
+					</pagination>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,112 @@
+<div x-ba-panel x-ba-panel-title="Nouvel Abonnement : {{ activeEShop.name }}">
+	<div class="container-fluid">
+		<form class="form-horizontal">
+			
+			<div layout="row">
+	          <md-input-container flex>
+	            <label>Date début</label>
+	            <md-datepicker ng-model="form.shopSub.startDate" md-min-date="minDate" flex required></md-datepicker>
+	          </md-input-container>
+	        </div>
+	        
+	        <div layout="row">
+	          <md-input-container flex>
+	            <label>Modèle d'abonnement</label>
+				<md-select x-ng-model="form.shopSub.subOffer" required>
+					<md-option x-ng-value="subOffer" x-ng-repeat="subOffer in subOffers">
+						{{ subOffer.title }}
+					</md-option>
+				</md-select>
+	          </md-input-container>
+			</div>
+			
+			<div layout="row" layout-align="start center" class="animated fade in" x-ng-show="form.shopSub.subOffer" layout-wrap>
+				<p flex="100">
+					<label>Statut de boutique conféré</label> {{ form.shopSub.subOffer.shopStatus.title }}
+				</p>
+			</div>
+			
+			<div layout="row" layout-align="start center" class="animated fade in" x-ng-show="form.shopSub.subOffer" layout-wrap>
+				<p flex="100">
+					<label>Durée</label> <duration-label x-duration="form.shopSub.subOffer.duration" x-duration-type="form.shopSub.subOffer.durationType" />
+				</p>
+			</div>
+			
+			<div layout="row" layout-align="start center" class="animated fade in" x-ng-show="form.shopSub.subOffer" layout-wrap>
+				<p flex="100">
+					<label>Limite d'article</label> Au plus {{ form.shopSub.subOffer.shopStatus.articleLimit | number }} articles
+				</p>
+			</div>
+			
+			<div layout="row" layout-align="start center" class="animated fade in" x-ng-show="form.shopSub.subOffer" layout-wrap>
+				<p flex="100">
+					<label>Prix</label> {{ form.shopSub.subOffer.price | number }} F CFA
+				</p>
+			</div>
+			
+			<div layout="row" layout-margin x-ng-if="form.shopSub && form.shopSub.subOffer.price > 0">
+		        <md-input-container class="md-block" flex>
+		          <label>Sélectionnez un compte pour le paiement</label>
+		            <md-select ng-model="form.eAccount" required>
+		              <md-option x-ng-repeat="eAccount in loggedUser.eAccounts" x-ng-value="eAccount">
+		                {{ eAccount.account }}
+		              </md-option>
+		            </md-select>
+		        </md-input-container>
+			</div>
+			
+			<div layout="column" layout-align="start center" x-ng-if="form.eAccount" class="animated fadeIn" layout-margin>
+				<p flex="100">
+					<h4 class="text-center"><b>Veuillez adresser votre paiement au compte suivant, puis entrez la référence du paiement dans le champ approprié</b></h4>
+				<p>
+				
+				<div flex="100">
+					<md-card>
+				        <md-card-title>
+				          <md-card-title-media>
+				            <div class="md-media-sm card-media">
+				            	<img ng-src="rest-api/e-money-provider/{{ selectedAdminEAccount.emp.id }}/fetch-logo" class="img-responsive" style="max-height: 100px; max-width: 100px;" />
+				            </div>
+				          </md-card-title-media>
+				          <md-card-title-text>
+				            <span class="md-headline">{{ selectedAdminEAccount.emp.name }}</span>
+				            <span class="md-subhead">Compte du virement</span>
+				          </md-card-title-text>
+				        </md-card-title>
+				        <md-card-content>
+				        	<p class="text-left">
+				        		<label>Numéro</label>
+				        		<span class="text-mainge" style="font-weight: bold; font-size: 120%">
+				        			{{ selectedAdminEAccount.account }}
+				        		</span>
+				        	</p>
+				        </md-card-content>
+			      </md-card>
+			    </div>
+			</div>
+			
+		    <div layout="row" x-ng-if="form.eAccount">
+	          <md-input-container class="md-block" flex>
+	            <label>Référence du paiement</label>
+	            <input ng-model="form.paymentRef" type="text" required>
+	          </md-input-container>
+			</div>
+		</form>
+	
+		<div layout="row" layout="space-between center" layout-wrap>
+			<div flex>
+				<md-button x-ui-sref="root.e-shops.show.shop-subs" class="md-raised"><i class="fa fa-arrow-circle-left"></i> <span class="hidden-xs">&nbsp;Retour à la liste</span></md-button>
+			</div>
+			
+			<div flex layout="row" layout-align="end center">
+				<md-button class="md-raised md-accent" x-ng-click="resetEntity()">
+					<span class="hidden-xs">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+				</md-button>
+				<md-button class="md-raised md-primary" x-ng-click="addEntity()">
+					<span class="hidden-xs">Valider</span>&nbsp;<i class="fa fa-check"></i>
+				</md-button>
+			</div>
+		</div>
+	
+	</div>
+</div>

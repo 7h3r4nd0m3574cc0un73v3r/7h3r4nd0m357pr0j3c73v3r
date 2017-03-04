@@ -1,0 +1,38 @@
+<div layout="column" layout-align="start" style="border-bottom: 1px solid #ddd; margin: 3px; width: 100%;" layout-padding>
+	<span layout="row" layout-align="start center" flex="100" x-ng-switch on="entity.nType">
+		<span x-ng-switch-when="APPROVED" x-ng-switch on="entity.entType" flex>
+			<span x-ng-switch-when="PROFILE">
+				<a ng-click="read()" class="default-lnk">Votre profil a été validé par l'administration.</a>
+			</span>
+		</span>
+		<span x-ng-switch-when="ALTERED_PAYMENT" x-ng-switch on="entity.entType" flex>
+			<span x-ng-switch-when="ORDER">
+				<a ng-click="read()" x-ng-if="entity.valid" class="default-lnk">
+					Le paiement N° {{ entity.paymentRelId | number }} de votre commande N° {{ entity.entRelId | number }} a été validée par l'administration.
+				</a>
+				<a ng-click="read()" x-ng-if="!entity.valid" class="default-lnk">
+					Le paiement N° {{ entity.paymentRelId | number }} de votre commande N° {{ entity.entRelId | number }} a été validée par l'administration.
+				</a>
+			</span>
+		</span>
+		<span x-ng-switch-when="DELIVERING_ORDER" x-ng-switch on="entity.entType" flex>
+			<span x-ng-switch-when="ORDER">
+				<a ng-click="read()" class="default-lnk">La livraison de votre commande #{{ entity.entRelId }} a démarré.</a>
+			</span>
+		</span>
+		<span x-ng-switch-when="PENDING_RATING" flex>
+			<a ng-click="read()" class="default-lnk">Vous avez {{ entity.count | number }} article{{ count > 1 ? 's' : ''}} en attente d'une note.</a>
+		</span>
+		<span x-ng-switch-when="APPROVED_UPGRADE_REQUEST" flex>
+			<a ng-click="read()" class="default-lnk">
+				Vous pouvez désormais ajouter des E-Boutiques sur notre plateforme et mettre vos articles en ligne.
+			</a>
+		</span>
+	</span>
+	<!-- Date -->
+	<span layout="row" layout-align="end center" class="text-right" flex>
+		<span flex>
+			<small>{{ entity.regDate | date:'yyyy-MM-dd HH:mm:ss' }}</small>
+		</span>
+	</span>
+</div>

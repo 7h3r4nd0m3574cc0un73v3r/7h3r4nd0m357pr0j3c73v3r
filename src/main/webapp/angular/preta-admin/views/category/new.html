@@ -1,0 +1,30 @@
+<div x-ba-panel x-ba-panel-title="Nouvelle categorie" x-ba-panel-class="with-scroll">
+	<form>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Titre</span>
+				<input type="text" x-ng-model="form.name" class="form-control" />
+			</div>
+		</div>
+		
+		<div class="alert bg-danger" x-ng-show="formErrors.conflict">
+			<strong><i class="fa fa-ban"></i> Ce nom existe déjà</strong>
+		</div>
+
+		<h3>Catégories parentes</h3>
+		
+		<div class="pull-left">
+			<a x-ui-sref="root.categories.list" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i>
+			<span class="hidden-xs">&nbsp;Retour à la liste</span></a>
+		</div>
+
+		<!-- <div class="pull-right btn-group"> -->
+		<button class="btn btn-primary pull-right" x-ng-click="addEntity( file)">
+			<span class="hidden-xs">Valider</span>&nbsp;<i class="fa fa-check"></i>
+		</button>
+		<button class="btn btn-warning pull-right" x-ng-click="resetEMP()">
+			<span class="hidden-xs">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+		</button>
+		<!-- </div> -->
+	</form>
+</div>

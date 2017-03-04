@@ -1,0 +1,116 @@
+<div x-ba-panel x-ba-panel-title="Détails Boutique : {{ entity.name }}" x-ba-panel-class="with-scroll">
+	<h4 class="special-header"><b>Informations générales</b></h4>
+	<table class="table table-hover">
+		<tbody>
+			<tr>
+				<td class="header-cell">Id</td>
+				<td>{{ entity.id }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Nom</td>
+				<td>{{ entity.name }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Description</td>
+				<td>{{ entity.description }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Logo</td>
+				<td>
+					<img x-ng-src="rest-api/e-shop/{{ entity.id }}/fetch-logo" class="img-responsive img-thumbnail center-block" />
+					<!-- <img x-ng-src="https://drive.google.com/uc?id={{ entity.logoGoogleId }}&export=download" class="img-responsive img-thumbnail center-block" /> -->
+				</td>
+			</tr>
+			<tr>
+				<td class="header-cell">IFU</td>
+				<td>{{ entity.ifu }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">RC</td>
+				<td>{{ entity.rc }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Type de boutique</td>
+				<td>
+					<span class="label label-warning">{{ entity.shopType == 'LOCAL' ? 'Locale' : 'Non locale' }}</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Marché de la place</td>
+				<td>
+					<span class="label label-default">{{ entity.isInMarket ? 'Oui' : 'Non' }}</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Activée</td>
+				<td><state-label is-enabled="entity.isEnabled"></state-label></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Date d'inscription</td>
+				<td>{{ entity.regDate | date: 'medium'}}</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<h4 class="special-header"><b>Contacts</b></h4>
+	
+	<table class="table table-hover">
+		<tbody>
+			<tr>
+				<td class="header-cell">Service client</td>
+				<td>{{ entity.customerNum }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Adresse mail</td>
+				<td>{{ entity.email }}</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<h4 class="special-header"><b>Localisation</b></h4>
+	
+	<table class="table table-hover">
+		<tbody>
+			<tr>
+				<td class="header-cell">Pays</td>
+				<td>{{ entity.country }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Departement</td>
+				<td>{{ entity.department }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Ville</td>
+				<td>{{ entity.city }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Arrondissement</td>
+				<td>{{ entity.borough }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Quartier</td>
+				<td>{{ entity.district }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Rue</td>
+				<td>{{ entity.street }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Adresse complète</td>
+				<td>{{ entity.fullAddress }}</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<div style="margin-top: 32px;">
+		<div class="pull-left">
+			<button x-ui-sref="root.e-shops" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span></button>
+		</div>
+		
+		<div class="pull-right">
+			<button type="button" x-ng-click="validateEntity()" x-ng-if="!entity.isEnabled" class="btn btn-success"><i class="fa fa-check"></i><span class="hidden-xs">&nbsp;Activer</span></button>
+			<!-- <button type="button" x-ng-click="updateEntity( entity)" x-ng-if="entity.isEnabled" class="btn btn-warning"><i class="fa fa-check"></i><span class="hidden-xs">&nbsp;Désactiver</span></button> -->
+		</div>
+		
+	</div>
+</div>

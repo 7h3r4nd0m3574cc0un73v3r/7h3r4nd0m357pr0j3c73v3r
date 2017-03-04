@@ -1,0 +1,49 @@
+<div>
+	<div class="row">
+		<div class="col-md-12" x-ui-view>
+			<div x-ba-panel x-ba-panel-title="Fournisseurs Monnaie Numérique" x-ba-panel-class="with-scroll">
+				<div class="">
+					<button x-ui-sref="root.emps.new" class="btn btn-primary pull-right"><i class="fa fa-plus-square"></i> Nouveau</button>
+					
+					<table class="table" st-table="entities" st-safe-src="safeEntities">
+						<thead>
+							<tr class="sortable ">
+								<th class="table-id" x-st-sort="id" st-sort-default="true">#</th>
+								<th st-sort="name">Désignation</th>
+								<th st-sort="numPattern">Préfixes</th>
+								<th>Logo</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr x-ng-repeat="entity in entities">
+								<td class="table-id">{{entity.id}}</td>
+								<td>{{entity.name}}</td>
+								<td>{{entity.numPattern}}</td>
+								<td>
+									<!-- <img class="img-thumbnail" style="max-height: 128px; max-width: 128px;" x-ng-src="rest-api/e-money-provider/{{ entity.id }}/fetch-logo" /> -->
+									<img class="img-thumbnail" style="max-height: 128px; max-width: 128px;" x-ng-src="https://drive.google.com/uc?id={{ entity.logoGoogleId}}&export=download" />
+ 								</td>
+								<td>
+									<div class="btn-group pull-right">
+										<button x-ui-sref="root.emps.show( { id: entity.id})" class="btn btn-default"><i class="fa fa-file-text"></i><span class="hidden-sm hidden-xs"> Afficher</span></button> 
+										<button x-ui-sref="root.emps.update( { id: entity.id})" class="btn btn-warning"><i class="fa fa-edit"></i><span class="hidden-sm hidden-xs"> Modifier</span></button> 
+										<button class="btn btn-danger" data-toggle="modal" x-ng-click="showDeleteModal( entity.id)"><i class="fa fa-remove"></i><span class="hidden-sm hidden-xs"> Supprimer</span></button>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="6" class="text-center">
+									<div st-pagination="" st-items-by-page="smartTablePageSize" st-displayed-pages="5"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

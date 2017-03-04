@@ -1,0 +1,43 @@
+<div x-ba-panel x-ba-panel-title="Modifier Statut de Boutique" x-ba-panel-class="with-scroll">
+	<form>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon addon-left partial-width">Titre</span>
+				<input type="text" x-ng-model="entity.title" class="form-control">
+			</div>
+		</div>
+		<div class="alert bg-danger" x-ng-show="formErrors.conflict">
+			<strong><i class="fa fa-ban"></i> Ce statut de boutique existe déjà</strong>
+		</div>
+
+		<div class="input-group">
+			<span class="input-group-addon addon-left partial-width">Description</span>
+			<textarea class="form-control" x-ng-model="entity.description"></textarea>
+		</div>
+		
+		<div class="input-group">
+			<span class="input-group-addon addon-left partial-width">Limite d'articles</span>
+			<input type="number" x-ng-model="entity.articleLimit" class="form-control">
+		</div>
+		
+		<div class="input-group">
+			<span class="input-group-addon addon-left partial-width">Activer</span>
+			
+			<div class="switches clearfix">
+				<switch color="primary" x-ng-model="entity.isEnabled"></switch>
+			</div>
+		</div>
+
+		<div class="pull-left">
+			<a x-ui-sref="root.shopStatuses" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs hidden-sm">&nbsp;Retour à la liste</span></a>
+		</div>
+		<!-- <div class="pull-right btn-group"> -->
+		<button class="btn btn-primary pull-right" x-ng-click="editEntity()">
+			<span class="hidden-xs hidden-sm">Valider</span>&nbsp;<i class="fa fa-check"></i>
+		</button>
+		<button class="btn btn-warning pull-right" x-ng-click="resetEntity()">
+			<span class="hidden-xs hidden-sm">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+		</button>
+		<!-- </div> -->
+	</form>
+</div>

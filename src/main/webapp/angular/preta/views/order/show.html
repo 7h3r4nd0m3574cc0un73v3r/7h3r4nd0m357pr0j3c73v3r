@@ -1,0 +1,122 @@
+<div class="row">
+	<div class="col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-lg-9 col-md-9 col-sm-9 col-xs-12">
+		<div class="row">
+			<div class="row">
+				<div class="container-fluid">
+					<div class="default-panel animated fadeIn">
+						<div class="default-panel-header">
+							<h4 class="title text-mainge"><i class="fa fa-sign-in"></i>&nbsp;Détails Commande # {{ entity.buyerRelId }}</h4>
+						</div>
+						<div class="default-panel-content">
+							<div class="loader-container" x-ng-if="isEntityLoading">
+								<div class="loading loading--double"></div>&nbsp;<span class="default-text text-mainge">Chargement en cours ...</span>
+							</div>
+							
+							<div x-ng-if="!isEntityLoading && entity != null" class="animated fadeIn">
+								<div>
+									<div class="order-text">Date: </div><div class="order-date pull-right">{{ entity.regDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+								</div>
+								<div>
+									<div class="order-text">E-Boutique: </div>
+									<div class="order-date pull-right">
+										<a x-ui-sref="root.e-shop( { id: entity.eShop.id })" class="default-lnk">{{ entity.eShop.name }}</a>
+									</div>
+								</div>
+								<div>
+									<div class="order-text">Statut: </div>
+									<div class="order-status pull-right">
+										<span class="badge bg-mainge"><order-status-label status="entity.status" /></span>
+									</div>
+								</div>
+								
+								<div>
+									<div class="order-text">Adresse de livraison: </div><div class="order-date pull-right">{{ entity.deliveryAddress }}</div>
+								</div>
+								
+								<div x-ng-if="entity.status == 'DELIVERING'" class="text-center">
+									<a class="btn btn-lg p-btn-default" x-ng-click="confirmReception( entity.id)"><span class="blink blink-infinite">Confirmer Réception Commande</span></a>
+								</div>
+								<div x-ng-show="entity.deliveryDate != null">
+									<div class="order-text">Départ de livraison: </div><div class="order-date pull-right">{{ entity.deliveryDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+								</div>
+								<div x-ng-show="entity.packageId != null">
+									<div class="order-text">N° Colis: </div><div class="order-date pull-right">{{ entity.packageId }}</div>
+								</div>
+								<div x-ng-show="entity.receptionDate != null">
+									<div class="order-text">Date de réception: </div><div class="order-date pull-right">{{ entity.receptionDate | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+								</div>
+								<div style="margin-top: 12px;">
+									<table wt-responsive-table class="table table-condensed order-article-table">
+								        <thead>
+								            <tr>
+								            	<th>Article</th>
+								            	<th class="text-right">Prix Unitaire</th>
+								            	<th class="text-right">Quantité</th>
+								            	<th class="text-right">Total</th>
+								            </tr>
+								        </thead>
+								        <tbody>
+								            <tr x-ng-repeat="orderedArticle in entity.orderedArticles">
+								            	<td>
+								            		<div layout="row" layout-align="start">
+								            			<span layout="row" layout-align="start" flex="none">
+										            		<a x-ui-sref="root.article({ id: orderedArticle.article.id })">
+											            		<img x-ng-src="https://drive.google.com/uc?id={{ orderedArticle.article.defaultPicture.googleId }}&export=download"
+																	class="img-responsive img-thumbnail center-block"
+																	style="width: 80px; height: 80px;" />
+															</a>
+								            			</span>
+								            			<span layout="column" layout-align="start" flex>
+								            				<span flex>
+								            					<a x-ui-sref="root.article({ id: orderedArticle.article.id })">
+								            						{{ orderedArticle.article.name }}
+								            					</a>
+								            				</span>
+										            		<span layout="row" layout-align="start" layout-wrap>
+																	<span flex="shrink" x-ng-repeat="arfeat in orderedArticle.orderedArticleFeatures">
+																		{{ arfeat.feature.label }}
+																		<span class="badge label-default" style="margin-top: -2px;" x-ng-repeat="featVal in arfeat.featureValues">
+																			 {{ featVal.value }}
+																		</span>
+																	</span>
+										            		</span>
+															<span layout="row" layout-align="start">
+																<label>Livraison:&nbsp;</label>
+																<span x-ng-if="orderedArticle.article.deliveryMode == 'FREE'" class="text-mainge"><b>Gratuite</b></span>
+																<span x-ng-if="orderedArticle.article.deliveryMode == 'CHARGED'">
+																	<small><b class="text-mainge">{{ (orderedArticle.article.deliveryFee * orderedArticle.quantity) | number }} F CFA</b> ( {{ orderedArticle.article.deliveryFee | number }} F CFA / unité)</small>
+																</span>
+															</span>
+								            			</span>
+								            		</div>
+								            	</td>
+								            	<td class="text-right ver-text-middle">{{ orderedArticle.article.price | number: 0}} F CFA</td>
+								            	<td class="text-right ver-text-middle">{{ orderedArticle.quantity | number: 0 }}</td>
+								            	<td class="text-right ver-text-middle">{{ orderedArticle.total | number }} F CFA</td>
+								            </tr>
+								        </tbody>
+								        <tfoot>
+								        	<tr>
+								        		<td colspan="3" class="text-right text-mainge"><b>Total</b></td>
+								        		<td class="text-right">{{ entity.total | number}} F CFA</td>
+								        	</tr>
+								        </tfoot>
+								    </table>
+								</div>
+								<div>
+									
+								</div>
+							</div>
+							
+							<h3 class="no-content-text" x-ng-if="!isEntityLoading && entity == null"><i class="fa fa-circle-o-notch"></i> Désolé, aucun contenu à afficher.</h3>
+						</div>
+						
+						<div class="default-panel-footer">
+							<md-button class="md-raised" x-ui-sref="root.orders" ui-sref-options='{reload: true}'><i class="fa fa-arrow-circle-left"></i> Retour</md-button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,137 @@
+<div x-ba-panel x-ba-panel-title="Nouvel Publicité">
+	<div class="container-fluid">
+		<form class="form-horizontal">
+			
+			<div layout="row">
+	          <md-input-container flex>
+	            <label>Date début</label>
+	            <md-datepicker ng-model="form.advOffer.startDate" md-min-date="minDate" flex required></md-datepicker>
+	          </md-input-container>
+	        </div>
+	        
+	        <div layout="row">
+	          <md-input-container flex>
+	            <label>Modèle de publicité</label>
+				<md-select x-ng-model="form.advOffer.advOption" required md-on-open="loadAdvOptions()">
+					<md-option x-ng-value="advOption" x-ng-repeat="advOption in advOptions">
+						{{ advOption.title }}
+					</md-option>
+				</md-select>
+	          </md-input-container>
+			</div>
+			
+	        <div layout="row">
+	          <md-input-container flex>
+	            <label>E-Boutique concernée</label>
+	            <md-select placeholder="Sélectionnez la boutique concernée" required x-ng-model="form.selectedEShop" md-on-open="loadEShops()">
+					<md-option x-ng-value="eShop" x-ng-repeat="eShop in eShops">
+						{{ eShop.name }}
+					</md-option>
+	            </md-select>
+	          </md-input-container>
+	        </div>
+	        
+			<div layout="row" x-ng-show="form.selectedEShop">
+	          <md-input-container flex>
+	            <label>Article concerné</label>
+	            <md-select placeholder="Sélectionnez l'article concerné" required x-ng-model="form.advOffer.article" md-on-open="loadArticles()">
+					<md-option x-ng-value="article" x-ng-repeat="article in articles">
+						{{ article.name }}
+					</md-option>
+	            </md-select>
+	          </md-input-container>
+	        </div>
+	        
+			<div layout="row" layout-align="start center" class="animated fade in" x-ng-show="form.advOffer.advOption" layout-wrap>
+				<p flex="100">
+					<label>Modèle de Publicité</label> {{ form.advOffer.advOption.title }}
+				</p>
+			</div>
+			
+			<div layout="row" layout-align="start center" class="animated fade in" x-ng-show="form.advOffer.advOption" layout-wrap>
+				<p flex="100">
+					<label>Durée</label> <duration-label x-duration="form.advOffer.advOption.duration" x-duration-type="form.advOffer.advOption.durationType" />
+				</p>
+			</div>
+			
+			<div layout="row" layout-align="start center" class="animated fade in" x-ng-show="form.advOffer.advOption" layout-wrap>
+				<p flex="100">
+					<label>Prix</label> {{ form.advOffer.advOption.price | number }} F CFA
+				</p>
+			</div>
+			
+			<div layout="row" layout-margin x-ng-if="form.advOffer && form.advOffer.advOption.price > 0">
+		        <md-input-container class="md-block" flex>
+		          <label>Sélectionnez un compte pour le paiement</label>
+		            <md-select ng-model="form.eAccount" required>
+		              <md-option x-ng-repeat="eAccount in loggedUser.eAccounts" x-ng-value="eAccount">
+		                {{ eAccount.account }}
+		              </md-option>
+		            </md-select>
+		        </md-input-container>
+			</div>
+			
+			<div layout="column" layout-align="start center" x-ng-if="form.eAccount" class="animated fadeIn" layout-margin>
+				<p flex="100">
+					<h4 class="text-center"><b>Veuillez adresser votre paiement au compte suivant, puis entrez la référence du paiement dans le champ approprié</b></h4>
+				<p>
+				
+				<div flex="100">
+					<md-card>
+				        <md-card-title>
+				          <md-card-title-media>
+				            <div class="md-media-sm card-media">
+				            	<img ng-src="rest-api/e-money-provider/{{ selectedAdminEAccount.emp.id }}/fetch-logo" class="img-responsive" style="max-height: 100px; max-width: 100px;" />
+				            </div>
+				          </md-card-title-media>
+				          <md-card-title-text>
+				            <span class="md-headline">{{ selectedAdminEAccount.emp.name }}</span>
+				            <span class="md-subhead">Compte du virement</span>
+				          </md-card-title-text>
+				        </md-card-title>
+				        <md-card-content>
+				        	<p class="text-left">
+				        		<label>Numéro</label>
+				        		<span class="text-mainge" style="font-weight: bold; font-size: 120%">
+				        			{{ selectedAdminEAccount.account }}
+				        		</span>
+				        	</p>
+				        </md-card-content>
+			      </md-card>
+			    </div>
+			</div>
+			
+		    <div layout="row" x-ng-if="form.eAccount">
+	          <md-input-container class="md-block" flex>
+	            <label>Référence du paiement</label>
+	            <input ng-model="form.paymentRef" type="text" required>
+	          </md-input-container>
+			</div>
+		
+		
+			<div layout="row">
+				<md-input-container class="md-block" flex>
+		            <label>Activer automatiquement après confirmation du paiement</label>
+		            <md-switch class="md-primary" ng-model="form.advOffer.autoEnabled" ng-init="form.advOffer.autoEnabled = true" aria-label="Activation Automatique">
+					    {{ form.advOffer.autoEnabled ? 'Oui' : 'Non' }}
+					</md-switch>
+	          </md-input-container>
+	        </div>
+	        
+			<div layout="row" layout="space-between center" layout-wrap>
+				<div flex>
+					<md-button x-ui-sref="root.adv-offers" class="md-raised"><i class="fa fa-arrow-circle-left"></i> <span class="hidden-xs">&nbsp;Retour à la liste</span></md-button>
+				</div>
+				
+				<div flex layout="row" layout-align="end center">
+					<md-button class="md-raised md-accent" x-ng-click="resetEntity()">
+						<span class="hidden-xs">Réinitialiser</span>&nbsp;<i class="fa fa-eraser"></i>
+					</md-button>
+					<md-button class="md-raised md-primary" x-ng-click="addEntity()">
+						<span class="hidden-xs">Valider</span>&nbsp;<i class="fa fa-check"></i>
+					</md-button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

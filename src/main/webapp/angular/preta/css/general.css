@@ -1,0 +1,8 @@
+.ver-text-middle { vertical-align: middle !important; }
+/* Special forms */
+.full-width { width: 100% !important; }
+.partial-width { width: 28%; }
+.header-cell { width: 25% !important; text-align: left !important; }
+.notif-hover:hover {
+	cursor: pointer;
+}

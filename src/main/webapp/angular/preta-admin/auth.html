@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html x-ng-app="adminLoginApp" lang="fr">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Hôbossa Admin - Login</title>
+		<link rel="shortcut icon" type="image/x-icon" href="angular/common/img/hobossa-tmp-fav.ico" />
+		<style>[ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak { display: none !important; }</style>
+		<link rel="stylesheet" href="angular/preta-admin/css/auth.css">
+		<link rel="stylesheet" href="angular/lib/bootstrap.css" >
+		<link rel="stylesheet" href="angular/lib/font-awesome.css" >
+	</head>
+	
+	<body x-ng-cloak="" x-ui-view="">
+		<div class="wrapper">
+			<form class="login" method="POST" id="login-form">				
+				<p class="title">Hôbossa Admin - Connexion</p>
+				<input type="text" x-ng-model="loginForm.username" placeholder="Nom d'utilisateur" autofocus />
+				<i class="fa fa-user"></i>
+				<input type="password" x-ng-model="loginForm.password" placeholder="Mot de passe" />
+				<i class="fa fa-key"></i>
+				<div class="alert alert-warning" x-ng-show="error.invalidAccount">
+					<i class="fa fa-warning"></i> Compte désactivé
+				</div>
+				<div class="alert alert-danger" x-ng-show="error.invalidCredentials">
+					<i class="fa fa-exclamation-circle"></i> Nom d'utilisateur ou mot de passe invalide
+				</div>
+				<div class="alert alert-info" x-ng-show="error.unauthorized">
+					<i class="fa fa-warning"></i> Vous n'avez pas l'authorisation requise
+				</div>
+				<button x-ng-click="login()">
+					<i class="spinner"></i><span class="state">Connexion <i class="glyphicon glyphicon-log-in"></i></span>
+				</button>
+			</form>
+		</div>
+		
+		<!-- Sripts AngularJS, Apps & Libs -->
+		<script src="angular/plugins/angular/angular.js"></script>
+		<script src="angular/plugins/angular-ui-router/release/angular-ui-router.min.js"></script>
+		<script src="angular/preta-admin/app-login.js"></script>
+		<script src="angular/preta-admin/services/LoginService.js"></script>
+		<script src="angular/preta-admin/controllers/LoginController.js"></script>
+	</body>
+</html>

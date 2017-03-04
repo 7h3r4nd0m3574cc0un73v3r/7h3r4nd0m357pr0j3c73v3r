@@ -1,0 +1,72 @@
+<div class="col-lg-offset-3 col-md-offset-3 col-sm-offset-2 col-lg-6 col-md-6 col-sm-8 col-xs-12">
+
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="row">
+				<div class="container-fluid">
+					<div class="default-panel animated fadeIn">
+						<div class="default-panel-header">
+							<h4 class="title text-mainge"><i class="fa fa-unlock"></i>&nbsp;Migration du compte en Manager</h4>
+						</div>
+						
+						<div layout="column" layout-align="center center" x-ng-if="isLoading" layout-margin>
+							<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+			        	</div>
+						        	
+						<div layout="row" layout-wrap layout-padding x-ng-if="done && !isLoading">
+							<div flex="100">
+								<p class="text-justify">
+									 Félicitations ! Votre requête de migration du compte a été enregistrée avec succès.
+									 Elle sera revue par nos administrateurs et votre compte sera mis à jour dans le 
+									 cas ou toutes les condtions sont remplies.
+								</p>
+							</div>
+							<div flex="100" layout="row" layout-align="center">
+								<md-button class="md-raised" aria-label="Valider" x-ui-sref="root" x-ui-sref-options="{reload: true}">
+									<i class="fa fa-home"></i> Retourner à l'accueil
+								</md-button>
+							</div>
+						</div>
+						
+						
+						<div layout="row" layout-wrap layout-padding x-ng-if="!done && !isLoading">
+							<div flex="100">
+								<p class="text-justify" style="text-indent: 24px;" x-ng-if="error == 0">
+									Vous souhaitez créer votre propre boutique et mettre en vente vos articles sur notre plateforme ? Rien de plus simple : Veuillez 
+									vous assurer de la validité des informations de votre profil, et que celui ci soit complet à 100 %, puis cliquez sur le bouton ci-dessous
+									pour faire la requête de migration de ce compte en mode Manager.<br /><br />
+									Notre admninistration se chargera d'activer votre compte Manager dans les plus brefs délais.
+								</p>
+								<p class="text-justify" style="text-indent: 24px;" x-ng-if="error == 1">
+									Désolé, vous n'avez ne remplissez pas les conditions une migration du compte en mode administrateur.
+								</p>
+								<p class="text-justify" style="text-indent: 24px;" x-ng-if="error == 2">
+									Votre compte est déjà en mode Manager !
+								</p>
+								<p class="text-justify" style="text-indent: 24px;" x-ng-if="error == 3">
+									Vous avez déjà une requête de validation en cous de traitement. Veuillez patienter pendant que l'administration
+									s'en occupe.
+								</p>
+								<p class="text-justify" style="text-indent: 24px;" x-ng-if="error == 4">
+									Désolé, votre profil est rempli à {{ loggedUser.profileCompletion | number }} % seulement. Veuillez le remplir complètement et réessayer.
+								</p>
+							</div>
+							<div flex="100" layout="row" layout-align="center">
+								<md-button class="md-raised md-primary" aria-label="Valider" x-ng-click="requestUpgrade()" x-ng-if="error == 0">
+									<span class="blink blink-infinite">Passer en mode Manager</span> <i class="fa fa-check-circle"></i>
+								</md-button>
+								
+								<md-button class="md-raised" aria-label="Valider" x-ui-sref="root" x-ui-sref-options="{reload: true}" x-ng-if="error > 0 && error < 4">
+									<i class="fa fa-home"></i> Retourner à l'accueil
+								</md-button>
+								
+								<md-button class="md-raised md-primary" aria-label="Profil" x-ui-sref="root.profile" x-ng-if="error == 4">
+									Mon profil <i class="fa fa-edit"></i>
+								</md-button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+</div>

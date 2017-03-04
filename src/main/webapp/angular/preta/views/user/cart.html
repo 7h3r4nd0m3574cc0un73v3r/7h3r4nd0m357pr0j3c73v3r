@@ -1,0 +1,150 @@
+<div class="row" style="margin-top: 16px;">
+	<div class="col-lg-offset-3 col-md-offset-3 col-lg-9 col-md-9 col-sm-12 col-xs-12">
+	        <div class="row">
+	        	<div class="row">
+			        <div class="container-fluid">
+				        <div class="products-container animated fadeIn">
+							<div class="products-container-header">
+								<h4 class="title text-mainge"><i class="fa fa-shopping-cart"></i>&nbsp;Mon Panier</h4>&nbsp;<small>Consultez votre panier et passez des commandes</small>
+							</div>
+							
+							<div class="products-container-content">
+								
+								<div layout="column" layout-align="space-around center" x-ng-show="isListLoading" layout-margin>
+									<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+						       	</div>
+								
+							    <div layout="column" layout-align="center center" x-ng-show="!isListLoading && !cartItems.length" layout-margin>
+									<div flex="auto">
+										<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Votre panier est vide</b></h3>
+									</div>
+						       </div>
+						       
+								<div class="default-panel-content" x-ng-show="!isListLoading && cartItems.length" layout="column">
+						       		
+									<div layout-sm="column" layout-gt-sm="row" style="border: 1px solid #eee; margin: 2px 0px 2px 0px;" x-ng-repeat="entity in cartItems">
+										<!-- Select + Article Pic + Desc and Cars -->
+										<div layout="row" flex-sm="100" flex-gt-sm="50" layout-align="start center">
+											<!-- Select -->
+											<div layout="column" layout-align="start center" flex="shrink" layout-padding-gt-sm>
+												<md-checkbox x-ng-model="entity.isSelected" class="md-warn" aria-label="Séletionner" flex></md-checkbox>
+											</div>
+											<!-- Article Picture -->
+											<div flex="none" layout="column" layout-align="start center">
+												<a x-ui-sref="root.article({ id: entity.article.id})">
+													<!-- <img x-ng-src="rest/article/fetchDefaultPic/{{ entity.article.id }}" 
+														class="img-responsive img-thumbnail center-block"
+														style="width: 100px; height: 100px;" /> -->
+													
+													<img x-ng-src="https://drive.google.com/uc?id={{ entity.article.pictures[0].googleId }}&export=download"
+														class="img-responsive img-thumbnail center-block"
+														style="width: 100px; height: 100px;" />
+												</a>
+											</div>
+											<!-- Article Name & Descc & Cars -->
+											
+											<div flex="grow" layout="column" layout-align="start"  layout-padding-gt-sm>
+												<a x-ui-sref="root.article({ id: entity.article.id })" style="margin-top: 4px; margin-bottom: 4px;" class="default-lnk" flex>
+													<span class="text-left" style="font-size: 120%;"><b>{{ entity.article.name }}</b></span>
+												</a>
+												<div layout="row" layout-align="start" layout-wrap>
+													<span x-ng-repeat="arfeat in entity.orderedArticleFeatures" flex="shrink">
+														{{ arfeat.feature.label }}
+														<span class="badge label-default" style="margin-top: -2px;" x-ng-repeat="featVal in arfeat.featureValues">
+															 {{ featVal.value }}
+														</span>
+													</span>
+												</div>
+												<div layout="row" layout-align="start">
+													<p>
+														<label>Livraison:</label>
+														<span x-ng-if="entity.article.deliveryMode == 'FREE'" class="badge bg-mainge">Gratuite</span>
+														<span x-ng-if="entity.article.deliveryMode == 'CHARGED'">
+															<small><b class="text-mainge blink blink-infinite">{{ (entity.article.deliveryFee * entity.quantity) | number }} F CFA</b> ( {{ entity.article.deliveryFee | number }} F CFA / unité)</small>
+														</span>
+													</p>
+												</div>
+											</div>
+										</div>
+										<!-- Price & Quty -->
+										<div layout="row" flex-sm="100" flex-gt-sm="24" layout-align="start center" layout-padding>
+											<div flex layout="row" layout-align="start center">
+												<span class="text-mainge" style="font-size: 120%; font-stretch: ultra-condensed;" flex="noshrink" x-ng-if="!entity.article.isDiscounted"><b>
+													{{ entity.article.price | number}}</b>&nbsp;<small>F CFA</small>
+												</span>
+												<span class="text-mainge" style="font-size: 120%; font-stretch: ultra-condensed;" flex="noshrink" x-ng-if="entity.article.isDiscounted"><b>
+													{{ entity.article.discountPrice | number}}</b>&nbsp;<small>F CFA</small>
+												</span>
+											</div>
+											<div flex layout="row" layout-align="end center">
+												<div class="input-group" style="width: 128px;">
+													<span class="input-group-btn">
+														<button class="btn btn-default btn-flat btn-sm" x-ng-click="decQuantity( entity.id)" x-ng-disabled="entity.quantity <= 1"><i class="fa fa-minus"></i></button>
+													</span>
+													<input id="quantity" x-ng-model="entity.quantity" class="form-control input-sm text-right" type="text" numbers-only readonly />
+													<span class="input-group-btn">
+														<button class="btn btn-default btn-flat btn-sm" x-ng-click="incQuantity( entity.id)"><i class="fa fa-plus"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+										<!-- Total -->
+										<div layout="row" flex-sm="100" flex-gt-sm="24" layout-align="start center" layout-padding>
+											<label class="hide-gt-sm" flex>Total</label>
+											<span flex-sm></span>
+											<span class="text-mainge" flex style="font-size: 120%; font-stretch: ultra-condensed;" x-ng-if="!entity.article.isDiscounted">
+												<b>{{ ( entity.article.price + entity.article.deliveryFee) * entity.quantity | number }}</b>&nbsp;<small>F CFA</small>
+											</span>
+											<span class="text-mainge" flex style="font-size: 120%; font-stretch: ultra-condensed;" x-ng-if="entity.article.isDiscounted">
+												<b>{{ ( entity.article.discountPrice + entity.article.deliveryFee) * entity.quantity | number }}</b>&nbsp;<small>F CFA</small>
+											</span>
+										</div>
+										<!-- Del Btn -->
+										<div layout="row" flex-sm="100" flex-gt-sm="2" layout-align="end center" layout-padding>
+											<md-button class="md-warn" x-ng-click="removeFromCart( entity.id, $event)">
+												<span class="hide-gt-sm">Supprimer&nbsp;</span><i class="fa fa-trash"></i>
+											</md-button>
+										</div>
+									</div>
+									
+									<div layout="row" layout-align="space-between center" layout-padding>
+										<span flex><b>Total de la sélection: </b></span>
+										<span flex class="text-mainge text-right" style="font-size: 120%; font-stretch: ultra-condensed;"><b>{{ total | number }}</b>&nbsp;<small>F CFA</small></span>
+									</div>
+									
+									<!-- Pages -->
+									<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+										<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+												num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+												total-items="pagination.itemsNumber" x-ng-change="changePage()"
+												previous-text="Précédent" next-text="Suivant">
+										</pagination>
+									</div>
+									
+								</div>
+							</div>
+							
+							<div class="default-panel-footer" style="padding-right: 4px; padding-left: 4px;" x-ng-show="cartItems.length">
+								<div layout="row" layout-align="start center" layout-wrap>
+									<div layout-sm="column" layout-gt-sm="row" layout-align-sm="center center" layout-align-gt-sm="start center" flex="100">
+										<md-button class="md-raised" x-ng-click="clearCart()" aria-label="Supprimer tout">Supprimer tout&nbsp;<i class="fa fa-trash"></i></md-button>
+										<span flex></span>
+										<md-button class="md-raised" x-ng-click="selectAll()" aria-label="Sélectionner tout">
+											<span x-ng-show="selectedItemsCount < allEntities.length">Sélectionner tout&nbsp;<i class="fa fa-check-square-o"></i></span>
+											<span x-ng-show="selectedItemsCount >= allEntities.length">Désélectionner tout&nbsp;<i class="fa fa-square-o"></i></span>
+										</md-button>
+									</div>
+									<div layout-sm="column" layout-gt-sm="row" layout-align-sm="center center" layout-align-gt-sm="start center" flex="100">
+										<md-button class="md-raised" x-ng-click="clearSelection()" x-ng-disabled="selectedItemsCount <= 0" aria-label="Supprimer sélection">Supprimer sélection&nbsp;<i class="fa fa-trash"></i></md-button>
+										<span flex></span>
+										<md-button class="md-primary md-raised" x-ng-show="cartItems.length" x-ng-click="orderArticles()" x-ng-disabled="selectedItemsCount <= 0">Commander la sélection <i class="fa fa-truck"></i></md-button>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
+</div>

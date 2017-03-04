@@ -1,0 +1,254 @@
+<div x-ui-view>
+	<!-- EShop Display -->
+	<div class="row" style="margin-top: 16px;">
+		<div class="col-lg-offset-3 col-md-offset-3 col-lg-9 col-md-9 col-sm-12 col-xs-12">
+			<div class="row">
+				<div class="row">
+					<div class="container-fluid">
+	
+						<div class="default-panel animated fadeInRight">
+						
+							<div class="default-panel-header">
+								<h4 class="title text-mainge"><i class="fa fa-opencart"></i>&nbsp;Bienvenue sur {{ entity.name }}</h4> <small>Visitez notre boutique en ligne</small>
+							</div>
+							
+							<div class="default-panel-content">
+								
+								<div class="loader-container" x-ng-if="isEntityLoading">
+									<div class="loading loading--double"></div>&nbsp;<span class="default-text text-mainge">Chargement de la boutique en cours ...</span>
+								</div>
+								
+								<div class="default-panel-content animated fadeIn" x-ng-if="!isEntityLoading">
+									<div class="container-fluid">
+										<div class="row">
+											<div class="row">
+												<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+													<!-- <img ng-src="rest-api/e-shop/{{ entity.id }}/fetch-logo" style="margin: auto; max-width: 100%; max-height: 350px;" class="img-responsive img-thumbail center-block" /> -->
+													
+													<img ng-src="https://drive.google.com/uc?id={{ entity.logoGoogleId }}&export=download" style="margin: auto; max-width: 100%; max-height: 350px;" class="img-responsive img-thumbail center-block" />
+												</div>
+												
+												<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+													<div style="border: 1px solid #F7F7F0; width: 100%; padding: 4px; max-height: 350px;">
+														<h3 class="text-mainge"><b>{{ entity.name }}</b></h3>
+														
+														<table style="margin-top: 8px;">
+																<tr>
+																	<td>
+																		<label class="control-label">IFU</label>
+																		<span class="text-justified">
+																			{{ entity.ifu }}
+																		</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="control-label">Registre de commerce</label>
+																		<span class="text-justified">
+																			{{ entity.rc}}
+																		</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="control-label">Service clientèle</label>
+																		<span class="text-justified">
+																			{{ entity.customerNum}}
+																		</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="control-label">Adresse E-Mail</label>
+																		<span class="text-justified">
+																			{{ entity.email}}
+																		</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="control-label">Pays</label>
+																		<span class="text-justified">
+																			{{ entity.country}}
+																		</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="control-label">Département</label>
+																		<span class="text-justified">
+																			{{ entity.department}}
+																		</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="control-label">Ville</label>
+																		<span class="text-justified">
+																			{{ entity.city}}
+																		</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="control-label">Arrondissement</label>
+																		<span class="text-justified">
+																			{{ entity.borough}}
+																		</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="control-label">Quartier</label>
+																		<span class="text-justified">
+																			{{ entity.district}}
+																		</span>
+																	</td>
+																</tr>
+																<tr>
+																	<td>
+																		<label class="control-label">Rue</label>
+																		<span class="text-justified">
+																			{{ entity.street}}
+																		</span>
+																	</td>
+																</tr>
+															</table>
+													</div>
+												</div>
+												
+												<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-justify" x-ng-if="entity.description != null">
+													<h3 class="text-mainge"><b>A propos de nous</b></h3>
+													<br />
+													<p class="text_justify">
+														{{ entity.description }}
+													</p>
+												</div>
+												<div layout="row" layout-align="end center" class="col-lg-12 col-md-12 col-sm-12 col-xs-12" x-ng-if="loggedUser != null">
+													<div flex>
+														<md-button class="md-primary" x-ng-click="addAsFavorite()" x-ng-if="!entity.isFavorite">
+															Ajouter aux Favoris&nbsp;<i class="fa fa-star"></i>
+														</md-button>
+														
+														<md-button class="md-primary" x-ng-click="removeFromFavorites()" x-ng-if="entity.isFavorite">
+															Retirer des Favoris&nbsp;<i class="fa fa-star-o"></i>
+														</md-button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							    <div layout="column" layout-align="center center" x-ng-if="!isEntityLoading && entity == null" style="min-height: 200px;">
+				   					<div flex="auto">
+				   						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun article à afficher</b></h3>
+				   					</div>
+						        </div>
+						        
+							</div>
+						</div>
+					
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row" style="margin-top: 16px;">
+		<div class="row">
+			<div class="col-lg-offset-3 col-md-offset-2 col-lg-9 col-md-10 col-sm-12 col-xs-12">
+				<div class="row">
+					<div class="container-fluid">
+						<div class="products-container animated fadeInRight">
+							<div class="products-container-header">
+								<h4 class="title text-mainge"><i class="fa fa-cart"></i>&nbsp;Nos Meilleures Ventes</h4> <small class="hidden-xs">Nos produits les plus vendus</small>
+								<a x-ui-sref="root.e-shop.best-sellers" class="more-btn pull-right hidden-xs">Voir plus <i class="fa fa-cubes"></i></a>
+							</div>
+							<div class="products-container-content">
+		
+								<div class="loader-container" x-ng-if="isBestSellerLoading">
+									<div class="loading loading--double" x-ng-show="isBestSellerLoading"></div>
+								</div>
+								
+								<div class="products-flex-container"  x-ng-if="!isBestSellerLoading && bestSellerArticles.length">	
+									<e-shop-product-widget article="article" x-ng-repeat="article in bestSellerArticles" />
+								</div>
+								
+							    <div layout="column" layout-align="center center" x-ng-if="!isBestSellerLoading && !bestSellerArticles.length" style="min-height: 200px;">
+				   					<div flex="auto">
+				   						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun article à afficher</b></h3>
+				   					</div>
+						        </div>
+						        
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Top Rated -->
+	<div class="row">
+		<div class="row">
+			<div class="col-lg-offset-3 col-md-offset-2 col-lg-9 col-md-10 col-sm-12 col-xs-12">
+				<div class="row">
+					<div class="container-fluid">
+						<div class="products-container animated fadeInRight">
+							<div class="products-container-header">
+								<h4 class="title text-mainge"><i class="fa fa-star"></i>&nbsp;Meilleurs Articles</h4> <small class="hidden-xs">Les produits les plus populaires</small>
+								<a x-ui-sref="root.e-shop.top-rated" class="more-btn pull-right hidden-xs">Voir plus <i class="fa fa-cubes"></i></a>
+							</div>
+							<div class="products-container-content">
+								<div class="loader-container" x-ng-if="isTopArticleLoading">
+									<div class="loading loading--double" x-ng-show="isTopArticleLoading"></div>
+								</div>
+								<div class="products-flex-container">
+									<e-shop-product-widget article="article" x-ng-repeat="article in topArticles" />
+								</div>
+								
+							    <div layout="column" layout-align="center center" x-ng-if="!isTopArticleLoading && !topArticles.length" style="min-height: 200px;">
+				   					<div flex="auto">
+				   						<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun article à afficher</b></h3>
+				   					</div>
+						        </div>
+						        
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Latest roducts -->
+	<div class="row">
+		<div class="row">			
+			<div class="col-lg-offset-3 col-md-offset-2 col-lg-9 col-md-10 col-sm-12 col-xs-12">
+				<div class="row">
+					<div class="container-fluid">
+						<div class="products-container animated fadeInRight">
+							<div class="products-container-header">
+								<h4 class="title text-mainge"><i class="fa fa-tags"></i>&nbsp;Nouveaux Articles</h4> <small class="hidden-xs">Nos articles récents</small>
+								<a x-ui-sref="root.e-shop.latest-articles" class="more-btn pull-right hidden-xs">Voir plus <i class="fa fa-cubes"></i></a>
+							</div>
+							<div class="products-container-content">
+								<div class="loader-container" x-ng-if="isLatestArticlesLoading">
+									<div class="loading loading--double" x-ng-show="isLatestArticlesLoading"></div>
+								</div>
+								
+								<div class="products-flex-container" x-ng-show="!isLatestArticlesLoading">
+									<e-shop-product-widget article="article" x-ng-repeat="article in latestArticles" />
+								</div>
+								
+								<h3 class="no-content-text" x-ng-if="!isLatestArticlesLoading && !latestArticles.length"><i class="fa fa-circle-o-notch"></i> Désolé, aucun contenu à afficher</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>

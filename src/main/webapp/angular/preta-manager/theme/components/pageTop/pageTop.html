@@ -1,0 +1,18 @@
+<div class="page-top clearfix"  max-height="50" ng-class="{'scrolled': scrolled}">
+  <a x-ui-sref="root" class="al-logo clearfix"><span>M<span class="hidden-xs">anager</span></span>Hôbossa</a>
+  <a class="collapse-menu-link ion-navicon" ba-sidebar-toggle-menu></a>
+  
+  <div class="user-profile clearfix">
+    <div class="al-user-profile" uib-dropdown>
+      <a uib-dropdown-toggle class="profile-toggle-link">
+        <img ng-src="{{::( 'User' | profilePicture )}}">
+      </a>
+      <ul  class="top-dropdown-menu profile-dropdown" uib-dropdown-menu>
+        <li><a x-ui-sref="root.profile" ><i class="fa fa-user"></i>Profil</a></li>
+        <li><a href x-ng-click="home()" ><i class="fa fa-home"></i>Accueil</a></li>
+        <li><a href x-ng-click="logout()" class="signout"><i class="fa fa-power-off"></i>Deconnexion</a></li>
+      </ul>
+    </div>
+    <msg-center></msg-center>
+  </div>
+</div>

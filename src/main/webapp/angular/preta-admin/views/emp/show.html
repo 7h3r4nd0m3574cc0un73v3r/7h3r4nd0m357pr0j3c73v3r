@@ -1,0 +1,33 @@
+<div x-ba-panel x-ba-panel-title="Détails Fournisseur Monnaie Numérique" x-ba-panel-class="with-scroll">
+	<table class="table table-hover">
+		<tbody>
+			<tr>
+				<td class="header-cell">Id</td>
+				<td>{{ entity.id }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Désignation</td>
+				<td>{{ entity.name }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Logo</td>
+				<td>
+					<!-- <img class="img-thumbnail center-block" style="max-height: 256px; max-width: 256px;" x-ng-src="rest-api/e-money-provider/{{ entity.id}}/fetch-logo" /> -->
+					<img class="img-thumbnail" style="max-height: 128px; max-width: 128px;" x-ng-src="https://drive.google.com/uc?id={{ entity.logoGoogleId}}&export=download" />
+				</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Préfixes</td>
+				<td>{{ entity.numPattern }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div class="pull-left">
+		<a x-ui-sref="root.emps" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span></a>
+	</div>
+
+	<button class="btn btn-warning pull-right" x-ui-sref="root.emps.edit( { id: entity.id})">
+		<span class="hidden-xs">Modifier</span>&nbsp;<i class="fa fa-edit"></i>
+	</button>
+</div>

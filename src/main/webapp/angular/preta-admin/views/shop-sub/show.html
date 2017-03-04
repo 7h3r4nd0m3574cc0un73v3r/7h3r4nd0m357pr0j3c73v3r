@@ -1,0 +1,77 @@
+<div x-ba-panel x-ba-panel-title="Abonnement #{{ entity.id }} - Boutique {{ entity.eShop.name }}" x-ba-panel-class="with-scroll">
+	<table class="table table-hover">
+		<tbody>
+			<tr>
+				<td class="header-cell">#</td>
+				<td>{{ entity.id }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Modèle d'abo.</td>
+				<td>{{ entity.subOffer.title }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Boutique</td>
+				<td>{{ entity.eShop.name }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Statut conféré</td>
+				<td>{{ entity.subOffer.shopStatus.title }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Prix</td>
+				<td>{{ entity.subOffer.price }} F CFA</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Date début</td>
+				<td>{{ entity.startDate | date }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Durée</td>
+				<td><duration-label x-duration="entity.subOffer.duration" x-duration-type="entity.subOffer.durationType" /></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Date fin</td>
+				<td>{{ entity.endDate | date }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Etat</td>
+				<td><sub-status x-status="entity.subStatus" /></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<br />
+	<h4>Paiements</h4>
+	<table class="table table-responsive table-hovered">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Montant</th>
+				<th>Référence</th>
+				<th>Statut</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr x-ng-repeat="payment in entity.payments">
+				<td>{{ payment.id}}</td>
+				<td>{{ payment.amount}} F CFA</td>
+				<td>{{ payment.paymentRef}}</td>
+				<td><payment-status x-status="payment.isValid" /></td>
+				<td>
+					<div class="btn-group pull-right">
+						<button class="btn btn-primary btn-xs" x-ng-click="acceptPayment( payment.id)" x-ng-if="payment.isValid == null"><i class="fa fa-check"></i><span class="hidden-xs"> Accepter</span></button>
+						<button class="btn btn-primary btn-xs disabled"x-ng-if="payment.isValid != null"><i class="fa fa-check"></i><span class="hidden-xs"> Accepter</span></button>
+						<button class="btn btn-danger btn-xs" x-ng-click="rejectPayment( payment.id)" x-ng-if="payment.isValid == null"><i class="fa fa-ban"></i><span class="hidden-xs"> Rejeter</span></button>
+						<button class="btn btn-danger btn-xs disabled" x-ng-if="payment.isValid != null"><i class="fa fa-ban"></i><span class="hidden-xs"> Rejeter</span></button>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<br />
+	<div class="pull-left">
+		<a x-ui-sref="root.shop-subs" x-ui-sref="{reload: true}" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span></a>
+	</div>
+</div>

@@ -1,0 +1,48 @@
+<div>
+	<div class="row">
+		<div class="col-md-12" x-ui-view>
+			<div x-ba-panel x-ba-panel-title="Statuts de boutiques" x-ba-panel-class="with-scroll">
+				<div class="">
+					<button x-ui-sref="root.shopStatuses.new" class="btn btn-primary pull-right"><i class="fa fa-plus-square"></i> Nouveau</button>
+					
+					<table class="table" st-table="entities" st-safe-src="safeEntities">
+						<thead>
+							<tr class="sortable ">
+								<th class="table-id" x-st-sort="id" st-sort-default="true">#</th>
+								<th st-sort="title">Titre</th>
+								<th st-sort="articleLimit">Limite d'article</th>
+								<th class="text-center">Actif</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr x-ng-repeat="entity in entities">
+								<td class="table-id">{{entity.id}}</td>
+								<td class="text-left">{{entity.title}}</td>
+								<td>{{entity.articleLimit}}</td>
+								<td class="text-center"><state-label is-enabled="entity.isEnabled"></state-label></td>
+								<td>
+									<div class="btn-group pull-right">
+										<button x-ui-sref="root.shopStatuses.show({ id: entity.id })" class="btn btn-default"><i class="fa fa-file-text"></i><span class="hidden-sm hidden-xs"> Afficher</span></button>
+										<button x-ui-sref="root.shopStatuses.edit({ id: entity.id })" class="btn btn-warning"><i class="fa fa-edit"></i><span
+											class="hidden-sm hidden-xs"> Modifier</span></button>
+										<button class="btn btn-danger" data-toggle="modal" x-ng-click="showDeleteModal( entity.id)"><i class="fa fa-remove"></i><span class="hidden-sm hidden-xs"> Supprimer</span></button>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="6" class="text-center">
+									<div st-pagination="" st-items-by-page="smartTablePageSize" st-displayed-pages="5"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

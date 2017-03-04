@@ -1,0 +1,41 @@
+<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+	<div class="article-div" style="margin-right: 1px; margin-left: 1px; margin-top: 2px; margin-bottom: 2px;">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<img x-ng-src="rest/article/fetchDefaultPic/{{ article.id }}" style="width: 200px; height: 200px;" class="img-responsive img-thumbnail center-block" />
+			</div>
+		</div>
+	
+		<div class="article-info">
+			<div class="container-fluid">
+				<div class="row">
+					<span class="article-price text-left pull-left">
+						<b>{{ article.price }}</b> <small>F CFA</small>
+					</span> 
+					<span class="text-muted text-right pull-right">
+						<small>{{ article.saleNumber }} Ventes</small>
+					</span>
+				</div>
+			</div>
+			
+			<div class="container-fluid">
+				<div class="row">
+					<div class="text-left" style="margin-top: 16px; margin-bottom: 16px; height: 48px;">
+						<a x-ui-sref="root.article( { id: article.id} )" class="custom-link text-justify">{{ article.name }}</a>
+					</div>
+				</div>
+			</div>
+			
+			<div class="container-fluid">
+				<div class="row">
+					<div class="text-left pull-left">
+						<a class="custom-link" x-ui-sref="root.e-shop({ id: article.eShop.id })"><i class="fa fa-opencart"></i>&nbsp;{{ article.eShop.name }}</a>
+					</div>
+					<div class="text-right text-muted pull-right">
+						<small>{{ article.eShop.city }}</small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

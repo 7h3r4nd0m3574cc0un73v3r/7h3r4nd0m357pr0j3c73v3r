@@ -1,0 +1,7 @@
+<span x-ng-switch on="status">
+	<span class="badge label-danger" x-ng-switch-when="PENDING_PAYMENT">Attente Paiement</span>
+	<span class="badge label-warning" x-ng-switch-when="PENDING_PAYMENT_CONFIRMATION">Confirmation Paiement</span>
+	<span class="badge label-default" x-ng-switch-when="PAID"><span class="blink blink-infinite blink-furiously">A livrer</span></span>
+	<span class="badge label-info" x-ng-switch-when="DELIVERING">Livraison en cours</span>
+	<span class="badge label-success" x-ng-switch-when="DELIVERED">Livrée</span>
+</span>

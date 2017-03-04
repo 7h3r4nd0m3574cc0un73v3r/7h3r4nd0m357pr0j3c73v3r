@@ -1,0 +1,48 @@
+<md-dialog aria-label="Ajout au Panier - Confirmation" flex="60">
+  <form ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2><i class="fa fa-cart-plus"></i>&nbsp;Confirmer l'ajout au Panier</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <i aria-label="Close" class="fa fa-remove"></i>
+        </md-button>
+      </div>
+    </md-toolbar>
+
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <h2>Voulez vous ajouter cet article au panier ?</h2>
+		
+		<div style="margin: 6px 0px 0px 0px; padding: 0;">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+						<e-shop-product-widget article="entity.article" />
+					</div>
+					<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12">
+						<div style="display: inline-block;">
+							<h1 class="text-mainge" style="font-weight: bold; font-stretch: condensed; font-size: 512%;"><span class="text-mainge">x&nbsp;</span>{{ entity.quantity }}</h1>
+						</div>
+						<div class="display: inline-block;">
+							<h1 style="font-weight: bold; font-stretch: condensed; font-size: 200%;">Total: <span class="text-mainge">{{ entity.article.price * entity.quantity | number }} F CFA</span></h1>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+      </div>
+    </md-dialog-content>
+
+    <md-dialog-actions layout="row">
+      <md-button x-ng-click="cancel()" md-autofocus class="md-raised">
+        <i class="fa fa-undo"></i>&nbsp;Annuler
+      </md-button>
+      <span flex></span>
+      <md-button class="md-primary md-raised" ng-click="answer( true)">
+        Confirmer&nbsp;<i class="fa fa-check-circle"></i> 
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

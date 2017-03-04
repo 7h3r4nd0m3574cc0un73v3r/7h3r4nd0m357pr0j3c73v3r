@@ -1,0 +1,17 @@
+<div layout="column" layout-align="space-around center" x-ng-show="isLoading">
+	<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+</div>
+		
+<div layout="column" layout-align="center center" x-ng-if="!isLoading && !slides.length">
+	<div flex="auto">
+		<h3 class="md-title text-mainge text-center"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Désolé! Aucun contenu à afficher</b></h3>
+	</div>
+</div>
+       
+<div layout="column" layout-align="center center" x-ng-if="!isLoading && slides.length" class="animated fadeIn">
+	<div uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+		<div uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+			<img ng-src="{{ slide.image }}" style="margin: auto; width: 100% !important;">
+		</div>
+	</div>
+</div>

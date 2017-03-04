@@ -1,0 +1,76 @@
+<div>
+	<div class="row">
+		<div class="col-md-12" x-ui-view>
+			<div x-ba-panel x-ba-panel-title="Ajouter une publicité à un article">
+		  		<div layout-gt-xs="column" layout-align-gt-xs="end center"
+		  			 layout-xs="column" layout-align-xs="space-around center">
+		  			<md-button aria-label="Ajouter" class="md-raised md-primary" x-ui-sref="root.adv-offers.new">
+		  				<i class="fa fa-plus-square"></i>&nbsp;
+		  				Nouvelle Publicté
+		  			</md-button>
+		  		</div>
+		  	</div>
+		  	
+			<div x-ba-panel x-ba-panel-title="{{ boxTitle }}">
+				<div layout="column" layout-align="space-around center" x-ng-show="isListLoading">
+					<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+	       		</div>
+					
+			    <div layout="column" layout-align="center center" x-ng-if="!isListLoading && !entities.length">
+   					<div flex="auto">
+   						<h3 class="md-title text-primary"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucune publicité à afficher</b></h3>
+   					</div>
+		        </div>
+		        
+		        <!-- Entities Loaded -->
+				<md-content layout-sm="column" layout-gt-sm="row" layout-wrap layout-align-gt-sm="start stretch"
+							x-ng-if="!isListLoading && entities.length">
+					 <md-card x-ng-repeat="entity in entities" flex="auto">
+				        <md-card-title>
+				          <md-card-title-text>
+				            <span class="md-title">{{ entity.article.name }} - Publicité #{{ entity.relId | number }} </span>
+				            <span class="md-subhead">
+				            	Valable du <b>{{ entity.startDate | date:'short'}}</b> au <b>{{ entity.endDate | date:'short' }}</b>
+				            </span>
+				          </md-card-title-text>
+				        </md-card-title>
+				        <md-card-content>
+				          <p>
+				          	<label>Statut</label>
+				          	<span><generic-status status="entity.status" /></span>
+				          </p>
+				        </md-card-content>
+				        <md-card-actions layout="row" layout-align="end center">
+				          <md-button class="md-primary md-raised md-icon-button" aria-label="Détails" x-ui-sref="root.adv-offers.show( { id: entity.id})">
+				            <i class="fa fa-folder-open"></i>
+				          	<md-tooltip md-direction="top">
+					          Détails
+					        </md-tooltip>
+				          </md-button>
+				          <md-button class="md-raised md-accent md-icon-button" aria-label="Activer" x-ng-if="entity.status == 'PAID'" x-ng-click="actDeactEntity( entity.id)">
+							<i class="fa fa-arrow-circle-up"></i>
+				          	<md-tooltip md-direction="top">
+					          Activer
+					        </md-tooltip>
+					       </md-button>
+				          <md-button class="md-raised md-warn md-icon-button" aria-label="Désactiver" x-ng-if="entity.status == 'ONGOING'" x-ng-click="actDeactEntity( entity.id)">
+							<i class="fa fa-arrow-circle-down"></i>
+				          	<md-tooltip md-direction="top">
+					          Désactiver
+					        </md-tooltip>
+					       </md-button>
+				      </md-card>
+				</md-content>
+				
+				<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+					<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+							num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+							total-items="pagination.itemsNumber" x-ng-change="changePage()"
+							previous-text="Précédent" next-text="Suivant">
+					</pagination>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>

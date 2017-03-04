@@ -1,0 +1,19 @@
+<div class="product-container animated fadeIn">
+	<a x-ui-sref="root.article( { id: article.id} )">
+		<img x-ng-src="https://drive.google.com/uc?id={{ article.pictures[0].googleId }}&export=download" class="img-responsive product-img" />
+	</a>
+	<div class="product-price text-mainge">
+		<span class="price-value">{{ article.price | number}}</span>
+		<span>F CFA</span>
+	</div>
+	<div class="product-sales" tooltip-placement="left" uib-tooltip="{{ article.saleNumber }} vente{{ article.saleNumber > 1 ? 's' : ''}}">
+		{{ article.saleNumber }} <i class="fa fa-shopping-cart"></i>
+	</div>
+	<div class="product-name" tooltip-placement="bottom" uib-tooltip="{{ article.name }}">
+		<a x-ui-sref="root.article( { id: article.id } )">{{ article.name | limitTo: 23 }} {{ article.name.length > 23 ? '...' : '' }}</a>
+	</div>
+	<div class="product-rating text-center">
+		<span uib-rating x-ng-model="article.rating" max="5" class="text-mainge disable-outline" read-only=true on-hover="hoveringOver(value)" 
+			  on-leave="overStar = null" titles="['Un','Deux','Trois', 'Quatre', 'Cinq']" aria-labelledby="default-rating"></span>
+	</div>
+</div>

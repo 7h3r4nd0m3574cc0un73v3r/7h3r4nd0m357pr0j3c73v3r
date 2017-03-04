@@ -1,0 +1,27 @@
+<div class="row" style="margin-top: 16px;">
+	<div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-lg-10 col-md-10 col-sm-10 col-xs-12">
+		<div class="row">
+			<div class="page-header">
+				<h4 class="text-mainge">
+					<b><i class="fa fa-cubes"></i>&nbsp;Articles - {{ category.label }}</b>&nbsp;<small></small>
+				</h4>
+			</div>
+		</div>
+		
+	    <div layout="column" layout-align="center center" x-ng-if="!entities.length" style="min-height: 200px;">
+			<div flex="auto">
+				<h3 class="md-title text-mainge"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun article dans cette catégorie</b></h3>
+			</div>
+        </div>
+		
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" x-ng-show="entities.length">
+			<rated-article article="entity" x-ng-repeat="entity in entities" />
+		</div>
+		
+		<div class="text-center">
+			<pagination uib-pagination x-ng-model="currentPage" boundary-links="true" rotate="true" 
+					num-pages="pagesNumber" max-size="15" class="pagination" items-per-page="pageSize"
+					total-items="itemsNumber" x-ng-change="changePage()"></pagination>
+		</div>
+	</div>
+</div>

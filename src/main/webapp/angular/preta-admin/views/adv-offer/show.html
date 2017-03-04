@@ -1,0 +1,102 @@
+<div x-ba-panel x-ba-panel-title="Détails Publicté #{{ entity.id }}" x-ba-panel-class="with-scroll">
+	<table class="table table-hover">
+		<tbody>
+			<tr>
+				<td class="header-cell">Id</td>
+				<td>{{ entity.id }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Date enregistrement</td>
+				<td>{{ entity.regDate | date: 'medium' }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Article concerné</td>
+				<td>{{ entity.article.name }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Boutique concernée</td>
+				<td>{{ entity.article.eShop.name }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Manager</td>
+				<td><a>{{ entity.article.eShop.manager.username }}</a></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Statut</td>
+				<td><generic-status x-status="entity.status" /></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Activ. Auto ?</td>
+				<td><state-label isEnabled="entity.isAutoEnabled" /></td>
+			</tr>
+			<tr>
+				<td colspan="2" class="text-center"><b>Modèle d'abonnement</b></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Titre</td>
+				<td>{{ entity.advOption.title }}</td>
+			</tr>
+			<tr>
+				<td class="header-cell">Prix</td>
+				<td><b>{{ entity.advOption.price | number }} F CFA</b></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Durée</td>
+				<td><duration-label duration="entity.advOption.duration" duration-type="entity.advOption.durationType" /></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Date de démarrage</td>
+				<td><b>{{ entity.startDate | date:'medium' }}</b></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Date d'expiration</td>
+				<td><b>{{ entity.endDate | date:'medium' }}</b></td>
+			</tr>
+			<tr>
+				<td class="header-cell">Code</td>
+				<td>{{ entity.code }}</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<h4 class="special-header">Paiements</h4>
+	<table class="table table-hover">	
+		<thead>
+			<tr>
+				<th>#</th>
+				<td class="text-right">Montant</td>
+				<td class="text-center">Référence</td>
+				<td class="text-center">Statut</td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr x-ng-repeat="payment in entity.payments">
+				<td class="text-right">{{ payment.id}}</td>
+				<td class="text-right">{{ payment.amount}} F CFA</td>
+				<td class="text-center">{{ payment.paymentRef}}</td>
+				<td class="text-center"><payment-status status="payment.isValid" /></td>
+				<td>
+					<div class="pull-right" x-ng-show="payment.isValid == null">
+						<button x-ng-click="acceptPayment( payment.id)" class="btn btn-success btn-xs">Accepter</button>
+						<button x-ng-click="rejectPayment( payment.id)" class="btn btn-danger btn-xs">Rejeter</button>
+					</div>
+					<div class="pull-right" x-ng-show="payment.isValid != null">
+						<button class="btn btn-success btn-xs disabled">Accepter</button>
+						<button class="btn btn-danger btn-xs disabled">Rejeter</button>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<div style="margin-top: 32px;">
+		<div layout="row" layout-align="space-between center">
+			<div layout="row" layout-align="start center">
+				<md-button class="md-raised" x-ui-sref="root.adv-offers">
+					<i class="fa fa-arrow-circle-left"></i>&nbsp;Retour
+				</md-button>
+			</div>
+		</div>
+	</div>
+</div>

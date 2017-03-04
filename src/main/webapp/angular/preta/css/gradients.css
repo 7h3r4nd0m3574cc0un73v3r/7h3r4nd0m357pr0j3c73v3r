@@ -1,0 +1,17 @@
+.header-gradient
+{
+	background-color: #46dcff !important;
+	background: -webkit-linear-gradient( 160deg, #46dcff, #fafafa, #fe9a2d);
+	background: -moz-linear-gradient( 160deg, #46dcff, #fafafa, #fe9a2d);
+	background: linear-gradient( 160deg, #46dcff, #fafafa, #fe9a2d);
+}
+
+.header-cyan
+{
+	background: #46dcff !important;
+}
+
+.header-orange
+{
+	background: #fe9a2d !important;
+}

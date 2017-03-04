@@ -1,0 +1,21 @@
+<div class="row  animated bounceInDown">
+	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+		<!-- <img src="angular/preta/img/preta-logo-tmp.png" class="img-responsive center-block" /> -->
+		<img src="https://drive.google.com/uc?id=0B0W0ktANhIydWE1qZUQ4QnBENDQ&export=download" class="img-responsive center-block" />
+	</div>
+
+	<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+		<div class="row">
+			<form class="" role="search" style="width: 100% !important; padding-top: 16px;">
+				<div class="form-group form-group-lg">
+					<div class="input-group input-group-lg" style="width: 100% !important;" x-ng-init="searchParams = {}">
+						<input x-ng-model="searchParams.name" class="form-control custom-form-input" type="text" placeholder="Mot clés, description, nom d'article ..." />
+						<span class="input-group-btn">
+							<button x-ui-sref="root.search({ name: searchParams.name, pageSize: 12, page: 1})" class="btn btn-mainge btn-flat" style="border-radius: 0;"><i class="fa fa-search"></i></button>
+						</span>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
