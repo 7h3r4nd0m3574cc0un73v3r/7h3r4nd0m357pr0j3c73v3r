@@ -26,7 +26,7 @@ import org.usayi.preta.exceptions.FieldErrorResource;
 public class Tools
 {
 	//Path to upload folder
-	public static final String uploadPath ="/home/jboss/hobossa/";
+	public static final String uploadPath ="/random/preta/";
 	
 	public static boolean isValidImage( MultipartFile file) {
 		try

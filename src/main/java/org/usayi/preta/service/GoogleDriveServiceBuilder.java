@@ -24,7 +24,7 @@ public class GoogleDriveServiceBuilder
     private static HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
 	/* Google Drive Secret P12 File */
-	public static final String pathToDriveSecret = "/home/jboss/hobossa/opnshft-secret/";
+	public static final String pathToDriveSecret = "/random/preta/secrets/";
 	
     /* Build Drive Service */
 	public static Drive buildDriveService() {
