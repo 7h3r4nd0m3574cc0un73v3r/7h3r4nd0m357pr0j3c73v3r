@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableBatchProcessing
+@SuppressWarnings( "unused")
 public class BatchConfiguration
 {
 	  @Autowired

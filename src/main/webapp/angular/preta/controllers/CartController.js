@@ -54,6 +54,10 @@ App.controller( 'CartController', [ '$rootScope', '$scope', '$state', 'ArticleSe
     $scope.changePage = function() {
     	$log.info( "Change Page Called");
     	$scope.isListLoading = true;
+    	/* In case of articles deletion and page is no longer available */
+    	if( $scope.pagination.currentPage < $scope.pagination.pagesNumber) {
+    		$scope.pagination.currentPage = $scope.pagination.pagesNumber;
+    	}
     	var pageIndex = ($scope.pagination.currentPage - 1) * $scope.pagination.pageSize;
     	$scope.cartItems = $scope.allEntities.slice( pageIndex, pageIndex + $scope.pagination.pageSize);
     	$log.info( "Entities changed from ChangePage: " + $scope.cartItems.length);

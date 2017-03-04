@@ -367,7 +367,6 @@
 		</dependency>
 		
 	</dependencies>
-    
     <build>
         <plugins>
             <plugin>
@@ -404,16 +403,6 @@
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
-            
-            <!--  OpenShift Conpatibility -->
-          	<plugin>
-	              <artifactId>maven-war-plugin</artifactId>
-	              <version>2.6</version>
-	              <configuration>
-	                  <warName>ROOT</warName>
-	              </configuration>
-          	</plugin>
-          	
 <!--             <plugin>
 			    <groupId>com.samaxes.maven</groupId>
 			    <artifactId>minify-maven-plugin</artifactId>
@@ -441,9 +430,6 @@
 			    </configuration>
 			</plugin> -->
         </plugins>
-        
-        <!-- OpenShift Compat. too -->
-        <finalName>preta</finalName>
     </build>
     
     <!--  Profiles for Backup scrips -->
