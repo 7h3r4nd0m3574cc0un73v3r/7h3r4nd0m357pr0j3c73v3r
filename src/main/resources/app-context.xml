@@ -14,9 +14,9 @@
 		<property name="driverClassName"
 			value="com.mysql.jdbc.Driver">
 		</property>
-		<property name="url" value="jdbc:mysql://localhost:3306/preta_db"></property>
-		<property name="username" value="preta_app"></property>
-		<property name="password" value="preta_app_password"></property>
+		<property name="url" value="jdbc:mysql://172.30.99.226:3306/preta_db"></property>
+		<property name="username" value="preta"></property>
+		<property name="password" value="preta_password"></property>
 	</bean>
 	
 	<bean id="persistenceUnitManager"
