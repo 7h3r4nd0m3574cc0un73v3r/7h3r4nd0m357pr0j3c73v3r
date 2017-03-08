@@ -158,7 +158,12 @@ App.controller( 'ArticleController', [ '$scope', '$rootScope', '$state', '$state
       angular.extend(toastrConfig, defaultConfig);
     });
 	/*End Toastr Config */
-
+    
+    /* Carousel COnfig */
+    $scope.carouselConfig = { active: 0};
+    
+    /* End Carusel Config */
+    
     $scope.addToCart = function() {
     	
     	if( $scope.isValidForCart()) {

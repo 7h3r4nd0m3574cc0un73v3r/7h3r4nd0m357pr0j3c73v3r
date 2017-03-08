@@ -19,15 +19,17 @@
 											<div class="row">
 												<!-- Slides -->
 												<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
-													<div uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+													<div uib-carousel interval="myInterval" no-wrap="noWrapSlides" active="carouselConfig.active">
 														<div uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
-															<img ng-src="{{ slide.image }}" style="margin: auto; width: 100% !important;">
+															<img ng-src="{{ slide.image }}" style="margin: auto; width: 100% !important; max-height: 320px;">
 														</div>
 													</div>
-													<div layout="row" layout-align="center space-around" layout-margin> 
-														<div flex="25" x-ng-repeat="slide in slides">
-															<img ng-src="{{ slide.image }}" />
-														</div>
+													<div layout="row" layout-align="center space-around" layout-margin>
+													
+														<a ng-click="carouselConfig.active = slide.id" class="picture-thumbnail" x-ng-repeat="slide in slides" flex="25">
+															<img ng-src="{{ slide.image }}" class="img-responsive center-block" style="max-width: 80px; max-height: 80px;" />
+														</a>
+														
 													</div>
 												</div>
 												<!-- Article Info -->

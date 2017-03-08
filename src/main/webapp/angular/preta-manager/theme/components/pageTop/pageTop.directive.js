@@ -16,11 +16,11 @@ function pageTop() {
 			/* Var Config */
 			var homeUrl =  $location.$$protocol + '://' + $location.$$host;
 			if( $location.host() == 'localhost')
-				homeUrl += ':' + $location.$$port.toString + '/preta';
+				homeUrl += ':' + $location.$$port + '/preta';
 			else
 				homeUrl += $location.$$host;
 			
-			console.log( homeUr);
+			console.log( homeUrl);
 			
 			/* Logout Function */
 			$scope.logout = function() {

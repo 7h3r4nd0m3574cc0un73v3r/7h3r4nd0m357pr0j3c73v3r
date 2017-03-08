@@ -1,0 +1,71 @@
+<div class="container-fluid">
+	<div class="col-lg-offset-3 col-md-offset-2 col-lg-6 col-md-8 col-sm-12 col-xs-12" style="min-height: 460px;">
+		<div class="row">
+			<div class="default-panel animated bounceInUp">
+			
+				<div class="default-panel-header">
+					<h4 class="title text-mainge"><i class="fa fa-truck"></i>&nbsp;Tracking de colis</h4>  <small>Vérifiez l'état d'avancement de vos livraisons</small>
+				</div>
+				
+				<div class="defaut-panel-content">
+					<div layout="column" layout-padding>
+						<form name="myForm">
+							<div layout="column" flex>
+					          <md-input-container class="md-block" flex>
+					            <label>N° de colis</label>
+					            <input ng-model="form.packageId" type="text" required name="packageId" />
+							    <div ng-messages="myForm.packageId.$error" multiple md-auto-hide="false">
+							      <div ng-message="required">
+						            Champ requis.
+						          </div>
+						          <div ng-if="formErrors.packageId.notFound">
+						            N° Colis inexistant
+						          </div>
+								</div>
+					          </md-input-container>
+							</div>
+							
+							<div layout="row" flex layout-align="space-around">
+					         	<md-button class="md-raised md-primary" ng-click="loadStatus()" ng-disabled="form.packageId == null">
+					         		Valider <i class="fa fa-check"></i>
+					         	</md-button>
+					        </div>
+					    </form>
+					</div>
+					
+					<div layout="column" x-ng-show="showInfo" layout-padding>
+						<div layout-sm="column" layout-gt-sm="row" flex>
+				          <md-input-container class="md-block" flex>
+				            <label>Agent Logistique</label>
+				            <input ng-model="packageInfo.logAgent" type="text" readonly />
+				          </md-input-container>
+				          
+				          <md-input-container class="md-block" flex>
+				            <label>Heure d'envoi</label>
+				            <input ng-model="packageInfo.startDate" type="text" readonly />
+				          </md-input-container>
+						</div>
+						<div layout="row" flex>
+							<md-input-container class="md-block" flex>
+					            <label>Statut du colis</label>
+					            <input ng-model="packageInfo.status" type="text" readonly />
+				          	</md-input-container>
+						</div>
+						<div layout="row" flex>
+							<md-input-container class="md-block" flex>
+					            <label>Estimation de la durée et date d'arrivée</label>
+					            <input ng-model="packageInfo.endDate" type="text" readonly />
+					        </md-input-container>
+						</div>
+						<div layout="row" flex>
+							<md-input-container class="md-block" flex>
+					            <label>Adresse de livraison</label>
+					            <input ng-model="packageInfo.deliveryAddress" type="text" readonly />
+					        </md-input-container>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
