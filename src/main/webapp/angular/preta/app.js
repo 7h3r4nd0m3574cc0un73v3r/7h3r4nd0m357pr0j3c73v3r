@@ -766,6 +766,13 @@ function config( $stateProvider, $urlRouterProvider, $mdThemingProvider) {
 			templateUrl: 'angular/preta/views/article/search.html',
 			controller: 'SearchController'
 		})
+		/* Tracking */
+		.state( 'root.tracking', {
+			url: '/tracking',
+			title: 'Tracking',
+			templateUrl: 'angular/preta/views/shared/tracking.html',
+			controller: 'TrackingController'
+		})
 		/*Logged User Stuff*/
 		.state( 'root.profile', {
 			url: '/profile',

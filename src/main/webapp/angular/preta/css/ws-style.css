@@ -664,6 +664,26 @@ h2.title:after{
   display: block;
   margin: 15px -70px 10px 25px;
 }
+/* Article Page */
+a.picture-thumbnail {
+	text-decoration: none;
+	border: 1px solid #ddd;
+}
+a.picture-thumbnail:link {
+	color: black;
+}
+a.picture-thumbnail:visited {
+	color: #666;
+}
+a.picture-thumbnail:hover {
+    cursor: pointer;
+    border: 1px solid #ff6823;
+}
+a.picture-thumbnail:active {
+    color: #ff7328;
+    border: 1px solid #ff6823;
+}
+/* End Article Page */
 
 /* Bootstrap Pagination override */
 .pagination > li > a,

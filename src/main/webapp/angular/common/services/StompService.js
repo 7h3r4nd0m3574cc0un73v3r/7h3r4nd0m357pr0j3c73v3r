@@ -1,6 +1,6 @@
 App.factory( 'StompService', [ '$stomp', '$log', '$q', '$rootScope', function( $stomp, $log, $q, $rootScope) {
 	/* Config */
-	var baseUrl = '';
+	var baseUrl = '/preta';
 	var endpoint = '/websocket';
 	var url = baseUrl + endpoint;
 	
