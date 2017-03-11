@@ -90,6 +90,7 @@ public interface IAdminRESTAPI extends ISharedRESTAPI
 	/* End Payment Type */
 	
 	/* Payment */
+	public PagedListJSON loadPayments( final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
 		/* Article Orders */
 		public PagedListJSON loadPaymentArticleOrders( final Long id, final Integer page, final Integer pageSize);
 		/* Shop Sub */
@@ -108,7 +109,11 @@ public interface IAdminRESTAPI extends ISharedRESTAPI
 		public void addSupervisedManagerToAdmin( final Long adminId, final Long managerId);
 		public void removeSupervisedManagerFromAdmin( final Long adminId, final Long managerId);
 	/* End Users */
-		
+	
+	/* Logged User */
+	public PagedListJSON loadAdminPayments( final Long userId, final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
+	/* End Logged User */
+	
 	/* HomePicture */
 	public PagedListJSON loadSlides( final Integer page, final Integer pageSize, final boolean orderByDiplayOrderAsc);
 	public Long addSlide( final Slide entity);

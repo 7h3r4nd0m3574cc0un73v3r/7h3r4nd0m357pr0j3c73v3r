@@ -317,8 +317,8 @@ public class AdminRESTAPIController
 	/* ShopStatus */
 	@GetMapping
 	@JsonView( Views.Admin.class)
-	@RequestMapping( value="/shop-status/get/{id}")
-	public ResponseEntity<?> getShopStatus( @PathVariable( "id") final Long id)
+	@RequestMapping( value="/shop-status/{id}")
+	public ResponseEntity<?> loadShopStatus( @PathVariable( "id") final Long id)
 	{
 		ShopStatus entity = aRESTAPI.loadShopStatus( id);
 
@@ -332,11 +332,16 @@ public class AdminRESTAPIController
 	@GetMapping
 	@JsonView( Views.Admin.class)
 	@RequestMapping( value="/shop-statuses")
-	public ResponseEntity<?> listShopStatus( @RequestParam( name="page", defaultValue="1") final Integer page,
+	public ResponseEntity<?> loadShopStatuses( @RequestParam( name="page", defaultValue="1") final Integer page,
 											 @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize)
 	{
 		try
 		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+				return Tools.unauthorized();
+			
 			return Tools.handlePagedListJSON( aRESTAPI.listShopStatus( page, pageSize));
 		}
 		catch( Exception e)
@@ -352,6 +357,11 @@ public class AdminRESTAPIController
 	{
 		try
 		{	
+			if( isAnonymous())
+				return Tools.unauthorized();
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+				return Tools.unauthorized();
+			
 			aRESTAPI.addShopStatus(entity);
 
 			return new ResponseEntity<Void>( HttpStatus.CREATED);
@@ -364,9 +374,14 @@ public class AdminRESTAPIController
 		}
 	}
 	@PutMapping
-	@RequestMapping( value="/shop-status/update/{id}")
+	@RequestMapping( value="/shop-status/{id}/update")
 	public ResponseEntity<?> updateShopStatus( @RequestBody ShopStatus entity, @PathVariable( "id") final Long id)
 	{
+		if( isAnonymous())
+			return Tools.unauthorized();
+		if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+			return Tools.unauthorized();
+		
 		ShopStatus originalEntity = aRESTAPI.loadShopStatus( id);
 
 		if( originalEntity == null)
@@ -381,13 +396,18 @@ public class AdminRESTAPIController
 
 	}
 	@DeleteMapping
-	@RequestMapping( value="/shop-status/delete/{id}")
+	@RequestMapping( value="/shop-status/{id}/delete")
 	public ResponseEntity<?> deleteShopStatus(@PathVariable( "id") final Long id)
 	{
 		try
 		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+				return Tools.unauthorized();
+			
 			if( aRESTAPI.loadShopStatus( id) == null)
-				return new ResponseEntity<Void>( HttpStatus.NOT_FOUND);
+				return Tools.entityNotFound();
 
 			aRESTAPI.deleteShopStatus( id);
 
@@ -707,6 +727,11 @@ public class AdminRESTAPIController
 	{
 		try
 		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+				return Tools.unauthorized();
+			
 			return Tools.handlePagedListJSON( aRESTAPI.loadUpgradeRequests(page, pageSize, orderByIdAsc, status));
 		}
 		catch( Exception e)
@@ -774,6 +799,49 @@ public class AdminRESTAPIController
 	/* End Upgrade Requests */
 	
 	/* Payments */
+	@GetMapping
+	@JsonView( Views.Admin.class)
+	@RequestMapping( "/payment/{id}")
+	public ResponseEntity<?> loadPayment( @PathVariable( "id") final Long id)
+	{
+		try
+		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+				return Tools.unauthorized();
+			
+			return new ResponseEntity<Payment>( aRESTAPI.loadPayment(id), HttpStatus.OK);
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
+	@GetMapping
+	@JsonView( Views.Admin.class)
+	@RequestMapping( "/payments")
+	public ResponseEntity<?> loadPayments( @RequestParam( name="page", defaultValue="1") final Integer page,
+										   @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize,
+										   @RequestParam( name="orderByIdAsc", defaultValue="true") final boolean orderByIdAsc,
+										   @RequestParam( name="status", defaultValue="0") final Integer status)
+	{
+		try
+		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+				return Tools.unauthorized();
+			
+			return Tools.handlePagedListJSON( aRESTAPI.loadPayments(page, pageSize, status, orderByIdAsc));
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
 	@PutMapping
 	@RequestMapping( "/payment/{id}/accept")
 	public ResponseEntity<?> acceptPayment( @PathVariable( "id") final Long id)
@@ -938,6 +1006,73 @@ public class AdminRESTAPIController
 		
 		return Tools.ok();
 	}
+		/* Article Order */
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/payment/{id}/article-orders")
+		public ResponseEntity<?> loadPaymentArticleOrders(
+											   @PathVariable( name="id", required=true) final Long id,
+											   @RequestParam( name="page", defaultValue="1") final Integer page,
+											   @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+					return Tools.unauthorized();
+				
+				return Tools.handlePagedListJSON( aRESTAPI.loadPaymentArticleOrders(id, page, pageSize));
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
+		/* ShopSub */
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/payment/{id}/shop-sub")
+		public ResponseEntity<?> loadPaymentShopSub(
+											   @PathVariable( name="id", required=true) final Long id)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+					return Tools.unauthorized();
+				
+				return new ResponseEntity<ShopSub>( aRESTAPI.loadPaymentShopSub(id), HttpStatus.OK);
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
+		/* ShopSub */
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/payment/{id}/adv-offer")
+		public ResponseEntity<?> loadPaymentAdvOffer( @PathVariable( name="id", required=true) final Long id)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+					return Tools.unauthorized();
+				
+				return new ResponseEntity<AdvOffer>( aRESTAPI.loadPaymentAdvOffer(id), HttpStatus.OK);
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
 	/* End Payments */
 	
 	/* Exception Handler */
@@ -1352,6 +1487,36 @@ public class AdminRESTAPIController
 			}
 		}
 	/* End Users */
+	
+	/* Logged User */
+		/* Payments */
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/logged-user/payments")
+		public ResponseEntity<?> loadUserPayments( @RequestParam( name="page", defaultValue="1") final Integer page,
+												   @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize,
+												   @RequestParam( name="status", defaultValue="0") final int status,
+												   @RequestParam( name="orderByIdAsc", defaultValue="true") final boolean orderByIdAsc) 
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+					return Tools.unauthorized();
+				
+				return Tools.handlePagedListJSON( aRESTAPI.loadPayments(page, pageSize, status, orderByIdAsc));
+				/* TODO: Change to Addressed Payments */
+				//return Tools.handlePagedListJSON( aRESTAPI.loadAdminPayments( getLoggedUserFromPrincipal().getUserInfo().getId(), status, page, pageSize, orderByIdAsc));
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
+	/* End Logged User */
 	
 	/* Category */
 	@GetMapping

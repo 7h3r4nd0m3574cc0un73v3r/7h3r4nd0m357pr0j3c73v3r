@@ -37,7 +37,9 @@ public class Payment implements Serializable
 	@GeneratedValue( strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	private String title;
+	@NotNull
+	@JsonView( Views.Public.class)
+	private Long relId;
 	
 	@NotNull
 	@JsonView( Views.Public.class)
@@ -53,8 +55,9 @@ public class Payment implements Serializable
 	@JsonView( Views.Public.class)
 	private Timestamp validationDate = null;
 	
-	@ManyToOne
-	@JsonIgnore
+	@Fetch( FetchMode.SELECT)
+	@JsonView( Views.Admin.class)
+	@ManyToOne( fetch=FetchType.EAGER)
 	@JoinColumn( referencedColumnName="id")
 	private EAccount eAccount;
 		
@@ -83,6 +86,36 @@ public class Payment implements Serializable
 	@JoinColumn( referencedColumnName="id", nullable=true)
 	private ShopSub shopSub = null;
 	
+	/* User who did the payment */
+	@NotNull
+	@ManyToOne
+	@JsonIgnore
+	private User user;
+	
+	@Transient
+	@JsonView( Views.Admin.class)
+	private String username;
+	
+	public String getUsername()
+	{
+		return username;
+	}
+
+	public void setUsername(String username)
+	{
+		this.username = username;
+	}
+
+	public User getUser()
+	{
+		return user;
+	}
+
+	public void setUser(User user)
+	{
+		this.user = user;
+	}
+
 	@Transient
 	@JsonView( Views.Public.class)
 	private Timestamp regDate;
@@ -117,14 +150,14 @@ public class Payment implements Serializable
 		this.id = id;
 	}
 
-	public final String getTitle()
+	public Long getRelId()
 	{
-		return title;
+		return relId;
 	}
 
-	public final void setTitle(String title)
+	public void setRelId(Long relId)
 	{
-		this.title = title;
+		this.relId = relId;
 	}
 
 	public final Float getAmount()
@@ -187,10 +220,9 @@ public class Payment implements Serializable
 		this.paymentType = paymentType;
 	}
 
-	public Payment(String title, Float amount, String paymentRef, PaymentType paymentType)
+	public Payment( Float amount, String paymentRef, PaymentType paymentType)
 	{
 		super();
-		this.title = title;
 		this.amount = amount;
 		this.paymentRef = paymentRef;
 		this.paymentType = paymentType;

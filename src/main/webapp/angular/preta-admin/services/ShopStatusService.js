@@ -4,7 +4,7 @@ App.factory( 'ShopStatusService', ['$http', '$q', function( $http, $q) {
 		return {
 			loadEntities: function() {
 				return $http({
-					url: 'rest/shop-statuses',
+					url: 'rest-api/admin/shop-statuses',
 					method: 'GET',
 					params: {
 						page: "1",
@@ -21,7 +21,7 @@ App.factory( 'ShopStatusService', ['$http', '$q', function( $http, $q) {
 				);
 			},
 			addEntity: function( entity) {
-				return $http.post( 'rest/shop-status/add', entity)
+				return $http.post( 'rest-api/admin/shop-status/add', entity)
 							.then( function( response) {
 								return response.data;
 							}, function( errResponse) {
@@ -30,7 +30,7 @@ App.factory( 'ShopStatusService', ['$http', '$q', function( $http, $q) {
 							});
 			},
 			editEntity: function( entity) {
-				return $http.put( 'rest/shop-status/edit/' + entity.id, entity)
+				return $http.put( 'rest-api/admin/shop-status/' + entity.id + '/update', entity)
 							.then( function( response) {
 								return response.data;
 							}, function( errResponse) {
@@ -39,7 +39,7 @@ App.factory( 'ShopStatusService', ['$http', '$q', function( $http, $q) {
 							});
 			},
 			deleteEntity: function( id) {
-				return $http.put( 'rest/shop-status/delete/' + id)
+				return $http.put( 'rest-api/admin/shop-status/' + id + '/delete')
 							.then( function( response) {
 								return response.data;
 							}, function( errResponse) {

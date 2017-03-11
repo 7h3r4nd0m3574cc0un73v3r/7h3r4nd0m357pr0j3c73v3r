@@ -259,6 +259,9 @@ public class ManagerRESTAPIController
 				Payment payment = new Payment( entity.getPayment());
 				payment.setShopSub( shopSub);
 				payment.setAmount( shopSub.getSubOffer().getPrice());
+				/* Set the User */
+				payment.setUser(user);
+				payment.setRelId( mRESTAPI.loadUserPayments( user.getUserInfo().getId(), 1, 0, 0, true).getItemsNumber() + 1L);
 				/*
 				 * TODO
 				 */
@@ -481,7 +484,9 @@ public class ManagerRESTAPIController
 				payment.setAmount( entity.getSubOffer().getPrice());
 				payment.setShopSub( entity);
 				payment.setPaymentRef(paymentRef);
-				
+				/* Set the User */
+				payment.setUser( getLoggedUserFromPrincipal());
+				payment.setRelId( mRESTAPI.loadUserPayments( getLoggedUserFromPrincipal().getUserInfo().getId(), 1, 0, 0, true).getItemsNumber() + 1L);
 				/* Persist Payment */
 				mRESTAPI.addPayment( payment, eAccount.getId(), adminEAccount.getId());
 				
@@ -1102,6 +1107,12 @@ public class ManagerRESTAPIController
 	{
 		try
 		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_MANAGER"))
+				return Tools.unauthorized();
+			
 			/* TODO Urgent: Control everything before a single ent is persisted */
 			/* TODO Control endDate must be superior to now for at least 1 hour */
 			ObjectMapper mapper = new ObjectMapper();
@@ -1185,7 +1196,8 @@ public class ManagerRESTAPIController
 				payment.setAmount( entity.getAdvOption().getPrice());
 				payment.setAdvOffer( entity);
 				payment.setPaymentRef(paymentRef);
-				
+				payment.setUser( mRESTAPI.loadUser( getLoggedUserFromPrincipal().getUserInfo().getId()));
+				payment.setRelId( mRESTAPI.loadUserPayments( getLoggedUserFromPrincipal().getUserInfo().getId(), 1, 0, 0, true).getItemsNumber() + 1L);
 				/* Persist Payment */
 				mRESTAPI.addPayment( payment, eAccount.getId(), adminEAccount.getId());
 				

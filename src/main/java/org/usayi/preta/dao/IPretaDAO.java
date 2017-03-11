@@ -155,6 +155,10 @@ public interface IPretaDAO
 		public User loadManagerSupervisingAdmin( final Long id);
 		/* Manager - EShops */
 		public PagedListJSON loadManagerEShops( final Long id, final Integer page, final Integer pageSize);
+		/* Payment */
+		public PagedListJSON loadUserPayments( final Long userId, final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
+		/* Admin Payments */
+		public PagedListJSON loadAdminPayments( final Long userId, final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
 	/* End User */
 	
 	/* AdvOption */
@@ -263,7 +267,8 @@ public interface IPretaDAO
 	/* End Picture */
 	
 	/* Payment */
-	public Payment getPayment( final Long id);
+	public PagedListJSON loadPayments( final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
+	public Payment loadPayment( final Long id);
 	public void addPayment( final Payment entity, final Long eAccount, final Long adminEAccountId);
 	public void updatePayment( final Payment entity);
 		/* Shop Sub */

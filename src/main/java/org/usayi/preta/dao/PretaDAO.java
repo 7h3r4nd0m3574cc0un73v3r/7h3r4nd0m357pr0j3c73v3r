@@ -13,6 +13,7 @@ import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.validator.constraints.Email;
+import org.springframework.context.annotation.Description;
 import org.springframework.transaction.annotation.Transactional;
 import org.usayi.preta.entities.AdvOffer;
 import org.usayi.preta.entities.AdvOption;
@@ -1135,6 +1136,38 @@ public class PretaDAO implements IPretaDAO
 				return null;
 			}
 		}
+		/* Admin Payments */
+		@Override
+		@SuppressWarnings("unchecked")
+		public PagedListJSON loadAdminPayments( Long userId, Integer page, Integer pageSize, int status, boolean orderByIdAsc)
+		{
+			String hql = "SELECT DISTINCT entity FROM Payment entity JOIN entity.adminEAccount eAccount JOIN eAccount.user userInfo"
+					+ " WHERE userInfo.id = :id";
+
+			if( status == 1)
+				hql += " AND entity.isValid is null";
+			else if( status == 2)
+				hql += " AND entity.isValid = true";
+			else if( status == 3)
+				hql += " AND entity.isValid = false";
+
+			hql += " ORDER BY entity.id";
+			if( !orderByIdAsc)
+				hql += " DESC";
+			
+			Query query = em.createQuery( hql);
+			query.setParameter( "id", userId);
+
+			PagedListJSON result =  generatePagedList(query, page, pageSize);
+			
+			for( Payment entity : ( List<Payment>) result.getEntities())
+			{
+				entity.setUsername( entity.getUser().getUsername());
+				entity.setRegDate( getRegDate( Payment.class, entity.getId()));
+			}
+			
+			return result;
+		}
 	/* End User */
 
 	/* AdvOffer */
@@ -2045,6 +2078,7 @@ public class PretaDAO implements IPretaDAO
 		
 		return entity.getId();
 	}
+		/* TODO Wrong place;Relocate */
 		/* Account for payment */
 		@Override
 		public PagedListJSON loadAdminEAccountsForPayments( Integer page, Integer pageSize)
@@ -2126,9 +2160,41 @@ public class PretaDAO implements IPretaDAO
 	
 	/* Payment */
 	@Override
-	public Payment getPayment( Long id)
+	@SuppressWarnings("unchecked")
+	@Description( "Status: 0 => All; 1 => Pending; 2 => Accepted; 3 => Rejected")
+	public PagedListJSON loadPayments( Integer page, Integer pageSize, int status, boolean orderByIdAsc)
+	{
+		String hql = "SELECT entity FROM Payment entity";
+		if( status == 1)
+			hql += " WHERE entity.isValid is null";
+		else if( status == 2)
+			hql += " WHERE entity.isValid = true";
+		else if( status == 3)
+			hql += " WHERE entity.isValid = false";
+		
+		hql += " ORDER BY entity.id ";
+		if( !orderByIdAsc)
+			hql += " DESC";
+		
+		Query query = em.createQuery( hql);
+		
+		PagedListJSON result =  generatePagedList(query, page, pageSize);
+		
+		for( Payment entity : ( List<Payment>) result.getEntities())
+		{
+			entity.setUsername( entity.getUser().getUsername());
+			entity.setRegDate( getRegDate( Payment.class, entity.getId()));
+		}
+		
+		return result;
+	}
+	@Override
+	public Payment loadPayment( Long id)
 	{
 		Payment entity = em.find(Payment.class, id);
+		
+		entity.setUsername( entity.getUser().getUsername());
+		entity.setRegDate( getRegDate( Payment.class, entity.getId()));
 		
 		return entity;
 	}
@@ -2151,6 +2217,30 @@ public class PretaDAO implements IPretaDAO
 	public void updatePayment( Payment entity)
 	{
 		em.merge( entity);
+	}
+	@Override
+	@Description( "Status: 0 => All; 1 => Pending; 2 => Accepted; 3 => Rejected")
+	public PagedListJSON loadUserPayments( Long userId, Integer page, Integer pageSize, int status, boolean orderByIdAsc)
+	{
+		String hql = "SELECT entity FROM Payment entity JOIN entity.user user JOIN user.userInfo userInfo"
+					+ " WHERE userInfo.id = :id";
+
+		if( status == 1)
+			hql += " AND entity.isValid is null";
+		else if( status == 2)
+			hql += " AND entity.isValid == true";
+		else if( status == 3)
+			hql += " AND entity.isValid == false";
+		
+		hql += " ORDER BY entity.id";
+		
+		if( !orderByIdAsc)
+			hql += " DESC";
+		
+		Query query = em.createQuery( hql);
+		query.setParameter( "id", userId);
+		
+		return generatePagedList( query, page, pageSize);
 	}
 		/* Article Orders */
 		@Override
@@ -2178,7 +2268,7 @@ public class PretaDAO implements IPretaDAO
 		@Override
 		public AdvOffer loadPaymentAdvOffer( Long id)
 		{
-			return getPayment(id).getAdvOffer();
+			return loadPayment(id).getAdvOffer();
 		}
 	/* End Payment */
 	

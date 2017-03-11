@@ -1975,7 +1975,11 @@ public class PublicRESTAPIController
 				/* Map Admin used EAccount */
 				EAccount adminUsedEAccount = pRESTAPI.loadEAccount( adminEAccountId);
 				
-				Payment payment = new Payment( "", total, paymentRef, restBL.getPaymentType( 1L));
+				Payment payment = new Payment( total, paymentRef, restBL.getPaymentType( 1L));
+				/* Set User and Relative Id */
+				payment.setUser(user);
+				payment.setRelId( pRESTAPI.loadUserPayments( user.getUserInfo().getId(), 1, 0, 0, true).getItemsNumber() + 1L);
+				
 				pRESTAPI.addPayment( payment, usedEAccount.getId(), adminUsedEAccount.getId());
 				
 				for( PreArticleOrder preOrder : preOrders)
@@ -2222,7 +2226,6 @@ public class PublicRESTAPIController
 				return Tools.internalServerError();
 			}
 		}
-		
 		/* Notifications */
 		@GetMapping
 		@JsonView( Views.Public.class)
@@ -2310,7 +2313,6 @@ public class PublicRESTAPIController
 				return Tools.internalServerError();
 			}
 		}
-		
 		/* Rating */
 		@PostMapping
 		@RequestMapping( "/ordered-article/{id}/rate")
@@ -2339,6 +2341,28 @@ public class PublicRESTAPIController
 				restBL.editOrderedArticle(entity);
 				
 				return Tools.ok();
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
+		/* Payment */
+		@GetMapping
+		@JsonView( Views.Public.class)
+		@RequestMapping( "/logged-user/payments")
+		public ResponseEntity<?> loadUserPayments( @RequestParam( name="page", defaultValue="1") final Integer page,
+												   @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize,
+												   @RequestParam( name="status", defaultValue="0") final int status,
+												   @RequestParam( name="orderByIdAsc", defaultValue="true") final boolean orderByIdAsc) 
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				return Tools.handlePagedListJSON( pRESTAPI.loadUserPayments( getLoggedUserFromPrincipal().getUserInfo().getId(), status, page, pageSize, orderByIdAsc));
 			}
 			catch( Exception e)
 			{
@@ -3000,7 +3024,7 @@ public class PublicRESTAPIController
 			eAccount.setIsDefault( true);
 			eAccount.setRelId( 1L);
 			
-			mRESTAPI.addEAccountToUserInfo( userInfo.getId(), 1L, eAccount);
+			mRESTAPI.addEAccountToUserInfo( userInfo.getId(), pRESTAPI.loadEMoneyProviderByName( "MTN").getId(), eAccount);
 
 			//Set base for User
 			User user = new User();

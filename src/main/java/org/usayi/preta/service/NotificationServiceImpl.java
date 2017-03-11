@@ -361,6 +361,13 @@ public class NotificationServiceImpl implements NotificationService
 		}
 	}
 
+	@Override
+	public void newRegisteredPayment( Object entity)
+	{
+		Payment payment = (Payment) entity;
+		
+	}
+	
 	/* Get N Set */
 	public IPretaDAO getPretaDao()
 	{
