@@ -1,0 +1,155 @@
+<div x-ba-panel x-ba-panel-title="Détails Paiement #{{ entity.id }}" x-ba-panel-class="with-scroll">
+	<div layout="column" layout-align="space-around center" x-ng-show="isEntityLoading">
+		<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+     		</div>
+		
+    <div layout="column" layout-align="center center" x-ng-if="!isEntityLoading && entity == null">
+		<div flex="auto">
+			<h3 class="md-title text-success"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Désolé, pas de contenu à afficher</b></h3>
+		</div>
+    </div>
+    
+	<div layout="column" layout-align="start">
+		<div layout="row" flex>
+			<md-input-container class="md-block" flex>
+	            <label>Id Absolu</label>
+	            <input ng-model="entity.id" readonly />
+            </md-input-container>
+            <md-input-container class="md-block" flex>
+	            <label>Id Relatif au Client</label>
+	            <input ng-model="entity.relId" readonly />
+            </md-input-container>
+		</div>
+		
+		<div layout="row" flex>
+            <md-input-container class="md-block" flex>
+	            <label>Client</label>
+	            <input ng-model="entity.username" readonly />
+            </md-input-container>
+        </div>
+        
+        <div layout="row" flex layout-wrap>
+            <md-input-container class="md-block" flex>
+	            <label>Envoyé du</label>
+	            <input ng-model="entity.eAccount.account" readonly />
+            </md-input-container>
+            <md-input-container class="md-block" flex>
+	            <label>Envoyé au</label>
+	            <input ng-model="entity.adminEAccount.account" readonly />
+            </md-input-container>
+            <md-input-container class="md-block" flex>
+	            <label>Date</label>
+	            <input value="{{ entity.regDate | date:'medium' }}" readonly />
+            </md-input-container>
+		</div>
+		
+		<div layout="row" flex>
+            <md-input-container class="md-block" flex>
+	            <label>Montant du paiement</label>
+	            <input value="{{ entity.amount | number}} F CFA" readonly class="text-right"/>
+            </md-input-container>
+		</div>
+		
+		<div layout="row" flex>
+            <md-input-container class="md-block" flex>
+	            <label>Reférence du paiement</label>
+	            <input ng-model="entity.paymentRef" readonly />
+            </md-input-container>
+		</div>
+		
+		<div layout="row"  ng-if="entity.isValid == true" flex>
+            <md-input-container class="md-block" flex>
+	            <label>Statut</label>
+	            <input value="Accepté" readonly class="text-center"/>
+            </md-input-container>
+		</div>
+		
+		<div layout="row" flex ng-if="entity.isValid == false">
+            <md-input-container class="md-block" flex>
+	            <label>Statut</label>
+	            <input value="Rejeté" readonly class="text-center"/>
+            </md-input-container>
+		</div>
+		
+		<div layout="row" flex ng-if="entity.isValid == null">
+            <md-input-container class="md-block" flex>
+	            <label>Statut</label>
+	            <input value="En attente" readonly class="text-center"/>
+            </md-input-container>
+		</div>
+		
+		<div layout="column" x-ng-if="entity.articleOrders.length" flex>
+			<div layout="row" flex>
+				<h3 class="text-success"><b>Commandes</b></h3>
+			</div>
+			
+			<div layout="column" flex>
+				<div layout="row" flex x-ng-repeat="articleOrder in entity.articleOrders" layout-padding layout-align="start center" layout-wrap>
+					<div flex="none">
+						<md-button class="md-raised md-icon-button" aria-label="Détails" x-ui-sref="root.orders.show( {id: articleOrder.id })">
+							<i class="fa fa-external-link"></i>
+							<md-tooltip>
+								Détails Commande
+							</md-tooltip>
+						</md-button>
+					</div>
+					<div flex="none">
+						# {{ articleOrder.id | number }} ( #{{ articleOrder.buyerRelId | number }} / Client)
+					</div>
+					<div flex="none">
+						<order-status status="articleOrder.status" />
+					</div>
+					<div flex="none">
+						Nombre Articles: {{ articleOrder.orderedArticles.length | number }}
+					</div>
+					<div flex="auto" class="text-right">
+						Montant <b>{{ articleOrder.total | number }} F CFA</b>
+					</div>
+				</div>
+				
+				<div layout="row" flex layout-padding>
+					<div flex="auto" class="text-right">
+						Total <b>{{ entity.expectedAmount | number }} F CFA</b>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div layout="column" x-ng-if="entity.shopSub" flex>
+			<div layout="row" flex>
+				<h3 class="text-success"><b>Abonnement</b></h3>
+			</div>
+			
+			<div layout="column" flex>
+				<shop-sub-card entity="entity.shopSub" />
+			</div>
+		</div>
+		
+		<div layout="column" x-ng-if="entity.advOffer" flex>
+			<div layout="row" flex>
+				<h3 class="text-success"><b>Publicité</b></h3>
+			</div>
+			
+			<div layout="column" flex>
+				<adv-offer-card entity="entity.advOffer" />
+			</div>
+		</div>
+	</div>
+	
+	<div layout="row" layout-wrap>
+		<div>
+			<md-button class="md-raised" x-ui-sref="root.payments" x-ui-sref-options="{ reload: true}">
+				<i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span>
+			</md-button>
+		</div>
+		<div flex></div>
+		<div layout="row" layout-align="end center">
+			<md-button class="md-raised md-warn" x-ng-click="rejectPayment( entity.id)" ng-disabled="entity.isValid != null">
+				Rejeter <i class="fa fa-ban"></i>
+			</md-button>
+			<md-button class="md-raised md-primary" x-ng-click="acceptPayment( entity.id)" ng-disabled="entity.isValid != null">
+				Accepter <i class="fa fa-check"></i>
+			</md-button>
+		</div>
+	</div>
+</div>

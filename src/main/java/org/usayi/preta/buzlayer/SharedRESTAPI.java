@@ -241,13 +241,19 @@ public abstract class SharedRESTAPI implements ISharedRESTAPI
 		{
 			return pretaDao.loadUserNotifications(userId, status, page, pageSize, orderByIdAsc, restrict);
 		}
+		/* Payment */
+		@Override
+		public PagedListJSON loadUserPayments( Long userId, Integer page, Integer pageSize, int status, boolean orderByIdAsc)
+		{
+			return pretaDao.loadUserPayments(userId, page, pageSize, status, orderByIdAsc);
+		}
 	/* End User */
 	
 	/* Payments */
 	@Override
 	public Payment loadPayment( Long id)
 	{
-		return pretaDao.getPayment(id);
+		return pretaDao.loadPayment(id);
 	}
 	@Override
 	public void updatePayment( Payment entity)
@@ -405,12 +411,12 @@ public abstract class SharedRESTAPI implements ISharedRESTAPI
 	
 	/* Notifications */
 	@Override
-	public Notification loadNotification( final Long id)
+	public Notification loadNotification( Long id)
 	{
 		return pretaDao.loadNotification(id);
 	}
 	@Override
-	public void updateNotification( final Notification entity)
+	public void updateNotification( Notification entity)
 	{
 		pretaDao.updateNotification(entity);
 	}

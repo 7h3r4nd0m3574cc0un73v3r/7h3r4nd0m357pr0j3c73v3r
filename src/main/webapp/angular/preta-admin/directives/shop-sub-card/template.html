@@ -1,0 +1,34 @@
+<md-card flex="auto">
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-title">#{{ entity.relId | number }} - {{ entity.subOffer.title }}</span>
+            <span class="md-subhead">
+            	Limité à {{ entity.subOffer.shopStatus.articleLimit | number }} article{{ entity.subOffer.shopStatus.articleLimit > 1 ? 's' : '' }}
+            </span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+          <p>
+          	<label>Valide du</label>
+          	<span>{{ entity.startDate | date }}</span>
+          	<label>au</label>
+          	<span>{{ entity.endDate | date }}</span>
+          </p>
+          <p>
+          	<label>Durée</label>
+          	<span><duration-label duration="entity.subOffer.duration" duration-type="entity.subOffer.durationType" /></span>
+          </p>
+          <p>
+          	<label>Statut</label>
+          	<generic-status x-status="entity.subStatus" />
+          </p>
+        </md-card-content>
+        <md-card-actions layout="row" layout-align="end center">
+          <md-button class="md-primary md-raised md-icon-button" aria-label="Détails" x-ui-sref="root.e-shops.show.shop-subs.show( { id: entity.id })">
+            <i class="fa fa-folder-open"></i>
+          	<md-tooltip md-direction="top">
+	          Détails
+	        </md-tooltip>
+          </md-button>
+        </md-card-actions>
+      </md-card>

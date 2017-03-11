@@ -67,6 +67,8 @@ public interface ISharedRESTAPI
 		public PagedListJSON loadManagerAdvOffers( final Long id, final Integer page, final Integer pageSize, final GenericStatus status, final boolean orderByIdAsc);
 		/* Notification */
 		public PagedListJSON loadNotifications( final Long userId, final int status, final Integer page, final Integer pageSize, final boolean orderByIdAsc, final Integer restrict);
+		/* Payment */
+		public PagedListJSON loadUserPayments( final Long userId,  final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
 	/* End User & UserInfo */
 	
 	/* Payments */

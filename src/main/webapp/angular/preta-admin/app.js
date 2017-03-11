@@ -585,6 +585,51 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 			controller: 'OrderController'
 		})
 		/* End Order Section */
+		/* Payments Section */
+		.state( 'root.payments', {
+			url: '/payments?page&pageSize&paymentStatus&orderByIdAsc',
+			title: 'Paiements',
+			templateUrl: 'angular/preta-admin/views/payment/list.html',
+			ncyBreadcrumb: {
+				label: '{{ breadCrumbLabel }}'
+			},
+			controller: 'PaymentController'
+		})
+		.state( 'root.payments.show', {
+			url: '/show/{id:int}',
+			title: 'Détails Paiement',
+			templateUrl: 'angular/preta-admin/views/payment/show.html',
+			ncyBreadcrumb: {
+				label: 'Détails #{{ entity.id | number }}'
+			},
+			controller: 'PaymentController'
+		})
+		/* Parametrized Shortcuts */
+		.state( 'root.payments-all', {
+			url: '/payments/all',
+			controller: [ '$state', function( $state) {
+				$state.go( 'root.payments', { page: 1, pageSize: 10, orderByIdAsc: true, paymentStatus: 0});
+			}]
+		})
+		.state( 'root.payments-pending', {
+			url: '/payments/pending',
+			controller: [ '$state', function( $state) {
+				$state.go( 'root.payments', { page: 1, pageSize: 10, orderByIdAsc: true, paymentStatus: 1});
+			}]
+		})
+		.state( 'root.payments-accepted', {
+			url: '/payments/accepted',
+			controller: [ '$state', function( $state) {
+				$state.go( 'root.payments', { page: 1, pageSize: 10, orderByIdAsc: true, paymentStatus: 2});
+			}]
+		})
+		.state( 'root.payments-rejected', {
+			url: '/payments/rejected',
+			controller: [ '$state', function( $state) {
+				$state.go( 'root.payments', { page: 1, pageSize: 10, orderByIdAsc: true, paymentStatus: 3});
+			}]
+		})
+		/* End Payements Section */
 		/* Category */
 		.state( 'root.categories', {
 			url : '/categories',
@@ -767,10 +812,33 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 		  stateRef: 'root.orders-all'
 	  }]
     });
+    
+    /* Payments */
+    baSidebarServiceProvider.addStaticItem({
+    	  title: 'Paiements',
+    	  icon: 'fa fa-mobile-phone',
+	  	  subMenu: [{
+	  		  title: 'Tous',
+	  		  stateRef: 'root.payments-all'
+	        }, {
+	  		  title: 'A Confirmer',
+	  		  stateRef: 'root.payments-pending'
+	  	  }, {
+	  		  title: 'Accept\xE9s',
+	  		  stateRef: 'root.payments-accepted'
+	  	  }, {
+	  		  title: 'Rejet\xE9s',
+	  		  stateRef: 'root.payments-rejected'
+	  	  }]
+    });
+    
+    /* Reglements */
     baSidebarServiceProvider.addStaticItem({
     	  title: 'R\xE8glements',
     	  icon: 'glyphicon glyphicon-transfer'
-      });
+    });
+    
+    /* Remboursements */
     baSidebarServiceProvider.addStaticItem({
   	  title: 'Remboursements',
   	  icon: 'fa fa-undo'

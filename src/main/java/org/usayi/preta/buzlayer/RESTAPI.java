@@ -381,7 +381,7 @@ public class RESTAPI implements IRESTAPI
 	@Override
 	public Payment getPayment( Long id)
 	{
-		return pretaDao.getPayment(id);
+		return pretaDao.loadPayment(id);
 	}
 //	@Override
 //	public void addPayment( Payment entity)
