@@ -18,6 +18,7 @@ public interface WebSocketService
 	void articleOrderToConfirm( final Long id);
 	void deliveredArticleOrder( final Long id);
 	void updatedArticleOrder( final Long id);
+	void alteredPayment( final Payment entity);
 	
 	/* Manager */
 	void confirmedArticleOrder( final Long id);

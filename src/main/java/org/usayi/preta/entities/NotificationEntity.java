@@ -12,5 +12,7 @@ public enum NotificationEntity
 	/* Approval Ready */
 	UPGRADE,
 	/* THRESHOLD */
-	ARTICLE
+	ARTICLE,
+	/* New Payment */
+	PAYMENT
 }

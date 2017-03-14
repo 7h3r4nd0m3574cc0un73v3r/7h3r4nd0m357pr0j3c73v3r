@@ -816,7 +816,7 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
     /* Payments */
     baSidebarServiceProvider.addStaticItem({
     	  title: 'Paiements',
-    	  icon: 'fa fa-mobile-phone',
+    	  icon: 'fa fa-check',
 	  	  subMenu: [{
 	  		  title: 'Tous',
 	  		  stateRef: 'root.payments-all'

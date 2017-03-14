@@ -12,6 +12,7 @@ import org.usayi.preta.buzlayer.IPublicRESTAPI;
 import org.usayi.preta.entities.ArticleOrder;
 import org.usayi.preta.entities.Notification;
 import org.usayi.preta.entities.OrderStatus;
+import org.usayi.preta.entities.Payment;
 import org.usayi.preta.entities.json.LoggedUser;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -122,12 +123,18 @@ public class WebSocketServiceImpl implements WebSocketService
 		messagingTemplate.convertAndSend( "/topic/article-order/" + id,
 										  aRESTAPI.loadArticleOrder(id));
 	}
+	@Override
+	public void alteredPayment(Payment entity)
+	{
+		messagingTemplate.convertAndSend( "/topic/admin/payment/" + entity.getId(), aRESTAPI.loadPayment( entity.getId()));
+	}
 	/* End Admin Section */
 	
 	/* Manager */
 	@Autowired
 	private final IManagerRESTAPI mRESTAPI;
 	
+
 	@Override
 	public void confirmedArticleOrder( Long id)
 	{

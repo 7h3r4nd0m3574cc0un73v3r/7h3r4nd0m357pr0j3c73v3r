@@ -63,12 +63,27 @@
     								$scope.areNotificationsLoading = false;
     						});
     	};
-    	
-    	/* Notification fecth additional infos */
-    	function prepareNotification( entity) {
+
+    	/* Read Notifications */
+    	$scope.readNotifications = function() {
+    		/* Cheating */
+    		$scope.unreadNotificationsCount = 0;
     		
+    		var ids = [];
+    		angular.forEach( $scope.notifications, function( n) {
+    			if( !n.isRead)
+    				ids.push( n.id);
+    		});
+    		
+    		if( ids.length > 0)
+    			NotificationService.multipleRead( ids)
+	    						   .then( function(r) {
+	    							   /* $scope.unreadNotificationsCount = 0; */
+	    							   /* Check the cheat */
+	    						   }, function( r) {
+	    							   console.error( response);
+	    						   });
     	};
-    	
       }]
     };
   }

@@ -1982,6 +1982,9 @@ public class PublicRESTAPIController
 				
 				pRESTAPI.addPayment( payment, usedEAccount.getId(), adminUsedEAccount.getId());
 				
+				/* Notify Admin */
+				notifications.newRegisteredPayment(payment);
+				
 				for( PreArticleOrder preOrder : preOrders)
 				{
 					ArticleOrder articleOrder = new ArticleOrder( preOrder);
@@ -2064,7 +2067,7 @@ public class PublicRESTAPIController
 
 					websocketService.articleOrderToConfirm( articleOrder.getId());
 					/* Notify Admin of new Order */
-					notifications.entityPayConfReady(articleOrder);
+//					notifications.entityPayConfReady(articleOrder);
 				}
 				
 				return Tools.created();
@@ -2772,6 +2775,12 @@ public class PublicRESTAPIController
 	@MessageMapping( "/article-order/{id}")
 	public ArticleOrder websocketLoadArticleOrder( @DestinationVariable final Long id) {
 		return pRESTAPI.loadArticleOrder(id);
+	}
+	@JsonView( Views.Public.class)
+	@SendToUser( "/topic/logged-user/payment/{id}")
+	@MessageMapping( "/payment/{id}")
+	public Payment websocketLoadPayment( @DestinationVariable final Long id) {
+		return pRESTAPI.loadPayment(id);
 	}
 	/* End WebSockets */
 	

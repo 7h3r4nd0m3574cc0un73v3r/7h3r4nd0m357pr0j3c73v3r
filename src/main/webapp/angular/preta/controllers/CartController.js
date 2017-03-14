@@ -1,5 +1,10 @@
 App.controller( 'CartController', [ '$rootScope', '$scope', '$state', 'ArticleService', '$stateParams', '$mdDialog', 'toastr', 'toastrConfig', '$log',
                                     function( $rootScope, $scope, $state, ArticleService, $stateParams, $mdDialog, toastr, toastrConfig, $log) {
+	/* Reject Unlogged User */
+	if( $rootScope.loggedUser == null) {
+		$state.go( 'root.errors.401');
+	}
+	
 	/* Loading Mutex */
 	$scope.isListLoading = true;
 	
@@ -292,21 +297,4 @@ App.controller( 'CartController', [ '$rootScope', '$scope', '$state', 'ArticleSe
 			}
 		});
 	};
-	
-	/* Watching changes */
-	$scope.$watch( 'allEntities', function( newValue, oldValue) {
-		$log.info( "All Entities changed " + $scope.allEntities.length);
-		$scope.updateTotal();
-	}, true);
-	
-	$scope.$watch( 'entities', function( newValue, oldValue) {
-		$log.info( "Entities changed from");
-		$log.info( oldValue)
-		$log.info( ' to ');
-		$log.info( newValue);
-	});
-	
-	$scope.$watch( 'isListLoading', function( newValue, oldValue) {
-		$log.info( "isListLoading changed to " + newValue);
-	});
 }]);

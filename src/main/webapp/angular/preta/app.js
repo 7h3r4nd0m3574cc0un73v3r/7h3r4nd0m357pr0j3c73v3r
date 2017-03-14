@@ -23,9 +23,19 @@ var App = angular.module( "pretaApp", [
                                       ]);
 App.config( config);
 
+/* Config Interceptor */
+module.factory('myInterceptor', ['$log', function($log) {  
+    $log.debug('$log is here to show you that this is a regular factory with injection');
+
+    var myInterceptor = {
+    		
+    };
+
+    return myInterceptor;
+}]);
+
 /* PretaApp Config */
-function config( $stateProvider, $urlRouterProvider, $mdThemingProvider) {
-	
+function config( $stateProvider, $urlRouterProvider, $mdThemingProvider, $httpProvider) {	
 	/* Theming Config */
 	$mdThemingProvider.theme( 'default')
 					  .primaryPalette( 'deep-orange')
@@ -37,6 +47,7 @@ function config( $stateProvider, $urlRouterProvider, $mdThemingProvider) {
 	/* mdDateProvider */
 	
 	/* End mdDateProvider */
+//	$httpProvider.interceptors.push('myInterceptor');
 	
 	/* Route Config */
 	$urlRouterProvider.otherwise('');
@@ -865,6 +876,28 @@ function config( $stateProvider, $urlRouterProvider, $mdThemingProvider) {
 				}
 			}]
 		})
+		/* Error Section */
+		.state( 'root.errors', {
+			url: '/errors',
+			template: '<div ui-view></div>'
+		})
+		.state( 'root.errors.401', {
+			url: '/401',
+			templateUrl: 'angular/preta/views/error/401.html'
+		})
+		.state( 'root.errors.403', {
+			url: '/403',
+			templateUrl: 'angular/preta/views/error/403.html'
+		})
+		.state( 'root.errors.404', {
+			url: '/404',
+			templateUrl: 'angular/preta/views/error/404.html'
+		})
+		.state( 'root.errors.500', {
+			url: '/500',
+			templateUrl: 'angular/preta/views/error/500.html'
+		})
+		/* End Error Section */
 		/* Debug */
 		.state( 'root.fa', {
 			url: '/fa',
@@ -879,6 +912,7 @@ function config( $stateProvider, $urlRouterProvider, $mdThemingProvider) {
 			templateUrl: 'angular/preta/views/sandbox.html',
 		})
 };
+
 
 function _arrayBufferToBase64(buffer) {
     var binary = '';

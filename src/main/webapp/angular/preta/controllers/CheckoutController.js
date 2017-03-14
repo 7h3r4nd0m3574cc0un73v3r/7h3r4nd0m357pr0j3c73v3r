@@ -1,5 +1,9 @@
-App.controller( 'CheckoutController', ['$state', '$scope', 'ArticleService', 'OrderService', 'ToastService', 'SoundService',
-                                     function( $state,  $scope, ArticleService, OrderService, ToastService, SoundService) {
+App.controller( 'CheckoutController', ['$state', '$scope', 'ArticleService', 'OrderService', 'ToastService', 'SoundService', '$rootScope',
+                                     function( $state,  $scope, ArticleService, OrderService, ToastService, SoundService, $rootScope) {
+	
+	if( $rootScope.loggedUser == null) {
+		$state.go( 'root.errors.401');
+	}
 	
 	/* Loading Mutexes */
 	$scope.isLoading = true;

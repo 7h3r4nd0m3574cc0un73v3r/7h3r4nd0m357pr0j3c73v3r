@@ -24,5 +24,5 @@ public interface NotificationService
 	/* Admin */
 	void entityApprovalReady( final Object entity);
 	void entityPayConfReady( final Object entity);
-	void newRegisteredPayment( final Object entity);
+	void newRegisteredPayment( final Payment entity);
 }

@@ -266,6 +266,9 @@ public class ManagerRESTAPIController
 				 * TODO
 				 */
 				mRESTAPI.addPayment(payment, payment.geteAccount().getId(), payment.getAdminEAccount().getId());
+
+				/* Notify Admin */
+				notifications.newRegisteredPayment(payment);
 				
 				shopSub.addPayment( payment);
 				shopSub.setSubStatus( GenericStatus.PENDING_PAYMENT_CONFIRMATION);
@@ -279,7 +282,7 @@ public class ManagerRESTAPIController
 			if( eShop.getProfileCompletion() >= 100)
 				notifications.entityApprovalReady(eShop);
 			
-			notifications.entityPayConfReady(shopSub);
+//			notifications.entityPayConfReady(shopSub);
 
 			/* Schedule Expiry
 			 * Email & Notifications Embeded
@@ -489,6 +492,9 @@ public class ManagerRESTAPIController
 				payment.setRelId( mRESTAPI.loadUserPayments( getLoggedUserFromPrincipal().getUserInfo().getId(), 1, 0, 0, true).getItemsNumber() + 1L);
 				/* Persist Payment */
 				mRESTAPI.addPayment( payment, eAccount.getId(), adminEAccount.getId());
+
+				/* Notify Admin */
+				notifications.newRegisteredPayment(payment);
 				
 				entity.addPayment( payment);
 				entity.setSubStatus( GenericStatus.PENDING_PAYMENT_CONFIRMATION);
@@ -1200,6 +1206,9 @@ public class ManagerRESTAPIController
 				payment.setRelId( mRESTAPI.loadUserPayments( getLoggedUserFromPrincipal().getUserInfo().getId(), 1, 0, 0, true).getItemsNumber() + 1L);
 				/* Persist Payment */
 				mRESTAPI.addPayment( payment, eAccount.getId(), adminEAccount.getId());
+
+				/* Notify Admin */
+				notifications.newRegisteredPayment(payment);
 				
 				entity.addPayment( payment);
 				entity.setStatus( GenericStatus.PENDING_PAYMENT_CONFIRMATION);
@@ -1207,7 +1216,7 @@ public class ManagerRESTAPIController
 			}
 			
 			/* Notifiy Admins */
-			notifications.entityPayConfReady(entity);
+//			notifications.entityPayConfReady(entity);
 			
 			return Tools.created();
 		}

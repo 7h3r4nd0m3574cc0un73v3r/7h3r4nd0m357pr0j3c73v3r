@@ -1,5 +1,9 @@
 App.controller( 'LoginController', [ '$rootScope', '$scope', '$state', 'UserService', 'ArticleService',
                                      function( $rootScope, $scope, $state, UserService, ArticleService) {
+	if( $rootScope.loggedUser != null) {
+		$state.go( 'root.errors.403');
+	}
+	
 	/*Init default variables*/
 	$scope.loginForm = { username: "", password: ""};
 	$scope.error = { invalidCredentials: false, invalidAccount: false, unauthorized: false};

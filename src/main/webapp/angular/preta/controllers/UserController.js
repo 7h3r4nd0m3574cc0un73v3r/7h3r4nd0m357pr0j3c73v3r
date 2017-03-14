@@ -1,6 +1,10 @@
 App.controller( 'UserController', [ '$rootScope', '$scope', '$state', '$http', '$mdDialog', 'UserService', 'ToastService', 'SoundService', 'StompService', '$log',
                                      function( $rootScope, $scope, $state, $http, $mdDialog, UserService, ToastService, SoundService, StompService, $log) {
 	
+	/* Reject Anonymous User */
+	if( $rootScope.loggedUser == null) {
+		$state.go( 'root.errors.401');
+	}
 	
 	/* Loading Mutex */
 	$scope.isLoading = true;
