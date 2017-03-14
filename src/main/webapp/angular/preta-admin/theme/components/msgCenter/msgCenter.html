@@ -1,7 +1,9 @@
 <ul class="al-msg-center clearfix">
 	<li uib-dropdown>
-		<a uib-dropdown-toggle> <i class="fa fa-bell"></i><span>{{ unreadNotificationsCount }}</span>
-			<span class="notification-ring"></span>
+		<a uib-dropdown-toggle ng-click="readNotifications()">
+			<i class="fa fa-bell"></i>
+			<span>{{ unreadNotificationsCount }}</span>
+			<span class="notification-ring" ng-show="unreadNotificationsCount > 0"></span>
 		</a>
 	
 		<div uib-dropdown-menu class="top-dropdown-menu">
@@ -35,6 +37,17 @@
 							<span x-ng-switch-when="CONFIRMATION_READY" x-ng-switch on="entity.entType" flex>
 								<span x-ng-switch-when="ORDER">
 									<a x-ui-sref="root.orders.show({ id: entity.entAbsId})">La commande #{{ entity.entRelId }} est prête pour validation.</a>
+								</span>
+								<span x-ng-switch-when="SUB">
+									<a x-ui-sref="root.shop-subs.show({ id: entity.entAbsId})">L'abonnement #{{ entity.entRelId }} est prêt pour validation.</a>
+								</span>
+								<span x-ng-switch-when="AD">
+									<a x-ui-sref="root.adv-offers.show({ id: entity.entAbsId})">La publicité #{{ entity.entRelId }} est prête pour validation.</a>
+								</span>
+							</span>
+							<span x-ng-switch-when="NEW_PAYMENT" x-ng-switch on="entity.entType" flex>
+								<span>
+									<a x-ui-sref="root.payments.show({ id: entity.entAbsId})">Un nouveau paiement requiert validation: Paiement # {{ entity.entAbsId }}</a>
 								</span>
 							</span>
 						</span>

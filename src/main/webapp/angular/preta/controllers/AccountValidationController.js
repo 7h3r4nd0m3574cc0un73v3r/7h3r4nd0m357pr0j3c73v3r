@@ -1,4 +1,8 @@
-App.controller( 'AccountValidationController',[ '$scope', 'UserService', '$stateParams', function( $scope, UserService, $stateParams) {
+App.controller( 'AccountValidationController',[ '$rootScope', '$scope', 'UserService', '$stateParams', '$state', function( $rootScope, scope, UserService, $stateParams, $state) {
+	if( $rootScope.loggedUser != null) {
+		$state.go( 'root.errors.403');
+	}
+	
 	/* Loading Mutexes */
 	$scope.isLoading = true;
 	$scope.done = false;

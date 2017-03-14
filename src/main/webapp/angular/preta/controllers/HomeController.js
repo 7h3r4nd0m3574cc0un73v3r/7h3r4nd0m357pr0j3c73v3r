@@ -139,5 +139,6 @@ App.controller( 'HomeController', [ '$rootScope', '$scope', 'loggedUser', 'Artic
 								console.error( response);
 								$scope.isLoading[2] = false;
 							});
+		  
 	}
 ]);

@@ -1,4 +1,9 @@
-App.controller( 'UpgradeRequestController',[ '$scope', 'UserService', function( $scope, UserService) {
+App.controller( 'UpgradeRequestController',[ '$rootScope', '$scope', 'UserService', '$state', function( $rootScope, $scope, UserService, $state) {
+	
+	if( $rootScope.loggedUser == null) {
+		$state.go( 'root.errors.401');
+	}
+	
 	/* Loading Mutexes */
 	$scope.isLoading = false;
 	$scope.done = false;

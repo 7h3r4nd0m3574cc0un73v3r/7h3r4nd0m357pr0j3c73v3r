@@ -56,6 +56,7 @@ App.controller( 'PaymentController', [ '$state', '$stateParams', '$scope', 'Paym
 	};
 	/* Retrieve necessary article order info */
 	function prepareEntity( entity) {
+		$scope.isEntityLoading = true;
 		/* Prepare variable for total amount */
 		entity.expectedAmount = 0;
 		/* Load Articles Orders */
@@ -112,6 +113,8 @@ App.controller( 'PaymentController', [ '$state', '$stateParams', '$scope', 'Paym
 					  }, function( r) {
 						  console.error( r);
 					  });
+		
+		$scope.isEntityLoading = false;
 	}
 	
 	loadEntities( $scope.pagination.page, $scope.pagination.pageSize,
@@ -156,29 +159,41 @@ App.controller( 'PaymentController', [ '$state', '$stateParams', '$scope', 'Paym
 						
 						prepareEntity( $scope.entity);
 						
+						/* Register Stomp Sub to Real Time Updates */
+						StompService.connect()
+									.then( function() {
+										StompService.subscribe( "/topic/admin/payment/" + $stateParams.id 
+														,function( p, h, r) {
+														/* Callback function Payload, Headers and Response as Params */
+														prepareEntity( p);
+														$scope.entity = p;
+														$scope.apply();
+													});
+									});
+						
 						$scope.isEntityLoading = false;
 					}, function( r) {
 						console.error( r);
 						$scope.isEntityLoading = false;
 					});	
-					
-		/* Payment Related */
-		$scope.acceptPayment = function( id) {
-			PaymentService.accept( id)
-							.then( function( response) {
-								/* WebSocket handled */
-							}, function( response) {
-								console.error( response);
-							});
-		};
-		
-		$scope.rejectPayment = function( id) {
-			PaymentService.reject( id)
-							.then( function( response) {
-								/* WebSocket handled */
-							}, function( response) {
-								console.error( response);
-							});
-		};
 	}
+	
+	/* Payment Related */
+	$scope.acceptPayment = function( id) {
+		PaymentService.accept( id)
+						.then( function( response) {
+							/* WebSocket handled */
+						}, function( response) {
+							console.error( response);
+						});
+	};
+	
+	$scope.rejectPayment = function( id) {
+		PaymentService.reject( id)
+						.then( function( response) {
+							/* WebSocket handled */
+						}, function( response) {
+							console.error( response);
+						});
+	};
 }]);

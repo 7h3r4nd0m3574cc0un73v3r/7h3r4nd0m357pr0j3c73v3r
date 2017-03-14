@@ -1,5 +1,10 @@
 App.controller( 'RatingController', [ '$rootScope', '$scope', '$state', '$stateParams', 'ArticleService', 'OrderService',
                                      function( $rootScope, $scope, $state, $stateParams, ArticleService, OrderService) {
+	/* Reject Anonymous User */
+	if( $rootScope.loggedUser != null) {
+		$state.go( 'root.errors.401');
+	}
+	
 	/* Init Data and Loading Mutex*/
 	$scope.entities = [];
 	$scope.isListLoading = true;

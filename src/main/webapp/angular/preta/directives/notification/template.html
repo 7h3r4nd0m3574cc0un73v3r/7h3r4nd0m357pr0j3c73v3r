@@ -8,10 +8,10 @@
 		<span x-ng-switch-when="ALTERED_PAYMENT" x-ng-switch on="entity.entType" flex>
 			<span x-ng-switch-when="ORDER">
 				<a ng-click="read()" x-ng-if="entity.valid" class="default-lnk">
-					Le paiement N° {{ entity.paymentRelId | number }} de votre commande N° {{ entity.entRelId | number }} a été validée par l'administration.
+					Le paiement N° {{ entity.paymentRelId | number }} concernant la commande N° {{ entity.entRelId | number }} a été validée par l'administration.
 				</a>
 				<a ng-click="read()" x-ng-if="!entity.valid" class="default-lnk">
-					Le paiement N° {{ entity.paymentRelId | number }} de votre commande N° {{ entity.entRelId | number }} a été validée par l'administration.
+					Le paiement N° {{ entity.paymentRelId | number }} concernant la commande N° {{ entity.entRelId | number }} a été rejeté par l'administration.
 				</a>
 			</span>
 		</span>

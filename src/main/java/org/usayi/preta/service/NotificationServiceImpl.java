@@ -362,10 +362,23 @@ public class NotificationServiceImpl implements NotificationService
 	}
 
 	@Override
-	public void newRegisteredPayment( Object entity)
+	public void newRegisteredPayment( Payment entity)
 	{
-		Payment payment = (Payment) entity;
+		Notification n = new Notification();
+		n.setAdmin(true);
+		n.setBuyer(false);
+		n.setManager(false);
+		n.setnType( NotificationType.NEW_PAYMENT);
+		n.setEntType( NotificationEntity.PAYMENT);
+		n.setEntAbsId(entity.getId());
+		n.setEntRelId(entity.getRelId());
+		n.setPaymentAbsId(entity.getId());
+		n.setPaymentRelId(n.getEntRelId());
+		n.setUser( pretaDao.loadUser( entity.getAdminEAccount().getUser().getId()));
 		
+		/* Persist Notification and Braodast to WebSocket */
+		pretaDao.addNotification(n, n.getUser().getUserInfo().getId());
+		websockets.newUserNotification(n);
 	}
 	
 	/* Get N Set */

@@ -1,4 +1,9 @@
-App.controller( 'PWResetController',[ '$scope', '$mdDialog', 'UserService', '$stateParams', function( $scope, $mdDialog, UserService, $stateParams) {
+App.controller( 'PWResetController',[ '$rootScope', '$scope', '$mdDialog', 'UserService', '$stateParams', '$state', function( $rootScope, $scope, $mdDialog, UserService, $stateParams, $state) {
+	
+	if( $rootScope.loggedUser != null) {
+		$state.go( 'root.errors.401');
+	}
+	
 	/* Loading Mutexes */
 	$scope.isLoading = false;
 	$scope.done = false;

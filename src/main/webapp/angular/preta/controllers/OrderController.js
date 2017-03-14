@@ -2,6 +2,10 @@ App.controller( 'OrderController', [ '$rootScope', '$state', '$stateParams', '$s
                                      function( $rootScope, $state, $stateParams, $scope, ArticleService, OrderService, StompService) {
 	/*$scope.articlesToOrder = ArticleService.articlesToOrder;*/
 	
+	if( $rootScope.loggedUser == null) {
+		$state.go( 'root.errors.401');
+	}
+	
 	/* Loading Mutexes */
 	$scope.isListLoading = true;
 	$scope.isEntityLoading = true;

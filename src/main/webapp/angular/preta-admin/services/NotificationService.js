@@ -18,6 +18,27 @@ App.factory( 'NotificationService', [ '$http', '$q', function( $http, $q) {
 			}, function( r) {
 				return $q.reject( r);
 			});
+		},
+		read: function( id) {
+			return $http({
+				method: 'PUT',
+				url: 'rest-api/logged-user/notification/' + id + '/read'
+			}).then( function( r) {
+				return r;
+			}, function( r) {
+				return $q.reject( response);
+			});
+		},
+		multipleRead: function( ids) {
+			return $http({
+				method: 'PUT',
+				url: 'rest-api/logged-user/read-notifications',
+				data: ids
+			}).then( function( r) {
+				return r;
+			}, function( r) {
+				return $q.reject( response);
+			});
 		}
 	}
 }]);

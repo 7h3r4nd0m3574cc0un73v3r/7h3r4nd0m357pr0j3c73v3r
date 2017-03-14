@@ -1,4 +1,9 @@
-App.controller( 'PWRecoveryController',[ '$scope', '$mdDialog', 'UserService', function( $scope, $mdDialog, UserService) {
+App.controller( 'PWRecoveryController',[ '$rootScopr', '$scope', '$mdDialog', 'UserService', '$state', function( $rootScopr, $scope, $mdDialog, UserService, $state) {
+	
+	if( $rootScope.loggedUser != null) {
+		$state.go( 'root.errors.401');
+	}
+	
 	/* Loading Mutexes */
 	$scope.isLoading = false;
 	$scope.done = false;

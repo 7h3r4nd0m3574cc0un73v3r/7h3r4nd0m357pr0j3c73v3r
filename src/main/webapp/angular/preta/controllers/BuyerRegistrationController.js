@@ -1,7 +1,12 @@
 'use strict';
 
-App.controller( 'BuyerRegistrationController', [ '$scope', '$state', 'RegistrationService', 'ToastService', 'SoundService', function( $scope, $state, RegistrationService, ToastService, SoundService) {
-				  /* Init variables */
+App.controller( 'BuyerRegistrationController', [ '$rootScope', '$scope', '$state', 'RegistrationService', 'ToastService', 'SoundService',
+											 function( $rootScope, $scope, $state, RegistrationService, ToastService, SoundService) {
+	if( $rootScope.loggedUser != null) {
+		$state.go( 'root.errors.403');
+	}
+	
+	/* Init variables */
 				  $scope.entity = { userInfo: { email: null}, username: null, password: null, confirmPassword: null, mobile: null, captcha: null};
 				  $scope.formErrors;
 				  
