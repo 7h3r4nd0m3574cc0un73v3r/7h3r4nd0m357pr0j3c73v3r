@@ -21,18 +21,45 @@ var App = angular.module( "pretaApp", [
                                        'rzModule',
                                        'vcRecaptcha'
                                       ]);
-App.config( config);
-
 /* Config Interceptor */
-module.factory('myInterceptor', ['$log', function($log) {  
-    $log.debug('$log is here to show you that this is a regular factory with injection');
-
+App.factory('myInterceptor', [ '$q', '$injector', function( $q, $injector) {  
     var myInterceptor = {
+    	/*response: function( config) {
+    		console.log( "Request Intercepted");
+    		console.log( config);
     		
+    		return config;
+    	},
+    	requestError: function( rejection) {
+    		console.log( "Request Error Intercepted");
+    		console.log( rejection);
+    		
+    		return $q.reject( rejection);
+    	},*/
+    	responseError: function( rejection) {
+    		/* Retrieve $state from injector */
+    		var $state = $injector.get( '$state');
+    		/* Redirect All Unathorized to 401 Error Page */
+    		if( !( rejection.status == 401 && rejection.config.url == 'rest-api/logged-user'))
+    			$state.go( 'root.errors.401');
+    		/* redirects All WS 500 errors to Error 500 page */
+    		if( rejection.status == 500)
+    			$state.go( 'root.errors.500');
+    		
+    		if( rejection.status == 403)
+    			$state.go( 'root.errors.403');
+
+    		if( rejection.status == 404)
+    			$state.go( 'root.errors.404');
+    		
+    		return $q.reject( rejection);
+    	}
     };
 
     return myInterceptor;
 }]);
+
+App.config( config);
 
 /* PretaApp Config */
 function config( $stateProvider, $urlRouterProvider, $mdThemingProvider, $httpProvider) {	
@@ -47,7 +74,7 @@ function config( $stateProvider, $urlRouterProvider, $mdThemingProvider, $httpPr
 	/* mdDateProvider */
 	
 	/* End mdDateProvider */
-//	$httpProvider.interceptors.push('myInterceptor');
+	$httpProvider.interceptors.push('myInterceptor');
 	
 	/* Route Config */
 	$urlRouterProvider.otherwise('');

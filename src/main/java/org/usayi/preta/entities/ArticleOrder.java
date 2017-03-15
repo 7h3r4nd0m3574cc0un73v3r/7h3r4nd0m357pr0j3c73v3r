@@ -68,7 +68,7 @@ public class ArticleOrder implements Serializable
 	private boolean useDefaultDeliveryAddress;
 	
 	@OneToOne
-	@JsonIgnore
+	@JsonView( Views.Admin.class)
 	@JoinColumn( referencedColumnName="id")
 	private Expense expense;
 	

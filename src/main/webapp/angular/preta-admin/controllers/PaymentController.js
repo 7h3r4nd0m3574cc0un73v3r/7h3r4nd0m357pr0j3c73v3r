@@ -167,7 +167,7 @@ App.controller( 'PaymentController', [ '$state', '$stateParams', '$scope', 'Paym
 														/* Callback function Payload, Headers and Response as Params */
 														prepareEntity( p);
 														$scope.entity = p;
-														$scope.apply();
+														$scope.$apply();
 													});
 									});
 						

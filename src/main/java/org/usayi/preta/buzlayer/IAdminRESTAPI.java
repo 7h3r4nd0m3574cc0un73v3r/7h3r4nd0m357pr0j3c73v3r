@@ -2,7 +2,21 @@ package org.usayi.preta.buzlayer;
 
 import java.util.List;
 
-import org.usayi.preta.entities.*;
+import org.usayi.preta.entities.AdvOffer;
+import org.usayi.preta.entities.AdvOption;
+import org.usayi.preta.entities.Category;
+import org.usayi.preta.entities.EMoneyProvider;
+import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.GenericStatus;
+import org.usayi.preta.entities.OrderStatus;
+import org.usayi.preta.entities.PaymentType;
+import org.usayi.preta.entities.Role;
+import org.usayi.preta.entities.ShopStatus;
+import org.usayi.preta.entities.ShopSub;
+import org.usayi.preta.entities.Slide;
+import org.usayi.preta.entities.SubOffer;
+import org.usayi.preta.entities.UpgradeRequest;
+import org.usayi.preta.entities.User;
 import org.usayi.preta.entities.json.PagedListJSON;
 
 public interface IAdminRESTAPI extends ISharedRESTAPI
@@ -108,10 +122,13 @@ public interface IAdminRESTAPI extends ISharedRESTAPI
 		public PagedListJSON loadSupervisedManagers( final Long id, final Integer page, final Integer pageSize);
 		public void addSupervisedManagerToAdmin( final Long adminId, final Long managerId);
 		public void removeSupervisedManagerFromAdmin( final Long adminId, final Long managerId);
+		/* Admin - ArticleOrder */
+		public PagedListJSON loadAdminArticleOrder( final Long userId, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc);
 	/* End Users */
 	
 	/* Logged User */
 	public PagedListJSON loadAdminPayments( final Long userId, final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
+	public PagedListJSON loadAdminExpensePendingOrders( final Long userId, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
 	/* End Logged User */
 	
 	/* HomePicture */

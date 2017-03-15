@@ -467,7 +467,7 @@ public class PublicRESTAPIController
 			}
 			
 			if( !isFound)
-				return Tools.unauthorized();
+				return Tools.forbidden();
 			
 			return new ResponseEntity<ArticleOrder>( entity, HttpStatus.OK);
 		}
@@ -991,6 +991,9 @@ public class PublicRESTAPIController
 	@RequestMapping( value="/register/buyer")
 	public ResponseEntity<?> registerBuyer( @RequestBody BuyerRegistration entity)
 	{
+		if( !isAnonymous())
+			return Tools.forbidden();
+		
 		try
 		{
 			List<FieldErrorResource> fErrors = new ArrayList<FieldErrorResource>();
@@ -1108,6 +1111,9 @@ public class PublicRESTAPIController
 	@RequestMapping( value="/register/e-shop")
 	public ResponseEntity<?> registerEShop( @RequestBody EShopRegistration entity)
 	{	
+		if( !isAnonymous())
+			return Tools.forbidden();
+		
 		try
 		{
 			List<FieldErrorResource> fErrors = new ArrayList<FieldErrorResource>();
@@ -1297,6 +1303,9 @@ public class PublicRESTAPIController
 	@RequestMapping( "/logged-user/update-profile")
 	public ResponseEntity<?> updateProfile( @RequestBody User entity)
 	{
+		if( isAnonymous())
+			return Tools.unauthorized();
+		
 		try
 		{
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1958,6 +1967,9 @@ public class PublicRESTAPIController
 				if( isAnonymous())
 					return Tools.unauthorized();
 				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_BUYER"))
+					return Tools.forbidden();
+				
 				User user = pRESTAPI.loadUser( getLoggedUserFromPrincipal().getUserInfo().getId());
 				
 				if( user.getProfileCompletion() < 100 || !user.isApproved())
@@ -2322,9 +2334,12 @@ public class PublicRESTAPIController
 		public ResponseEntity<?> rateArticle( @PathVariable( name="id") final Long id,
 											  @RequestBody final Integer rating)
 		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			
+			/* Check if User owns Ordered Article */
 			try
 			{
-				
 				OrderedArticle entity = restBL.getOrderedArticle( id);
 
 				//Return entity not found
@@ -2785,7 +2800,7 @@ public class PublicRESTAPIController
 	/* End WebSockets */
 	
 	/* Debug */
-	/* TODO Remove this */
+	/* TODO Remove all below */
 	@GetMapping
 	@RequestMapping( "/debug/init-db")
 	public ResponseEntity<?> initDB()

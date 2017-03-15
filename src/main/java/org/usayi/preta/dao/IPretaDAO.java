@@ -13,6 +13,7 @@ import org.usayi.preta.entities.Category;
 import org.usayi.preta.entities.EAccount;
 import org.usayi.preta.entities.EMoneyProvider;
 import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.Feature;
 import org.usayi.preta.entities.FeatureValue;
 import org.usayi.preta.entities.GenericStatus;
@@ -159,6 +160,10 @@ public interface IPretaDAO
 		public PagedListJSON loadUserPayments( final Long userId, final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
 		/* Admin Payments */
 		public PagedListJSON loadAdminPayments( final Long userId, final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
+		/* Admin - Orders ready for Expense */
+		public PagedListJSON loadAdminExpensePendingOrders( final Long userId, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
+		/* Admin - Addressed ArticleOrders */
+		public PagedListJSON loadAdminArticleOrders( final Long userId, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc);
 	/* End User */
 	
 	/* AdvOption */
@@ -347,6 +352,12 @@ public interface IPretaDAO
 	public Long addNotification( final Notification entity, final Long userId);
 	public PagedListJSON loadUserNotifications( final Long id, final int status, final Integer page, final Integer pageSize, final boolean orderByIdAsc, final Integer restrict);
 	/* End Notification */
+	
+	/* Expenses */
+	public PagedListJSON loadExpenses( final Integer page, final Integer pageSize);
+	public Long addExpense( final Expense entity);
+	public Expense loadExpense( final Long id);
+	/* End Expenses */
 	
 	/* Generic */
 	public Timestamp getRegDate( Class<?> entityClass, final Long id);
