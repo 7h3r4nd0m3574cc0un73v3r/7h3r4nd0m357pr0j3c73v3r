@@ -11,6 +11,7 @@ import org.usayi.preta.entities.Payment;
 import org.usayi.preta.entities.ShopSub;
 import org.usayi.preta.entities.SubOffer;
 import org.usayi.preta.entities.UpgradeRequest;
+import org.usayi.preta.entities.VisitedArticle;
 import org.usayi.preta.entities.json.PagedListJSON;
 
 public class PublicRESTAPI extends SharedRESTAPI implements IPublicRESTAPI
@@ -200,7 +201,7 @@ public class PublicRESTAPI extends SharedRESTAPI implements IPublicRESTAPI
 		return pretaDao.loadCartItem(id);
 	}
 	@Override
-	public void updateCartItem( final CartItem entity)
+	public void updateCartItem( CartItem entity)
 	{
 		pretaDao.updateCartItem( entity);
 	}
@@ -269,6 +270,11 @@ public class PublicRESTAPI extends SharedRESTAPI implements IPublicRESTAPI
 		{
 			pretaDao.removeEShopFromUserFav(userId, eShopId);
 		}
+		/* Visited Articles */
+		public PagedListJSON loadUserVisitedArticles( Long id, Integer page, Integer pageSize, boolean orderByIdAsc)
+		{
+			return pretaDao.loadUserVisitedArticles(id, page, pageSize, orderByIdAsc);
+		}
 	/* End User */
 	
 	/* EAccount */
@@ -302,4 +308,11 @@ public class PublicRESTAPI extends SharedRESTAPI implements IPublicRESTAPI
 		return pretaDao.loadDisplayedSlides(page, pageSize);
 	}
 	/* End HomePicture */
+	
+	/* Visited Articles */
+	public Long addVisitedArticle( VisitedArticle entity)
+	{
+		return pretaDao.addVisitedArticle(entity);
+	}
+	/* ENd Visited Articles */
 }

@@ -5,6 +5,7 @@ App.controller( 'LastVisitedController', [ 'ArticleService', '$scope', '$statePa
 	/* Pagination Settings */
 	$scope.pagination = { currentPage: $stateParams.page == undefined ? 1 : $stateParams.page,
 						  pageSize: $stateParams.pageSize == undefined ? 12 : $stateParams.pageSize,
+						  orderByIdAsc: $stateParams.orderByIdAsc == undefined ? false : $stateParams.orderByIdAsc,
 					      pagesNumber: null,
 					      itemsNumber: null
 						};
@@ -19,9 +20,9 @@ App.controller( 'LastVisitedController', [ 'ArticleService', '$scope', '$statePa
 	/* End View Config */
 	
 	/* Load Functions */
-	$scope.loadEntities = function( page, pageSize) {
+	$scope.loadEntities = function( page, pageSize, orderByIdAsc) {
 		$scope.isLoading = true;
-		ArticleService.loadLastVisited( page, pageSize)
+		ArticleService.loadLastVisited( page, pageSize, orderByIdAsc)
 					  .then( function( response) {
 							$scope.pagination.pagesNumber = response.pagesNumber;
 							$scope.pagination.itemsNumber = response.itemsNumber;
@@ -49,7 +50,6 @@ App.controller( 'LastVisitedController', [ 'ArticleService', '$scope', '$statePa
 													ArticleService.loadPictures( article.id)
 																  .then( function( response) {
 																	  article.pictures = response.entities;
-																	  console.log( article);
 																  }, function( response) {
 																	  console.error( response);
 																  });
@@ -66,10 +66,10 @@ App.controller( 'LastVisitedController', [ 'ArticleService', '$scope', '$statePa
 	}
 	
 	/* Call to load function */
-	$scope.loadEntities( $scope.pagination.page, $scope.pagination.pageSize);
+	$scope.loadEntities( $scope.pagination.page, $scope.pagination.pageSize, $scope.pagination.orderByIdAsc);
 	
 	$scope.changePage = function() {
-		$state.go( $state.current.name, { page: $scope.pagination.currentPage, pageSize: $stateParams.pageSize },{ notify: false});
-		$scope.loadEntities( $scope.pagination.currentPage, $scope.pagination.pageSize);
+		$state.go( $state.current.name, { page: $scope.pagination.currentPage, pageSize: $stateParams.pageSize, orderByIdAsc: $stateParams.orderByIdAsc },{ notify: false});
+		$scope.loadEntities( $scope.pagination.currentPage, $scope.pagination.pageSize, $scope.pagination.orderByIdAsc);
 	};
 }]);

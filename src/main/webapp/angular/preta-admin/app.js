@@ -575,6 +575,18 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 				$state.go( 'root.orders', { page: 1, pageSize: 10, orderByIdAsc: true, orderStatus: 4});
 			}]
 		})
+		.state( 'root.orders-expense-pending', {
+			url: '/orders/expense-pending',
+			controller: [ '$state', function( $state) {
+				$state.go( 'root.orders', { page: 1, pageSize: 10, orderByIdAsc: true, orderStatus: 5});
+			}]
+		})
+		.state( 'root.orders-expended', {
+			url: '/orders/expended',
+			controller: [ '$state', function( $state) {
+				$state.go( 'root.orders', { page: 1, pageSize: 10, orderByIdAsc: true, orderStatus: 6});
+			}]
+		})
 		.state( 'root.orders.show', {
 			url: '/show/{id}',
 			title: 'Commandes',
@@ -807,6 +819,12 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 	  }, {
 		  title: 'Livr\xE9es',
 		  stateRef: 'root.orders-delivered'
+	  }, {
+		  title: 'A r\xE9gler',
+		  stateRef: 'root.orders-expense-pending'
+	  }, {
+		  title: 'R\xE9gl\xE9es',
+		  stateRef: 'root.orders-expended'
 	  }, {
 		  title: 'Toutes',
 		  stateRef: 'root.orders-all'

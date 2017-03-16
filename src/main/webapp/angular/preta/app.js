@@ -821,10 +821,11 @@ function config( $stateProvider, $urlRouterProvider, $mdThemingProvider, $httpPr
 		})
 		/* last Visisted */
 		.state( 'root.last-visited', {
-			url: '/last-visited?page&pageSize',
+			url: '/last-visited?page&pageSize&orderByIdAsc',
 			params: {
 				page: '1',
-				pageSize: '12'
+				pageSize: '12',
+				orderByIdAsc: 'false'
 			},
 			templateUrl: 'angular/preta/views/article/generic-list.html',
 			title: 'RxE9cemment visit\xE9s',

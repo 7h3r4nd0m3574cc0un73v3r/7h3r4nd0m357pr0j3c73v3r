@@ -42,7 +42,7 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderS
 	function loadEntities( page, pageSize, orderStatus, orderByIdAsc) {
 		$scope.isListLoading = true;
 		
-		OrderService.loadEntities( page, pageSize, orderStatus, orderByIdAsc)
+		OrderService.loadAddressedEntities( page, pageSize, orderStatus, orderByIdAsc)
 					.then( function( response) {
 						/* Update Pagination info and Scope */
 						$scope.pagination.pagesNumber = response.pagesNumber;

@@ -82,6 +82,8 @@ public interface IPublicRESTAPI extends ISharedRESTAPI
 		public PagedListJSON loadFavoritesEShops( final Long userId, final Integer page, final Integer pageSize);
 		public void addEShopToUserFav( final Long userId, final Long eShopId);
 		public void removeEShopFromUserFav( final Long userId, final Long eShopId);
+		/* Visited Articles */
+		public PagedListJSON loadUserVisitedArticles( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
 	/* End User */
 	
 	/* EAccount */
@@ -97,4 +99,8 @@ public interface IPublicRESTAPI extends ISharedRESTAPI
 	/* Home Picture */
 	public PagedListJSON loadDisplayedHomePictures( final Integer page, final Integer pageSize);
 	/* End Home Picture */
+
+	/* Visited Articles */
+	public Long addVisitedArticle( final VisitedArticle entity);
+	/* ENd Visited Articles */
 }

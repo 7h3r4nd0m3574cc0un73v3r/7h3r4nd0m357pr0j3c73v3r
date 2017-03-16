@@ -287,21 +287,24 @@ App.factory( 'ArticleService', ['$http', '$q', 'Upload', function( $http, $q, Up
 					headers: {
 						'Content-type': 'application/x-www-form-urlencoded'
 					}
-				}).then( function( response) {
+				})
+				.then( function( response) {
 					return response;
 				}, function( response) {
 					return $q.reject( response);
 				});
 			},
-			loadLastVisited: function( page, pageSize) {
+			loadLastVisited: function( page, pageSize, orderByIdAsc) {
 				return $http({
-								url: 'rest-api/logged-user/last-visited-articles',
+								url: 'rest-api/logged-user/visited-articles',
 								method: 'GET',
 								params: {
 									page: page,
-									pageSize: pageSize
+									pageSize: pageSize,
+									orderByIdAsc: orderByIdAsc
 								}
-							}).then( function( response) {
+							})
+							.then( function( response) {
 								return response.data;
 							},
 							function( errResponse) {
