@@ -8,5 +8,7 @@ public enum OrderStatus
 	DELIVERING,
 	DELIVERED,
 	/* Parametrized */
-	ALL
+	ALL,
+	PENDING_EXPENSE,
+	ESHOP_PAID
 }

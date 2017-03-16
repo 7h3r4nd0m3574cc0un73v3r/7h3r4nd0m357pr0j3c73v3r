@@ -1,6 +1,8 @@
 package org.usayi.preta.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
@@ -21,21 +24,44 @@ public class Expense implements Serializable
 	private static final long serialVersionUID = 6330239536274900635L;
 
 	@Id
-	@GeneratedValue( strategy=GenerationType.IDENTITY)
 	@NotAudited
+	@GeneratedValue( strategy=GenerationType.IDENTITY)
 	private Long id;
 	
 	@NotNull
-	@NotEmpty
 	private Float amount;
 	
 	@NotNull
-	@NotEmpty
 	private String expenseRef;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn( referencedColumnName="id")
 	private EAccount eAccount;
+
+	@NotNull
+	@ManyToOne
+	@JoinColumn( referencedColumnName="id")
+	private EAccount adminEAccount;
+
+	@NotEmpty
+	@OneToMany( mappedBy="expense")
+	private Collection<ArticleOrder> articleOrders = new ArrayList<ArticleOrder>();
+	
+	public Collection<ArticleOrder> getArticleOrders()
+	{
+		return articleOrders;
+	}
+	
+	public EAccount getAdminEAccount()
+	{
+		return adminEAccount;
+	}
+
+	public void setAdminEAccount(EAccount adminEAccount)
+	{
+		this.adminEAccount = adminEAccount;
+	}
 
 	public final Long getId()
 	{
@@ -88,5 +114,9 @@ public class Expense implements Serializable
 	public Expense()
 	{
 		super();
+	}
+	
+	public final void addArticleOrder( final ArticleOrder entity) {
+		articleOrders.add(entity);
 	}
 }

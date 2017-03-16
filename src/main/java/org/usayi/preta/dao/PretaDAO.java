@@ -25,6 +25,7 @@ import org.usayi.preta.entities.Category;
 import org.usayi.preta.entities.EAccount;
 import org.usayi.preta.entities.EMoneyProvider;
 import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.Feature;
 import org.usayi.preta.entities.FeatureValue;
 import org.usayi.preta.entities.GenericStatus;
@@ -44,6 +45,7 @@ import org.usayi.preta.entities.SubOffer;
 import org.usayi.preta.entities.UpgradeRequest;
 import org.usayi.preta.entities.User;
 import org.usayi.preta.entities.UserInfo;
+import org.usayi.preta.entities.VisitedArticle;
 import org.usayi.preta.entities.json.PagedListJSON;
 
 @Transactional
@@ -1165,6 +1167,113 @@ public class PretaDAO implements IPretaDAO
 				entity.setUsername( entity.getUser().getUsername());
 				entity.setRegDate( getRegDate( Payment.class, entity.getId()));
 			}
+			
+			return result;
+		}
+		/* Admin - Orders ready for Expense */
+		@Override
+		@SuppressWarnings( "unchecked")
+		public PagedListJSON loadAdminExpensePendingOrders( Long userId, Integer page, Integer pageSize, boolean orderByIdAsc)
+		{
+			Query query = em.createQuery( "SELECT DISTINCT entity FROM ArticleOrder entity JOIN entity.payments payment JOIN payment.adminEAccount adminEAccount"
+					+ " JOIN adminEAccount.user userInfo"
+					+ " WHERE entity.status = :status AND payment.isValid = true AND userInfo.id = :id");
+			
+			query.setParameter( "status", OrderStatus.DELIVERED);
+			query.setParameter( "id", userId);
+			
+			PagedListJSON result = generatePagedList(query, page, pageSize);
+			
+			for( ArticleOrder entity : (List<ArticleOrder>) result.getEntities())
+			{
+				entity.setRegDate( getRegDate( ArticleOrder.class, entity.getId()));
+			}
+			
+			return result;
+		}
+		/* Admin - Article Orders Addressed to Admin */
+		@Override
+		@SuppressWarnings( "unchecked")
+		public PagedListJSON loadAdminArticleOrders( Long userId, Integer page,Integer pageSize,OrderStatus status,boolean orderByIdAsc)
+		{
+//			String hql = "SELECT DISTINCT entity FROM ArticleOrder entity JOIN entity.payments payment JOIN payment.adminEAccount adminEAccount"
+//						+ " JOIN adminEAccount.user userInfo JOIN entity.expense expense WHERE userInfo.id = :id";
+
+//			String hql = "SELECT DISTINCT entity FROM ArticleOrder entity, Payment payment JOIN payment.adminEAccount adminEAccount"
+//						+ " JOIN adminEAccount.user userInfo JOIN payment.articleOrders articleOrder WHERE userInfo.id = :id"
+//						+ " AND articleOrder.id = entity.id";
+			
+			String hql = "SELECT DISTINCT entity FROM ArticleOrder entity JOIN entity.payments payment JOIN payment.adminEAccount adminEAccount"
+					+ " JOIN adminEAccount.user userInfo WHERE userInfo.id = :id";
+			
+			if( !status.equals( OrderStatus.ALL))
+				hql += " AND entity.status = :status";
+			
+			if( status.equals( OrderStatus.PENDING_EXPENSE)) {
+				hql += " AND entity.status = :status AND entity.expense is null";
+			}
+			
+			if( status.equals( OrderStatus.ESHOP_PAID)) {
+				hql += " AND entity.status = :status AND entity.expense is not null";
+			}
+			
+			hql += " ORDER BY entity.id";
+			if( !orderByIdAsc)
+				hql += " DESC";
+			
+			System.err.println( hql);
+			
+			Query query = em.createQuery( hql);
+			query.setParameter( "id", userId);
+			
+			if( !status.equals( OrderStatus.ALL))
+				query.setParameter( "status", status);
+			
+			if( status.equals( OrderStatus.PENDING_EXPENSE) || status.equals( OrderStatus.ESHOP_PAID)) {
+				query.setParameter( "status", OrderStatus.DELIVERED);
+			}
+			
+			PagedListJSON result = generatePagedList(query, page, pageSize);
+			
+			for( ArticleOrder entity : (List<ArticleOrder>) result.getEntities())
+			{
+				entity.setRegDate( getRegDate( ArticleOrder.class, entity.getId()));
+			}
+			
+			return result;
+		}
+		/* Visited Articles */
+		@Override
+		@SuppressWarnings( "unchecked")
+		public PagedListJSON loadUserVisitedArticles( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc)
+		{
+			String hql = "SELECT entity FROM VisitedArticle entity JOIN entity.user user JOIN user.userInfo userInfo"
+					+ " WHERE userInfo.id = :id ORDER BY entity.id";
+			if( !orderByIdAsc)
+				hql += " DESC";
+			
+			Query query = em.createQuery( hql);
+			query.setParameter( "id", id);
+			
+			PagedListJSON result = generatePagedList(query, page, pageSize);
+			
+			List<VisitedArticle> visitedArticles = new ArrayList<VisitedArticle>();
+			
+			for( VisitedArticle visArt : (List<VisitedArticle>) result.getEntities())
+			{
+				boolean found = false;
+				
+				for( VisitedArticle visArt2 : visitedArticles)
+				{
+					if( visArt2.getArticleId().equals(visArt.getArticleId()))
+						found = true;
+				}
+				
+				if( !found)
+					visitedArticles.add( visArt);
+			}
+			
+			result.setEntities( visitedArticles);
 			
 			return result;
 		}
@@ -2299,16 +2408,18 @@ public class PretaDAO implements IPretaDAO
 	public PagedListJSON loadArticleOrders(Integer page,Integer pageSize,OrderStatus status,boolean orderByIdAsc)
 	{
 		String hql = "SELECT DISTINCT entity FROM ArticleOrder entity";
-		if( status != OrderStatus.ALL)
+		
+		if( !status.equals( OrderStatus.ALL) || !status.equals( OrderStatus.ESHOP_PAID) || !status.equals( OrderStatus.PENDING_EXPENSE))
 			hql += " WHERE entity.status = :orderStatus";
+		
 		hql += " ORDER BY entity.id";
 		if( !orderByIdAsc)
 			hql += " DESC";
 		
 		Query query = em.createQuery( hql);
-		if( status != OrderStatus.ALL)
-			query.setParameter( "orderStatus", status);
 		
+		if( !status.equals( OrderStatus.ALL) || !status.equals( OrderStatus.ESHOP_PAID) || !status.equals( OrderStatus.PENDING_EXPENSE))
+			query.setParameter( "orderStatus", status);
 		
 		PagedListJSON result = generatePagedList(query, page, pageSize);
 		
@@ -2837,6 +2948,47 @@ public class PretaDAO implements IPretaDAO
 		return generatePagedList(query, page, pageSize);
 	}
 	/* End Notification */
+
+	/* Expenses */
+	@Override
+	public PagedListJSON loadExpenses( Integer page, Integer pageSize)
+	{
+		Query query = em.createQuery( "SELECT entity FROM Expense entity");
+		
+		return generatePagedList(query, page, pageSize);
+	}
+	@Override
+	public Long addExpense( Expense entity)
+	{
+		return null;
+	}
+	@Override
+	public Expense loadExpense( Long id)
+	{
+		return null;
+	}
+	/* End Expenses */
+	
+	/* Visited Article */
+	@Override
+	public PagedListJSON loadVisitedArticles( final Integer page, final Integer pageSize, final boolean orderByIdAsc)
+	{
+		String hql = "SELECT entity FROM VisitedArtile entity ORDER BY entity.id";
+		if( !orderByIdAsc)
+			hql += " DESC";
+		
+		Query query = em.createQuery( hql);
+		
+		return generatePagedList(query, page, pageSize);
+	}
+	@Override
+	public Long addVisitedArticle( final VisitedArticle entity)
+	{
+		em.persist(entity);
+		
+		return entity.getId();
+	}
+	/* End Visited Article */
 	
 	//Tools*
 	@SuppressWarnings("rawtypes")

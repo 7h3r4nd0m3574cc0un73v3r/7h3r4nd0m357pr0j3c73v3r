@@ -382,6 +382,12 @@ public class AdminRESTAPI extends SharedRESTAPI implements IAdminRESTAPI
 		{
 			pretaDao.removeSupervisedManagerFromAdmin(adminId, managerId);
 		}
+		/* Admin - ArticleOrder */
+		@Override
+		public PagedListJSON loadAdminArticleOrder( Long userId, Integer page, Integer pageSize, OrderStatus status, boolean orderByIdAsc)
+		{
+			return pretaDao.loadAdminArticleOrders(userId, page, pageSize, status, orderByIdAsc);
+		}
 	/* End Users */
 
 	/* Logged User */
@@ -389,6 +395,11 @@ public class AdminRESTAPI extends SharedRESTAPI implements IAdminRESTAPI
 	public PagedListJSON loadAdminPayments( Long userId, Integer page, Integer pageSize, int status, boolean orderByIdAsc)
 	{
 		return pretaDao.loadAdminPayments(userId, page, pageSize, status, orderByIdAsc);
+	}
+	@Override
+	public PagedListJSON loadAdminExpensePendingOrders( Long userId, Integer page, Integer pageSize, boolean orderByIdAsc)
+	{
+		return pretaDao.loadAdminExpensePendingOrders(userId, page, pageSize, orderByIdAsc);
 	}
 	/* End Logged User */
 		

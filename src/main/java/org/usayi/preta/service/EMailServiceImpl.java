@@ -374,9 +374,8 @@ public class EMailServiceImpl implements EMailService
 	{
 		try
 		{
-			
 			String subject = "Hôbossa - Commande #" + entity.getBuyerRelId() + " reçue par le client !";
-			Email to = new Email( entity.getUser().getUserInfo().getEmail());
+			Email to = new Email( pretaDao.loadEShopManager( pretaDao.loadArticleOrderEShop(entity.getId()).getId()).getUserInfo().getEmail());
 
 			String html = templates.registeredOrderTmpl()
 								   .replaceAll( "%mailtitle%", "Commande N° " + entity.getBuyerRelId() + " reçue par le client !")

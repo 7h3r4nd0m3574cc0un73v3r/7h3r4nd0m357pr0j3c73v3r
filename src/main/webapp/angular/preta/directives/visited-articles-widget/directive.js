@@ -18,9 +18,9 @@
 	    	  var simpleEntities = [];
 	    	  
 	    	  /* Loading Entities */
-	    	  $scope.loadEntities = function( page, pageSize) {
+	    	  $scope.loadEntities = function( page, pageSize, orderByIdAsc) {
 	    		   	$scope.isLoading = true;
-	    	        ArticleService.loadLastVisited( page, pageSize)
+	    	        ArticleService.loadLastVisited( page, pageSize, orderByIdAsc)
 	    	        			  .then( function( response) {
 	    	        				  simpleEntities = response.entities;
 	    	        				  
@@ -60,7 +60,7 @@
 	    	  }
 	    	  
 	    	  /* Call to loading functions */
-	    	  $scope.loadEntities( 1, 4);
+	    	  $scope.loadEntities( 1, 4, false);
 	      }]
 	    };
   }

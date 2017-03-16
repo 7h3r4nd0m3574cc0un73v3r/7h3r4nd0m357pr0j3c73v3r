@@ -13,10 +13,10 @@ import org.usayi.preta.entities.Category;
 import org.usayi.preta.entities.EAccount;
 import org.usayi.preta.entities.EMoneyProvider;
 import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.Feature;
 import org.usayi.preta.entities.FeatureValue;
 import org.usayi.preta.entities.GenericStatus;
-import org.usayi.preta.entities.Slide;
 import org.usayi.preta.entities.Notification;
 import org.usayi.preta.entities.OrderStatus;
 import org.usayi.preta.entities.OrderedArticle;
@@ -27,10 +27,12 @@ import org.usayi.preta.entities.Picture;
 import org.usayi.preta.entities.Role;
 import org.usayi.preta.entities.ShopStatus;
 import org.usayi.preta.entities.ShopSub;
+import org.usayi.preta.entities.Slide;
 import org.usayi.preta.entities.SubOffer;
 import org.usayi.preta.entities.UpgradeRequest;
 import org.usayi.preta.entities.User;
 import org.usayi.preta.entities.UserInfo;
+import org.usayi.preta.entities.VisitedArticle;
 import org.usayi.preta.entities.json.PagedListJSON;
 
 public interface IPretaDAO
@@ -159,6 +161,12 @@ public interface IPretaDAO
 		public PagedListJSON loadUserPayments( final Long userId, final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
 		/* Admin Payments */
 		public PagedListJSON loadAdminPayments( final Long userId, final Integer page, final Integer pageSize, final int status, final boolean orderByIdAsc);
+		/* Admin - Orders ready for Expense */
+		public PagedListJSON loadAdminExpensePendingOrders( final Long userId, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
+		/* Admin - Addressed ArticleOrders */
+		public PagedListJSON loadAdminArticleOrders( final Long userId, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc);
+		/* Visited Articles */
+		public PagedListJSON loadUserVisitedArticles( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
 	/* End User */
 	
 	/* AdvOption */
@@ -347,6 +355,17 @@ public interface IPretaDAO
 	public Long addNotification( final Notification entity, final Long userId);
 	public PagedListJSON loadUserNotifications( final Long id, final int status, final Integer page, final Integer pageSize, final boolean orderByIdAsc, final Integer restrict);
 	/* End Notification */
+	
+	/* Expenses */
+	public PagedListJSON loadExpenses( final Integer page, final Integer pageSize);
+	public Long addExpense( final Expense entity);
+	public Expense loadExpense( final Long id);
+	/* End Expenses */
+	
+	/* Visited Article */
+	public PagedListJSON loadVisitedArticles( final Integer page, final Integer pageSize, final boolean orderByIdAsc);
+	public Long addVisitedArticle( final VisitedArticle entity);
+	/* End Visited Article */
 	
 	/* Generic */
 	public Timestamp getRegDate( Class<?> entityClass, final Long id);

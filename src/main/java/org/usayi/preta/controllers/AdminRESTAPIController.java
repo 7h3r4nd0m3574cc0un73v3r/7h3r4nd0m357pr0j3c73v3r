@@ -1114,6 +1114,7 @@ public class AdminRESTAPIController
 	
 	/* Article Orders */
 	@GetMapping
+	@JsonView( Views.Admin.class)
 	@RequestMapping( "/article-orders")
 	public ResponseEntity<?> loadArticleOrders( @RequestParam( name="page", defaultValue="1") final Integer page,
 											    @RequestParam( name="pageSize", defaultValue="0") final Integer pageSize,
@@ -1145,6 +1146,12 @@ public class AdminRESTAPIController
 					break;
 				case 4:
 					orderStatus = OrderStatus.DELIVERED;
+					break;
+				case 5:
+					orderStatus = OrderStatus.PENDING_EXPENSE;
+					break;
+				case 6:
+					orderStatus = OrderStatus.ESHOP_PAID;
 					break;
 				case -1:
 					orderStatus = OrderStatus.ALL;
@@ -1515,6 +1522,89 @@ public class AdminRESTAPIController
 				return Tools.handlePagedListJSON( aRESTAPI.loadPayments(page, pageSize, status, orderByIdAsc));
 				/* TODO: Change to Addressed Payments */
 				//return Tools.handlePagedListJSON( aRESTAPI.loadAdminPayments( getLoggedUserFromPrincipal().getUserInfo().getId(), status, page, pageSize, orderByIdAsc));
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/logged-user/expense-pending-orders")
+		public ResponseEntity<?> loadAdminExpensePendingOrders( @RequestParam( name="page", defaultValue="1") final Integer page,
+															    @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize,
+															    @RequestParam( name="orderByIdAsc", defaultValue="true") final boolean orderByIdAsc) 
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+					return Tools.forbidden();
+				
+				return Tools.handlePagedListJSON( aRESTAPI.loadAdminExpensePendingOrders( getLoggedUserFromPrincipal().getUserInfo().getId(), page, pageSize, orderByIdAsc));
+				
+				/* TODO: Change to Addressed Payments */
+				//return Tools.handlePagedListJSON( aRESTAPI.loadAdminPayments( getLoggedUserFromPrincipal().getUserInfo().getId(), status, page, pageSize, orderByIdAsc));
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
+		/* ArticleOrders */
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/logged-user/article-orders")
+		public ResponseEntity<?> loadAdminArticleOrders( @RequestParam( name="page", defaultValue="1") final Integer page,
+													    @RequestParam( name="pageSize", defaultValue="0") final Integer pageSize,
+													    @RequestParam( name="orderByIdAsc", defaultValue="true") final boolean orderByIdAsc,
+													    @RequestParam( name="orderStatus", defaultValue="-1") final Integer status)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+					return Tools.forbidden();
+				
+				OrderStatus orderStatus;
+				switch( status)
+				{
+					case 0:
+						orderStatus = OrderStatus.PENDING_PAYMENT;
+						break;
+					case 1:
+						orderStatus = OrderStatus.PENDING_PAYMENT_CONFIRMATION;
+						break;
+					case 2:
+						orderStatus = OrderStatus.PAID;
+						break;
+					case 3:
+						orderStatus = OrderStatus.DELIVERING;
+						break;
+					case 4:
+						orderStatus = OrderStatus.DELIVERED;
+						break;
+					case 5:
+						orderStatus = OrderStatus.PENDING_EXPENSE;
+						break;
+					case 6:
+						orderStatus = OrderStatus.ESHOP_PAID;
+						break;
+					case -1:
+						orderStatus = OrderStatus.ALL;
+						break;
+					default:
+						orderStatus = OrderStatus.ALL;
+						break;
+				}
+				
+				return Tools.handlePagedListJSON( aRESTAPI.loadAdminArticleOrder( getLoggedUserFromPrincipal().getUserInfo().getId(), page, pageSize, orderStatus, orderByIdAsc));
 			}
 			catch( Exception e)
 			{

@@ -28,7 +28,7 @@ App.factory( 'UserService', [ '$http', '$q', function( $http, $q) {
 		},
 		/*Logout the currently logged user*/
 		logout: function() {
-			return $http.get( 'rest/logout')
+			return $http.get( 'rest-api/logout')
 						.then( function( response) {
 							return response;
 						}, function( response) {

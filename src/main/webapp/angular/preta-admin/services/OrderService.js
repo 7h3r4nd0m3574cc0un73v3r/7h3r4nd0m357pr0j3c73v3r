@@ -69,6 +69,27 @@ App.factory( 'OrderService', ['$http', '$q', function( $http, $q) {
 							});
 				
 			},
+			loadAddressedEntities: function( page, pageSize, orderStatus, orderByIdAsc) {
+				return $http({
+					url: 'rest-api/admin/logged-user/article-orders',
+					method: 'GET',
+					params: {
+						page: page,
+						pageSize: pageSize,
+						orderStatus: orderStatus,
+						orderByIdAsc: orderByIdAsc
+					}
+				})
+				.then(	
+					function( response) { 
+						return response.data;
+					},
+					function( errResponse) {
+						console.log( 'Error: OrderService > loadEntities');
+						return $q.reject( errResponse);
+				});
+			}
+			
 		}
 	}                            
 ]);

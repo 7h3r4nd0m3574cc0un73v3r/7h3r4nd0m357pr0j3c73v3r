@@ -1,14 +1,11 @@
 package org.usayi.preta.controllers;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +73,7 @@ import org.usayi.preta.entities.SubOffer;
 import org.usayi.preta.entities.UpgradeRequest;
 import org.usayi.preta.entities.User;
 import org.usayi.preta.entities.UserInfo;
+import org.usayi.preta.entities.VisitedArticle;
 import org.usayi.preta.entities.form.BuyerRegistration;
 import org.usayi.preta.entities.form.EShopRegistration;
 import org.usayi.preta.entities.form.PWRequest;
@@ -85,7 +83,6 @@ import org.usayi.preta.entities.json.CategoryTreeJSON;
 import org.usayi.preta.entities.json.LoggedUser;
 import org.usayi.preta.entities.json.PagedListJSON;
 import org.usayi.preta.entities.json.PreArticleOrder;
-import org.usayi.preta.entities.json.VisitedArticle;
 import org.usayi.preta.exceptions.FieldErrorResource;
 import org.usayi.preta.service.EMailService;
 import org.usayi.preta.service.GoogleDriveService;
@@ -99,8 +96,6 @@ import org.usayi.preta.service.WebSocketService;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.http.FileContent;
-import com.google.api.services.drive.Drive;
 
 @RestController
 @RequestMapping( "/rest-api")
@@ -467,7 +462,7 @@ public class PublicRESTAPIController
 			}
 			
 			if( !isFound)
-				return Tools.unauthorized();
+				return Tools.forbidden();
 			
 			return new ResponseEntity<ArticleOrder>( entity, HttpStatus.OK);
 		}
@@ -991,6 +986,9 @@ public class PublicRESTAPIController
 	@RequestMapping( value="/register/buyer")
 	public ResponseEntity<?> registerBuyer( @RequestBody BuyerRegistration entity)
 	{
+		if( !isAnonymous())
+			return Tools.forbidden();
+		
 		try
 		{
 			List<FieldErrorResource> fErrors = new ArrayList<FieldErrorResource>();
@@ -1108,6 +1106,9 @@ public class PublicRESTAPIController
 	@RequestMapping( value="/register/e-shop")
 	public ResponseEntity<?> registerEShop( @RequestBody EShopRegistration entity)
 	{	
+		if( !isAnonymous())
+			return Tools.forbidden();
+		
 		try
 		{
 			List<FieldErrorResource> fErrors = new ArrayList<FieldErrorResource>();
@@ -1297,6 +1298,9 @@ public class PublicRESTAPIController
 	@RequestMapping( "/logged-user/update-profile")
 	public ResponseEntity<?> updateProfile( @RequestBody User entity)
 	{
+		if( isAnonymous())
+			return Tools.unauthorized();
+		
 		try
 		{
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -1958,6 +1962,9 @@ public class PublicRESTAPIController
 				if( isAnonymous())
 					return Tools.unauthorized();
 				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_BUYER"))
+					return Tools.forbidden();
+				
 				User user = pRESTAPI.loadUser( getLoggedUserFromPrincipal().getUserInfo().getId());
 				
 				if( user.getProfileCompletion() < 100 || !user.isApproved())
@@ -2080,9 +2087,10 @@ public class PublicRESTAPIController
 		}
 		/* Articles */
 		@GetMapping
-		@RequestMapping( "/logged-user/last-visited-articles")
-		public ResponseEntity<?> loadLastVisitedArticle( @RequestParam( name="page", defaultValue="1") final Integer page,
-														 @RequestParam( name="pageSize", defaultValue="6") final Integer pageSize)
+		@RequestMapping( "/logged-user/visited-articles")
+		public ResponseEntity<?> loadUserVisitedArticle( @RequestParam( name="page", defaultValue="1") final Integer page,
+														 @RequestParam( name="pageSize", defaultValue="6") final Integer pageSize,
+														 @RequestParam( name="orderByIdAsc", defaultValue="false") final boolean orderByIdAsc)
 		{
 			try
 			{
@@ -2095,40 +2103,8 @@ public class PublicRESTAPIController
 				
 				if( user.hasRole( "ROLE_ADMIN"))
 					return Tools.unauthorized();
-
-				ObjectMapper mapper = new ObjectMapper();
 				
-				/* Get the Google Drive Service */
-				Drive driveService = GoogleDriveServiceBuilder.buildDriveService();
-				
-				List<VisitedArticle> userVisitedArticles = new ArrayList<VisitedArticle>();
-				List<VisitedArticle> visitedArticles = new ArrayList<VisitedArticle>();
-				
-				/* Fetch Last Visited Articles */
-				if( GoogleDriveServiceImpl.isValidDriveFile( GoogleDriveServiceImpl.visitedArticleStatsId)) {
-					String fileId = GoogleDriveServiceImpl.visitedArticleStatsId;
-					ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-					driveService.files().get( fileId)
-					        .executeMediaAndDownloadTo(outputStream);
-					
-//					InputStream is;
-//					is = driveService.files().get( Tools.visitedArticleStatsId).executeAsInputStream();
-					visitedArticles = mapper.readValue( outputStream.toByteArray(), new TypeReference<List<VisitedArticle>>() {}); /*mapper.readValue( IOUtils.toByteArray( is), new TypeReference<List<VisitedArticle>>() {});*/
-				} else {
-					/* Fallback on local file */
-					File file = new File( Tools.visitedArticlesPath);
-					
-					if( file.exists()) {
-						visitedArticles = mapper.readValue( IOUtils.toByteArray( new FileInputStream(file)),  new TypeReference<List<VisitedArticle>>() {});
-					}
-				}
-				
-				for( VisitedArticle vArt : visitedArticles) {
-					if( vArt.getUserId().equals( getLoggedUserFromPrincipal().getUserInfo().getId()) && userVisitedArticles.size() < 16)
-						userVisitedArticles.add( vArt);
-				}
-				
-				return Tools.handlePagedListJSON( Tools.generatePagedList( userVisitedArticles, page, pageSize));
+				return Tools.handlePagedListJSON( pRESTAPI.loadUserVisitedArticles(user.getUserInfo().getId(), page, pageSize, orderByIdAsc));
 			}
 			catch( Exception e)
 			{
@@ -2136,7 +2112,6 @@ public class PublicRESTAPIController
 				return Tools.internalServerError();
 			}
 		}
-		@SuppressWarnings("unchecked")
 		@PostMapping
 		@JsonView( Views.Public.class)
 		@RequestMapping( "/logged-user/add-visited-article")
@@ -2156,70 +2131,13 @@ public class PublicRESTAPIController
 				User user = getLoggedUserFromPrincipal();
 				
 				if( user.hasRole( "ROLE_ADMIN"))
-					return Tools.unauthorized();
+					return Tools.forbidden();
 				
-				ObjectMapper mapper = new ObjectMapper();
-//				JSONArray visitedArticles = new JSONArray();
-				List<VisitedArticle> visitedArticles = new ArrayList<VisitedArticle>();
+				VisitedArticle entity = new VisitedArticle();
+				entity.setUser( pRESTAPI.loadUser( getLoggedUserFromPrincipal().getUserInfo().getId()));
+				entity.setArticleId( article.getId());
 				
-				File file = new File( Tools.visitedArticlesPath);
-				
-				if( file.exists()) {
-					visitedArticles = mapper.readValue( IOUtils.toByteArray( new FileInputStream(file)),  new TypeReference<List<VisitedArticle>>() {});
-				}
-				
-				visitedArticles.add( new VisitedArticle( article, getLoggedUserFromPrincipal().getUserInfo().getId(), 
-									( List<Category>) pRESTAPI.loadArticleCategories(article.getId(), 1, 0).getEntities()));
-
-				/* Writing to local */
-				FileWriter fileWriter = new FileWriter( Tools.visitedArticlesPath);
-				try 
-				{
-					fileWriter.write( mapper.writeValueAsString(visitedArticles));
-				}
-				catch( Exception e)
-				{
-					e.printStackTrace();
-				}
-				finally
-				{
-					fileWriter.flush();
-					fileWriter.close();
-				}
-
-				/* Pushing to Google Drive */
-				/* Create a Google File MetaData*/
-				com.google.api.services.drive.model.File gFileMetaData = new com.google.api.services.drive.model.File();
-
-				/* Temporarly save the file on server */
-				/* Read the saved file to Google File Content */
-				FileContent gFileContent = new FileContent( "application/json", file);
-				
-				/* Get the Google Drive Service */
-				Drive driveService = GoogleDriveServiceBuilder.buildDriveService();
-				
-				/* Insert the File into the GoogleDrive Service and get it's ID */
-				try
-				{
-					if( GoogleDriveServiceImpl.isValidDriveFile( GoogleDriveServiceImpl.visitedArticleStatsId)) {
-						driveService.files().update( GoogleDriveServiceImpl.visitedArticleStatsId, gFileMetaData, gFileContent)
-									.execute();
-					}
-					else {
-						/* Set Google File Name */
-						gFileMetaData.setName( "visited-articles.json");
-						/* Set Google File Folder, in this case, the article folder */
-						gFileMetaData.setParents( Collections.singletonList( GoogleDriveServiceImpl.statsFolderId));
-						
-						driveService.files()
-									  .create( gFileMetaData, gFileContent)
-							          .execute().getId();
-					}
-				}
-				catch( Exception e)
-				{
-					e.printStackTrace();
-				}
+				pRESTAPI.addVisitedArticle(entity);
 				
 				return Tools.ok();
 			}
@@ -2322,9 +2240,12 @@ public class PublicRESTAPIController
 		public ResponseEntity<?> rateArticle( @PathVariable( name="id") final Long id,
 											  @RequestBody final Integer rating)
 		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			
+			/* Check if User owns Ordered Article */
 			try
 			{
-				
 				OrderedArticle entity = restBL.getOrderedArticle( id);
 
 				//Return entity not found
@@ -2785,7 +2706,7 @@ public class PublicRESTAPIController
 	/* End WebSockets */
 	
 	/* Debug */
-	/* TODO Remove this */
+	/* TODO Remove all below */
 	@GetMapping
 	@RequestMapping( "/debug/init-db")
 	public ResponseEntity<?> initDB()
