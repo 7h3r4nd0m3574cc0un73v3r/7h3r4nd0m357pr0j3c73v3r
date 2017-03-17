@@ -69,12 +69,6 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 											}, function( response) {
 												console.error( response);
 											});
-								/* OrderService.loadPayments( entity.id)
-											.then( function( response) {
-												entity.payments = response;
-											}, function( response) {
-												console.error( response);
-											}); */
 								OrderService.loadOrderedArticlesByOrder( entity.id)
 											.then( function( response) {
 												entity.articleCount = response.length;

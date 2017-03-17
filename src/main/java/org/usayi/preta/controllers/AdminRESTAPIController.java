@@ -1181,12 +1181,12 @@ public class AdminRESTAPIController
 				return Tools.unauthorized();
 			
 			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
-				return Tools.unauthorized();
+				return Tools.forbidden();
 			
 			ArticleOrder entity = aRESTAPI.loadArticleOrder( id);
 			
 			if( entity == null)
-				return new ResponseEntity<Void>( HttpStatus.NOT_FOUND);
+				return Tools.entityNotFound();
 			
 			return new ResponseEntity<ArticleOrder>( entity, HttpStatus.OK);
 		}

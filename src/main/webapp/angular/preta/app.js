@@ -19,7 +19,8 @@ var App = angular.module( "pretaApp", [
                                        'ngAudio',
                                        'ngMessages',
                                        'rzModule',
-                                       'vcRecaptcha'
+                                       'vcRecaptcha',
+                                       'angular-preload-image'
                                       ]);
 /* Config Interceptor */
 App.factory('myInterceptor', [ '$q', '$injector', function( $q, $injector) {  
@@ -938,6 +939,36 @@ function config( $stateProvider, $urlRouterProvider, $mdThemingProvider, $httpPr
 				label: 'Sandbox'
 			},
 			templateUrl: 'angular/preta/views/sandbox.html',
+			controller: [ '$scope', '$http', function( $scope, $http) {
+				/* https://drive.google.com/open?id=0B0W0ktANhIydb2pwMDdHY3VYcVk */
+				$scope.picture = { url: 'https://drive.google.com/uc?id=0B0W0ktANhIydb2pwMDdHY3VYcVk&export=download', data: null };
+				$scope.isLoading = false;
+				
+				$scope.load = function() {
+					$scope.isLoading = true;
+					
+					$http({ 
+							url: $scope.picture.url,
+							method: 'GET',
+							headers: {
+								'Access-Control-Allow-Origin': '*'
+							}
+						})
+						.then( function( r) {
+							 $scope.picture.data = r.data;
+							 
+							 $scope.isLoading = false;
+						 }, function( r) {
+							 console.error( r);
+							 $scope.isLoading = false;
+						 });
+				};
+				
+				$scope.reset = function() {
+					$scope.picture.data = null;
+					$scope.isLoading = false;
+				};
+			}]
 		})
 };
 

@@ -31,10 +31,10 @@ App.factory( 'OrderService', ['$http', '$q', function( $http, $q) {
 			},
 			loadEntity: function( id) {
 				return $http.get( 'rest-api/admin/article-order/' + id)
-				.then(	function( response) { return response.data; },
-						function( errResponse) {
+				.then(	function( r) { return r.data; },
+						function( r) {
 							console.log( 'Error: OrderService > loadEntity');
-							return $q.reject( errResponse);
+							return $q.reject( r);
 						});
 			},
 			loadPayments: function( id, page, pageSize) {

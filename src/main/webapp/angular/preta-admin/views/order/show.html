@@ -9,110 +9,126 @@
 		</div>
     </div>
     
-	<table class="table table-hover" x-ng-if="!isEntityLoading && entity != null">
-		<tbody>
-			<tr>
-				<td class="header-cell">Id</td>
-				<td>{{ entity.id | number }}</td>
-			</tr>
-			<tr>
-				<td class="header-cell">Date</td>
-				<td>{{ entity.regDate | date: 'medium' }}</td>
-			</tr>
-			<tr>
-				<td class="header-cell">Auteur</td>
-				<td>{{ entity.buyer.username }}</td>
-			</tr>
-			<tr>
-				<td class="header-cell">Statut</td>
-				<td><order-status x-status="entity.status" /></td>
-			</tr>
-			<tr x-ng-show="entity.deliveryDate != null">
-				<td class="header-cell">Date de début livraison</td>
-				<td>{{ entity.deliveryDate | date: 'medium' }}</td>
-			</tr>
-			<tr x-ng-show="entity.packagedId != null">
-				<td class="header-cell">N° de colis</td>
-				<td>{{ entity.deliveryDate | date: 'medium' }}</td>
-			</tr>
-			<tr x-ng-show="entity.receptionDate != null">
-				<td class="header-cell">Date de livraison</td>
-				<td>{{ entity.receptionDate | date: 'medium' }}</td>
-			</tr>
-		</tbody>
-	</table>
+    <div layout="column" layout-align="start">
+		<div layout-gt-xs="row" layout-xs="column" flex layout-wrap>
+			<md-input-container class="md-block" flex>
+	            <label>Id Absolu</label>
+	            <input value="{{ entity.id | number }}" readonly />
+            </md-input-container>
+            <md-input-container class="md-block" flex>
+	            <label>Id Relatif Acheteur</label>
+	            <input ng-model="entity.buyerRelId" readonly />
+            </md-input-container>
+            <md-input-container class="md-block" flex>
+	            <label>Id Relatif Boutique</label>
+	            <input ng-model="entity.eShopRelId" readonly />
+            </md-input-container>
+		</div>
+		
+		<div layout-gt-xs="row" layout-xs="column" flex>
+            <md-input-container class="md-block" flex>
+	            <label>Acheteur</label>
+	            <input ng-model="entity.buyer.username" readonly />
+            </md-input-container>
+            <md-input-container class="md-block" flex>
+	            <label>Date Enregistrement</label>
+	            <input value="{{ entity.regDate | date: 'medium' }}" readonly />
+            </md-input-container>
+        </div>
+        
+		<div layout="row" flex>
+            <md-input-container class="md-block" flex>
+	            <label>E-Boutique</label>
+	            <input value="{{ entity.eShop.name }}" readonly />
+            </md-input-container>
+        </div>
+        
+		<div layout="row" flex layout-margin>
+			<div flex>
+	            <label>Statut</label>
+	            <order-status status="entity.status" />
+			</div>
+        </div>
+        
+		<div layout-gt-xs="row" layout-xs="column" flex>
+            <md-input-container class="md-block" flex x-ng-show="entity.deliveryDate != null">
+	            <label>Début Livraison</label>
+	            <input value="{{ entity.deliveryDate | date: 'medium' }}" readonly />
+            </md-input-container>
+            <md-input-container class="md-block" flex x-ng-show="entity.receptionDate != null">
+	            <label>Réception</label>
+	            <input value="{{ entity.receptionDate | date: 'medium' }}" readonly />
+            </md-input-container>
+        </div>
+        
+		<div layout="row" flex x-ng-show="entity.packageId != null">
+			<md-input-container class="md-block" flex>
+	            <label>N° Colis</label>
+	            <input value="{{ entity.packageId }}" readonly />
+            </md-input-container>
+		</div>
+	</div>
 	
-	<h4 class="special-header">Articles commandés</h4>
+	<h4 class="special-header text-success">Articles commandés</h4>
 	
-	<table class="table table-hovered">
-		<thead>
-			<tr>
-				<th>Article</th>
-				<td class="text-right">Prix</td>
-				<td class="text-right">Quantité</td>
-				<td class="text-right">Total</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr x-ng-repeat="orderedArticle in entity.orderedArticles">
-				<td>
-					{{ orderedArticle.article.name}}
-				</td>
-				<td class="text-right">
-					{{ orderedArticle.article.price | number }} F CFA
-				</td>
-				<td class="text-right">
-					{{ orderedArticle.quantity | number }}
-				</td>
-				<td class="text-right">
-					{{ ( orderedArticle.article.price * orderedArticle.quantity) | number  }} F CFA
-				</td>
-			</tr>
-		</tbody>
-		<tfoot>
-			<tr>
-				<td colspan="3" class="text-right">
-					<b>Total</b>
-				</td>
-				<td class="text-right">{{ entity.total | number }} F CFA</td>
-			</tr>
-		</tfoot>
-	</table>
+	<div layout="column">
+		<div layout-sm="column" layout-gt-sm="row" ng-repeat="ordArt in entity.orderedArticles" layout-padding>
+			<div flex="none">
+				<img x-ng-src="https://drive.google.com/uc?id={{ ordArt.article.pictures[0].googleId }}&export=download"
+					class="img-responsive img-thumbnail center-block"
+					style="width: 60px; height: 60px;" />
+			</div>
+			<div flex="auto">
+	            <md-input-container class="md-block" flex layout-align="start stretch">
+		            <label>Article</label>
+		            <input value="{{ ordArt.article.name}}" readonly class="text-right" />
+	            </md-input-container>
+			</div>
+			<div flex layout-align="start stretch">
+	            <md-input-container class="md-block" flex>
+		            <label>Prix Unitaire</label>
+		            <input value="{{ ordArt.article.price | number }} F CFA" readonly class="text-right" />
+	            </md-input-container>
+			</div>
+			<div flex layout-align="start stretch" x-ng-show="ordArt.article.deliveryFee > 0">
+	            <md-input-container class="md-block" flex>
+		            <label>Livr.</label>
+		            <input value="{{ ordArt.article.deliveryFee | number }} F CFA" readonly class="text-right" />
+	            </md-input-container>
+			</div>
+			<div flex layout-align="start stretch">
+	            <md-input-container class="md-block" flex>
+		            <label>Quantité</label>
+		            <input value="{{ ordArt.quantity | number }}" readonly  class="text-right" />
+	            </md-input-container>
+			</div>
+			<div flex layout-align="start stretch">
+	            <md-input-container class="md-block" flex>
+		            <label>Total</label>
+		            <input value="{{ ( (ordArt.article.price + ordArt.article.deliveryFee) * ordArt.quantity) | number  }} F CFA" readonly class="text-right" />
+	            </md-input-container>
+			</div>
+		</div>
+		
+		<div flex layout-align="start center" layout="row" layout-padding>
+            <md-input-container class="md-block" flex layout-align="start stretch">
+	            <label>Total</label>
+	            <input value="{{ entity.total | number }} F CFA" readonly class="text-right" />
+            </md-input-container>
+		</div>
+	</div>
 	
-	<h4 class="special-header">Paiements</h4>
-	<table class="table table-hover">	
-		<thead>
-			<tr>
-				<th>#</th>
-				<td class="text-right">Montant</td>
-				<td class="text-center">Référence</td>
-				<td class="text-center">Statut</td>
-				<td></td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr x-ng-repeat="payment in entity.payments">
-				<td class="text-right">{{ payment.id | number }}</td>
-				<td class="text-right">{{ payment.amount | number }} F CFA</td>
-				<td class="text-center">{{ payment.paymentRef}}</td>
-				<td class="text-center"><payment-status status="payment.isValid" /></td>
-				<td>
-					<div class="pull-right" x-ng-show="payment.isValid == null">
-						<button x-ng-click="acceptPayment( payment.id)" class="btn btn-success btn-xs">Accepter</button>
-						<button x-ng-click="rejectPayment( payment.id)" class="btn btn-danger btn-xs">Rejeter</button>
-					</div>
-					<div class="pull-right" x-ng-show="payment.isValid != null">
-						<button class="btn btn-success btn-xs disabled">Accepter</button>
-						<button class="btn btn-danger btn-xs disabled">Rejeter</button>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	
-	<div style="margin-top: 32px;">
-		<div class="pull-left">
-			<button x-ui-sref="root.orders" x-ui-sref-options="{ reload: true}" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span></button>
+	<div layout="row" layout-align="start center">
+		<div>
+			<md-button class="md-raised" x-ui-sref="root.orders" x-ui-sref-options="{ reload: true}" >
+				<i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour</span>
+			</md-button>
+		</div>
+		<div flex></div>
+		<div>
+			<md-button class="md-raised md-primary md-mini">
+				Régler <i class="fa fa-money"></i>
+			</md-button>
 		</div>
 	</div>
 </div>
