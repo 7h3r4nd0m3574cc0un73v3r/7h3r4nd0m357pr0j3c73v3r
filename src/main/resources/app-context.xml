@@ -14,7 +14,7 @@
 		<property name="driverClassName"
 			value="com.mysql.jdbc.Driver">
 		</property>
-		<property name="url" value="jdbc:mysql://172.30.99.226:3306/preta_db"></property>
+		<property name="url" value="jdbc:mysql://172.30.213.159:3306/preta_db"></property>
 		<property name="username" value="preta"></property>
 		<property name="password" value="preta_password"></property>
 	</bean>
