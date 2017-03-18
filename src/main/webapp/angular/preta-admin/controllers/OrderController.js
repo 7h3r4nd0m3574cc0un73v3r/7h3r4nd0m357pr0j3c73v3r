@@ -16,6 +16,10 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderS
 		$scope.breadCrumbLabel = "Commandes à livrer";
 	else if( $stateParams.status == 4)
 		$scope.breadCrumbLabel = "Commandes livr\xE8es";
+	else if( $stateParams.status == 5)
+		$scope.breadCrumbLabel = "Commandes \xE0 r\xE9gler";
+	else if( $stateParams.status == 6)
+		$scope.breadCrumbLabel = "Commandes r\xE9gl\xE9es";
 	else
 		$scope.breadCrumbLabel = "Commandes";
 	/* End Breadcrumb custom */

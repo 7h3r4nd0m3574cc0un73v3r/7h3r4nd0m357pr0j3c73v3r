@@ -931,7 +931,7 @@ public class ManagerRESTAPIController
 			User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			
 			if( !user.hasRole( "ROLE_MANAGER"))
-				return Tools.unauthorized();
+				return Tools.forbidden();
 			
 			ObjectMapper mapper = new ObjectMapper();
 			
@@ -953,6 +953,8 @@ public class ManagerRESTAPIController
 			notifications.buyerOrderDelivering(entity);
 			/* Email User */
 			emails.deliveringArticleOrder(entity);
+			/* Websockets */
+			service.updatedArticleOrder( entity.getId());
 			
 			return Tools.ok();
 		}

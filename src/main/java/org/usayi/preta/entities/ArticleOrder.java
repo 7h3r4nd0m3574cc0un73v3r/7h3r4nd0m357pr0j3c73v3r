@@ -42,7 +42,7 @@ public class ArticleOrder implements Serializable
 	private Long buyerRelId;
 	
 	@NotNull
-	@JsonView( Views.Manager.class)
+	@JsonView( { Views.Admin.class, Views.Manager.class})
 	private Long eShopRelId;
 	
 	@NotNull

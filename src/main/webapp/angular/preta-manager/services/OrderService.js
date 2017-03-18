@@ -19,7 +19,7 @@ App.factory( 'OrderService', ['$http', '$q', 'Upload', function( $http, $q, Uplo
 						return $q.reject( errResponse);
 					});
 			},
-			getBuyer: function( id) {
+			loadBuyer: function( id) {
 				return $http.get( 'rest/article-order/' + id +'/buyer')
 							.then(	function( response) { return response.data; },
 									function( errResponse) {
@@ -74,7 +74,7 @@ App.factory( 'OrderService', ['$http', '$q', 'Upload', function( $http, $q, Uplo
 							return $q.reject( response);
 						});
 			},
-			getEShop: function( id) {
+			loadEShop: function( id) {
 				return $http({
 								method: 'GET',
 								url: 'rest-api/manager/article-order/' + id + '/e-shop'

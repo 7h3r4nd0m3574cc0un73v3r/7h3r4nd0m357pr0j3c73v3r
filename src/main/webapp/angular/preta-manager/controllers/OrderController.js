@@ -1,12 +1,8 @@
 'use strict';
 
-App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootScope', 'OrderService', 'PaymentService', 'entity',
-                                     function( $state, $stateParams, $scope, $rootScope, OrderService, PaymentService, entity)
-{
-	/*SmartTable Config*/
-	$scope.smartTablePageSize = 10;
-	/*End SmartTable Config*/
-	
+App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootScope', 'OrderService', 'PaymentService', 'entity', 'StompService',
+                                     function( $state, $stateParams, $scope, $rootScope, OrderService, PaymentService, entity, StompService)
+{	
 	/* Breadcrumb & Box Title custom */
 	if( $stateParams.articleOrderStatus == -1) {
 		$scope.breadCrumbLabel = "Commandes";
@@ -31,6 +27,14 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 	else if( $stateParams.articleOrderStatus == 4) {
 		$scope.breadCrumbLabel = "Commandes livr\xE8es";
 		$scope.boxTitle = "Commandes livr\xE8es";
+	}
+	else if( $stateParams.articleOrderStatus == 5) {
+		$scope.breadCrumbLabel = "Commandes en attente de r\xE8glement";
+		$scope.boxTitle = "Commandes en attente de r\xE8glement";
+	}
+	else if( $stateParams.articleOrderStatus == 6) {
+		$scope.breadCrumbLabel = "Commandes r\xE9gl\xE9es";
+		$scope.boxTitle = "Commandes r\xE9gl\xE9es";
 	}
 	else {
 		$scope.breadCrumbLabel = "Commandes";
@@ -63,18 +67,14 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 						.then( function( response) {
 							
 							angular.forEach( response.entities, function( entity) {
-								OrderService.getBuyer( entity.id)
+								prepareEntity( entity);
+								/*
+								OrderService.loadBuyer( entity.id)
 											.then( function( response) {
 												entity.buyer = response;
 											}, function( response) {
 												console.error( response);
 											});
-								/* OrderService.loadPayments( entity.id)
-											.then( function( response) {
-												entity.payments = response;
-											}, function( response) {
-												console.error( response);
-											}); */
 								OrderService.loadOrderedArticlesByOrder( entity.id)
 											.then( function( response) {
 												entity.articleCount = response.length;
@@ -82,15 +82,16 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 												angular.forEach( response, function( orderedArticle) {
 													entity.total += ( orderedArticle.article.price + orderedArticle.article.deliveryFee ) * orderedArticle.quantity;
 												});
-											}, function( response) {
-												console.error( response);
+											}, function( r) {
+												console.error( r);
 											});
-								OrderService.getEShop( entity.id)
+								OrderService.loadEShop( entity.id)
 											.then( function( response) {
 												entity.eShop = response;
 											}, function( response) {
 												console.error( response);
 											});
+								*/
 							});
 							
 							/* Save to scope */
@@ -106,6 +107,45 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 						});
 	};
 	
+	/* Retrieve necessary article order info */
+	function prepareEntity( entity, level) {
+		/* Load EShop */
+		OrderService.loadEShop( entity.id)
+					.then( function( response) {
+						entity.eShop = response;
+					}, function( response) {
+						console.log( response);
+					});
+		/* Load Buyer */
+		OrderService.loadBuyer( entity.id)
+					.then( function( response) {
+						entity.buyer = response;
+					}, function( response) {
+						console.log( response);
+					});
+		
+		if( level >= 1) {
+			/* Load OrderedArticles */
+			OrderService.loadOrderedArticlesByOrder( entity.id)
+						.then( function( orderedArticles) {
+							entity.orderedArticles = orderedArticles;
+							entity.total = 0;
+							angular.forEach( entity.orderedArticles, function( value) {
+								entity.total += ( value.article.price + value.article.deliveryFee ) * value.quantity;
+							});
+						}, function( r) {
+							console.error( r);
+						});
+			/* Load Payments */
+			OrderService.loadPayments( entity.id)
+						.then( function( payments) {
+							entity.payments = payments.entities;
+						}, function( r) {
+							console.error( r);
+						});
+		}
+	}
+	
 	/* Call to loadEntities */
 	$scope.loadEntities( $scope.pagination.currentPage, $scope.pagination.pageSize,
 						 $scope.pagination.orderByIdAsc, $scope.pagination.articleOrderStatus);
@@ -120,14 +160,12 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 	
 	/* Mark Entity as Delivered */
 	$scope.deliverEntity = function() {
-		console.log( $scope.entity);
 		if( $scope.isValidForm()) {
 			OrderService.deliverEntity( $scope.entity.id, $scope.entity.packageId)
 			.then( function( response) {
-				console.log( response);
-				$scope.updateEntity( $scope.entity.id);
-			}, function( response) {
-				console.error( response);
+//				$scope.updateEntity( $scope.entity.id);
+			}, function( r) {
+				console.error( r);
 			});
 			
 		}
@@ -143,33 +181,33 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 		return true;
 	};
 	
-	
-	$scope.updateEntity = function( id) {
-		OrderService.loadEntity( id)
+	/* Show ArticleOrder */
+	if( $stateParams.id != undefined) {
+		$scope.isEntityLoading = true;
+		
+		OrderService.loadEntity( $stateParams.id)
 					.then( function( response) {
-						var entity = response;
-						OrderService.loadOrderedArticlesByOrder( id)
-									.then( function( orderedArticles) {
-										entity.orderedArticles = orderedArticles;
-										entity.total = 0;
-										angular.forEach( entity.orderedArticles, function( value) {
-											entity.total += value.article.price * value.quantity;
-										});
-									}, function( errResponse) {
-										console.error( errResponse);
-									});
-						OrderService.getBuyer( id)
-									.then( function( buyer) {
-										entity.buyer = buyer;
-									}, function( errResponse) {
-										console.error( errResponse);
-									});
+						$scope.entity = response;
 						
-						$scope.entity = entity;
-					}, function( response) {
-						console.error( response);
-					});
-	};
+						prepareEntity( $scope.entity, 1);
+
+						/* Websocket Monitor Entity */
+						StompService.connect()
+									.then( function() {
+										StompService.subscribe( '/topic/article-order/' + $scope.entity.id,
+																function( payload, headers, response) {
+																	$scope.entity = payload;
+																	prepareEntity( $scope.entity, 1);
+															  });
+									});
+									/* TODO Unsubscribe when leaving */
+						
+						$scope.isEntityLoading = false;
+					}, function( r) {
+						console.error( r);
+						$scope.isEntityLoading = false;
+					});	
+	}
 	
 	/* Error Handling */
 	$scope.initFormErrors = function() {

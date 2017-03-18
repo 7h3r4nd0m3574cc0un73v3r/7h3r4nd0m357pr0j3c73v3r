@@ -75,6 +75,7 @@ App.controller( 'OrderController', [ '$rootScope', '$state', '$stateParams', '$s
 					.then( function( response) {
 						$scope.entity.orderedArticles = response;
 						$scope.entity.total = 0;
+						
 						angular.forEach( $scope.entity.orderedArticles, function( orderedArticle) {
 							orderedArticle.total = ( orderedArticle.article.price + orderedArticle.article.deliveryFee) * orderedArticle.quantity;
 							$scope.entity.total += orderedArticle.total;
@@ -82,7 +83,7 @@ App.controller( 'OrderController', [ '$rootScope', '$state', '$stateParams', '$s
 							/* Load Default Picture */
 							ArticleService.loadDefaultPicture( orderedArticle.article.id)
 										  .then( function( response) {
-											  orderedArticle.article.defaultPicture = response;
+											  orderedArticle.article.pictures.push( response);
 										  }, function( response) {
 											  console.error( response);
 										  });
