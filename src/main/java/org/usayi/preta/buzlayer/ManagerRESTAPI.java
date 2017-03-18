@@ -39,8 +39,7 @@ public class ManagerRESTAPI extends SharedRESTAPI implements IManagerRESTAPI
 		/* ArticleOrders */
 		@SuppressWarnings("unchecked")
 		@Override
-		public PagedListJSON loadArticlesOrderByManagerAndByStatus( Long id, Integer page, Integer pageSize, boolean orderByIdAsc,
-																	OrderStatus orderStatus)
+		public PagedListJSON loadArticlesOrderByManagerAndByStatus( Long id, Integer page, Integer pageSize, boolean orderByIdAsc, OrderStatus orderStatus)
 		{
 			PagedListJSON result = pretaDao.loadArticleOrderByManagerAndByStatus( id, page, pageSize, orderByIdAsc, orderStatus);
 			
@@ -50,6 +49,11 @@ public class ManagerRESTAPI extends SharedRESTAPI implements IManagerRESTAPI
 			}
 			
 			return result;
+		}
+		@Override
+		public PagedListJSON loadManagerArticleOrders( final Long id, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc)
+		{
+			return pretaDao.loadManagerArticleOrders(id, page, pageSize, status, orderByIdAsc);
 		}
 	/* End Manager */
 		

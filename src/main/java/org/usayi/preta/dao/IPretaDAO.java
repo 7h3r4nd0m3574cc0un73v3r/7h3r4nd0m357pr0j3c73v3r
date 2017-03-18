@@ -130,6 +130,7 @@ public interface IPretaDAO
 		/* Articles Orders As Manager */
 		public PagedListJSON loadArticleOrderByManagerAndByStatus( final Long userId, final Integer page, final Integer pageSize, final boolean orderByIdAsc,
 																   final OrderStatus orderStatus);
+		public PagedListJSON loadManagerArticleOrders( final Long id, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc);
 		/* EAccount */
 		public Long addEAccountToUserInfo( final Long id, final Long empId, final EAccount entity);
 		public Long addExEAccountToUserInfo( final Long id, final Long eAccountId);

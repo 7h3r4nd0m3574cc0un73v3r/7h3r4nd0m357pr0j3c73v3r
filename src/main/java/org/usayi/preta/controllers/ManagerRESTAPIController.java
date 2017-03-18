@@ -187,6 +187,62 @@ public class ManagerRESTAPIController
 				return new ResponseEntity<List<ArticleOrder>>( HttpStatus.INTERNAL_SERVER_ERROR);
 			}	
 		}
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/logged-user/article-orders")
+		public ResponseEntity<?> loadAdminArticleOrders( @RequestParam( name="page", defaultValue="1") final Integer page,
+													    @RequestParam( name="pageSize", defaultValue="0") final Integer pageSize,
+													    @RequestParam( name="orderByIdAsc", defaultValue="true") final boolean orderByIdAsc,
+													    @RequestParam( name="orderStatus", defaultValue="-1") final Integer status)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_MANAGER"))
+					return Tools.forbidden();
+				
+				OrderStatus orderStatus;
+				switch( status)
+				{
+					case 0:
+						orderStatus = OrderStatus.PENDING_PAYMENT;
+						break;
+					case 1:
+						orderStatus = OrderStatus.PENDING_PAYMENT_CONFIRMATION;
+						break;
+					case 2:
+						orderStatus = OrderStatus.PAID;
+						break;
+					case 3:
+						orderStatus = OrderStatus.DELIVERING;
+						break;
+					case 4:
+						orderStatus = OrderStatus.DELIVERED;
+						break;
+					case 5:
+						orderStatus = OrderStatus.PENDING_EXPENSE;
+						break;
+					case 6:
+						orderStatus = OrderStatus.ESHOP_PAID;
+						break;
+					case -1:
+						orderStatus = OrderStatus.ALL;
+						break;
+					default:
+						orderStatus = OrderStatus.ALL;
+						break;
+				}
+				
+				return Tools.handlePagedListJSON( mRESTAPI.loadManagerArticleOrders( getLoggedUserFromPrincipal().getUserInfo().getId(), page, pageSize, orderStatus, orderByIdAsc));
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
 		/* End Manager */
 	
 	/* EShops */
@@ -588,7 +644,6 @@ public class ManagerRESTAPIController
 		}
 	}
 	/* End Shop Subs */
-	
 	
 	/* Articles */
 	@GetMapping

@@ -384,7 +384,7 @@ public class AdminRESTAPI extends SharedRESTAPI implements IAdminRESTAPI
 		}
 		/* Admin - ArticleOrder */
 		@Override
-		public PagedListJSON loadAdminArticleOrder( Long userId, Integer page, Integer pageSize, OrderStatus status, boolean orderByIdAsc)
+		public PagedListJSON loadAdminArticleOrders( Long userId, Integer page, Integer pageSize, OrderStatus status, boolean orderByIdAsc)
 		{
 			return pretaDao.loadAdminArticleOrders(userId, page, pageSize, status, orderByIdAsc);
 		}
