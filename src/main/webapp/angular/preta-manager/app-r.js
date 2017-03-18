@@ -346,33 +346,6 @@ App.config( [ '$stateProvider', '$urlRouterProvider', 'baSidebarServiceProvider'
 			ncyBreadcrumb: {
 				label: 'Commande #{{ entity.id }}'
 			},
-			resolve: {
-				entity: [ 'OrderService', '$stateParams', function( OrderService, $stateParams) {
-					return OrderService.loadEntity( $stateParams.id)
-										.then( function( response) {
-											var entity = response;
-											OrderService.loadOrderedArticlesByOrder( $stateParams.id)
-														.then( function( orderedArticles) {
-															entity.orderedArticles = orderedArticles;
-															entity.total = 0;
-															angular.forEach( entity.orderedArticles, function( value) {
-																entity.total += value.article.price * value.quantity;
-															});
-														}, function( errResponse) {
-															console.error( errResponse);
-														});
-											OrderService.getBuyer( $stateParams.id)
-														.then( function( buyer) {
-															entity.buyer = buyer;
-														}, function( errResponse) {
-															console.error( errResponse);
-														});
-											return entity;
-										}, function( response) {
-											console.error( response);
-										});
-				}]
-			},
 			controller: 'OrderController'
 		})
 		/* Profile */

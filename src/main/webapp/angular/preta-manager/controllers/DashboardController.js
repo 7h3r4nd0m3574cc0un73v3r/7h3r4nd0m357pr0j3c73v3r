@@ -34,7 +34,7 @@ App.controller( 'DashboardController', [ '$scope', '$rootScope', 'EShopService',
 						$scope.eShops = response.entities;
 						
 						angular.forEach( $scope.eShops, function( value) {
-							value.profileCompletion = EShopService.computeProfileCompletion( value);
+//							value.profileCompletion = EShopService.computeProfileCompletion( value);
 							
 							/* Load Current Shop Sub */
 							EShopService.loadCurrentShopSub( value.id)
@@ -71,7 +71,7 @@ App.controller( 'DashboardController', [ '$scope', '$rootScope', 'EShopService',
 		OrderService.loadByManagerAndStatus( 1, 8, true, 2)
 						.then( function( response) {					
 							angular.forEach( response.entities, function( entity) {
-								OrderService.getBuyer( entity.id)
+								OrderService.loadBuyer( entity.id)
 											.then( function( response) {
 												entity.buyer = response;
 											}, function( response) {
@@ -93,7 +93,7 @@ App.controller( 'DashboardController', [ '$scope', '$rootScope', 'EShopService',
 											}, function( response) {
 												console.error( response);
 											});
-								OrderService.getEShop( entity.id)
+								OrderService.loadEShop( entity.id)
 											.then( function( response) {
 												entity.eShop = response;
 											}, function( response) {

@@ -9,7 +9,7 @@
 		</div>
     </div>
     
-    <div layout="column" layout-align="start">
+    <div layout="column" layout-align="start" x-ng-if="!isEntityLoading && entity != null">
 		<div layout-gt-xs="row" layout-xs="column" flex layout-wrap>
 			<md-input-container class="md-block" flex>
 	            <label>Id Absolu</label>
