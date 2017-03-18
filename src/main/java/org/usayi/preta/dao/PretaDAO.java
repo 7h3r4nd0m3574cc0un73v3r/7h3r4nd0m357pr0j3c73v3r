@@ -861,6 +861,46 @@ public class PretaDAO implements IPretaDAO
 				return null;
 			}
 		}
+		@Override
+		@SuppressWarnings( "unchecked")
+		public PagedListJSON loadManagerArticleOrders( Long id, Integer page, Integer pageSize, OrderStatus status, boolean orderByIdAsc)
+		{	
+			String hql = "SELECT DISTINCT entity FROM ArticleOrder entity, User manager JOIN entity.orderedArticles orderedArticles JOIN orderedArticles.article article"
+				+ " JOIN article.eShop articleEShop JOIN manager.managedEShops managedEShops WHERE manager = :manager AND articleEShop.id = managedEShops.id";
+			
+			if( status != OrderStatus.ALL)
+				hql += " AND entity.status = :orderStatus";
+			
+			if( status.equals( OrderStatus.PENDING_EXPENSE))
+				hql += " AND entity.status = :status AND entity.expense is null";
+			
+			if( status.equals( OrderStatus.ESHOP_PAID)) {
+				hql += " AND entity.status = :status AND entity.expense is not null";
+			}
+			
+			hql += " ORDER BY entity.id";
+			if( !orderByIdAsc)
+				hql += " DESC";
+			
+			Query query = em.createQuery( hql);
+
+			query.setParameter( "manager", loadUser( id));
+			if( status != OrderStatus.ALL)
+				query.setParameter( "orderStatus", status);
+
+			if( status.equals( OrderStatus.PENDING_EXPENSE) || status.equals( OrderStatus.ESHOP_PAID)) {
+				query.setParameter( "status", OrderStatus.DELIVERED);
+			}
+
+			PagedListJSON result = generatePagedList(query, page, pageSize);
+			
+			for( ArticleOrder entity : (List<ArticleOrder>) result.getEntities())
+			{
+				entity.setRegDate( getRegDate( ArticleOrder.class, entity.getId()));
+			}
+			
+			return result;
+		}
 		/* ArticleOrders as Buyer */
 		@Override
 		@SuppressWarnings( "unchecked")
@@ -1221,8 +1261,6 @@ public class PretaDAO implements IPretaDAO
 			if( !orderByIdAsc)
 				hql += " DESC";
 			
-			System.err.println( hql);
-			
 			Query query = em.createQuery( hql);
 			query.setParameter( "id", userId);
 			
@@ -1245,7 +1283,7 @@ public class PretaDAO implements IPretaDAO
 		/* Visited Articles */
 		@Override
 		@SuppressWarnings( "unchecked")
-		public PagedListJSON loadUserVisitedArticles( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc)
+		public PagedListJSON loadUserVisitedArticles( Long id, Integer page, Integer pageSize, boolean orderByIdAsc)
 		{
 			String hql = "SELECT entity FROM VisitedArticle entity JOIN entity.user user JOIN user.userInfo userInfo"
 					+ " WHERE userInfo.id = :id ORDER BY entity.id";
@@ -2971,7 +3009,7 @@ public class PretaDAO implements IPretaDAO
 	
 	/* Visited Article */
 	@Override
-	public PagedListJSON loadVisitedArticles( final Integer page, final Integer pageSize, final boolean orderByIdAsc)
+	public PagedListJSON loadVisitedArticles( Integer page, Integer pageSize, boolean orderByIdAsc)
 	{
 		String hql = "SELECT entity FROM VisitedArtile entity ORDER BY entity.id";
 		if( !orderByIdAsc)
@@ -2982,7 +3020,7 @@ public class PretaDAO implements IPretaDAO
 		return generatePagedList(query, page, pageSize);
 	}
 	@Override
-	public Long addVisitedArticle( final VisitedArticle entity)
+	public Long addVisitedArticle( VisitedArticle entity)
 	{
 		em.persist(entity);
 		

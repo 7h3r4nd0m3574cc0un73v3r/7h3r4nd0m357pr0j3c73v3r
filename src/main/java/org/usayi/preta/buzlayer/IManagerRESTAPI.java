@@ -31,8 +31,8 @@ public interface IManagerRESTAPI extends ISharedRESTAPI
 		/* EShops */
 		public Long addEShopToUser( final Long userId, final EShop entity);
 		/* ArticleOrders */
-		public PagedListJSON loadArticlesOrderByManagerAndByStatus( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAs,
-																    final OrderStatus orderStatus);
+		public PagedListJSON loadArticlesOrderByManagerAndByStatus( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAs, final OrderStatus orderStatus);
+		public PagedListJSON loadManagerArticleOrders( final Long id, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc);
 	/* End %anager */
 		
 	/* Feature */

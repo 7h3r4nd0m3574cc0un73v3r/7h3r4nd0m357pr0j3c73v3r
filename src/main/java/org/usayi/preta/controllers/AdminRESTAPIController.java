@@ -1604,7 +1604,7 @@ public class AdminRESTAPIController
 						break;
 				}
 				
-				return Tools.handlePagedListJSON( aRESTAPI.loadAdminArticleOrder( getLoggedUserFromPrincipal().getUserInfo().getId(), page, pageSize, orderStatus, orderByIdAsc));
+				return Tools.handlePagedListJSON( aRESTAPI.loadAdminArticleOrders( getLoggedUserFromPrincipal().getUserInfo().getId(), page, pageSize, orderStatus, orderByIdAsc));
 			}
 			catch( Exception e)
 			{

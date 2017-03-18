@@ -123,7 +123,7 @@ public interface IAdminRESTAPI extends ISharedRESTAPI
 		public void addSupervisedManagerToAdmin( final Long adminId, final Long managerId);
 		public void removeSupervisedManagerFromAdmin( final Long adminId, final Long managerId);
 		/* Admin - ArticleOrder */
-		public PagedListJSON loadAdminArticleOrder( final Long userId, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc);
+		public PagedListJSON loadAdminArticleOrders( final Long userId, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc);
 	/* End Users */
 	
 	/* Logged User */
