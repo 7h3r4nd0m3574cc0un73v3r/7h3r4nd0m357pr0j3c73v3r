@@ -46,10 +46,13 @@ App.factory('myInterceptor', [ '$q', '$injector', function( $q, $injector) {
     		/* redirects All WS 500 errors to Error 500 page */
     		if( rejection.status == 500)
     			$state.go( 'root.errors.500');
+
+    		if( rejection.status == 503)
+    			$state.go( 'root.errors.503');
     		
     		if( rejection.status == 403)
     			$state.go( 'root.errors.403');
-
+    		
     		if( rejection.status == 404)
     			$state.go( 'root.errors.404');
     		
@@ -925,6 +928,10 @@ function config( $stateProvider, $urlRouterProvider, $mdThemingProvider, $httpPr
 		.state( 'root.errors.500', {
 			url: '/500',
 			templateUrl: 'angular/preta/views/error/500.html'
+		})
+		.state( 'root.errors.503', {
+			url: '/503',
+			templateUrl: 'angular/preta/views/error/503.html'
 		})
 		/* End Error Section */
 		/* Debug */
