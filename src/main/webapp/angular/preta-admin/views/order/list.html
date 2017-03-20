@@ -34,8 +34,18 @@
 				          	<label>Statut</label>
 				          	<span><order-status status="entity.status" /></span>
 				          </p>
+				          <p>
+				          	<label>Montant</label>
+				          	<span>{{ entity.total | number }} F CFA</span>
+				          </p>
 				        </md-card-content>
 				        <md-card-actions layout="row" layout-align="end center">
+				          <md-button class="md-raised md-icon-button" aria-label="Sélectionner" x-ng-click="selectOrder( entity.id)" x-ng-if="pagination.orderStatus == 5" x-ng-disabled="entity.disabled">
+					          <i ng-class="{ 'fa fa-square-o': !entity.selected, 'fa fa-check-square': entity.selected }"></i>
+					          <md-tooltip md-direction="top">
+						          Sélectionner
+					          </md-tooltip>
+				          </md-button>
 				          <md-button class="md-primary md-raised md-icon-button" aria-label="Détails" x-ui-sref="root.orders.show( { id: entity.id })">
 				            <i class="fa fa-folder-open"></i>
 				          	<md-tooltip md-direction="top">
@@ -45,7 +55,7 @@
 				      </md-card>
 				</md-content>
 				
-				<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+				<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize && pagination.pageSize > 0">
 					<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
 							num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
 							total-items="pagination.itemsNumber" x-ng-change="changePage()"
@@ -53,6 +63,32 @@
 					</pagination>
 				</div>
 				
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12" x-ui-view>
+			<div x-ba-panel x-ba-panel-title="Sélection">
+				<div layout="column" layout-align="start" ng-if="pagination.orderStatus == 5">
+					<div layout="row" layout-align="start">
+						<md-input-container class="md-block" flex>
+							<label>Nombre de commande sélectionnées</label>
+							<input class="text-right" value="{{ selection.count | number }}" readonly />
+						</md-input-container>
+					</div>
+					<div layout="row" layout-align="start">
+						<md-input-container class="md-block" flex>
+							<label>Total de la sélection</label>
+							<input class="text-right" value="{{ selection.total | number }} F CFA" readonly />
+						</md-input-container>
+					</div>
+					<div layout="row" layout-align="end">
+						<md-button class="md-raised md-primary" ng-disabled="selection.count <= 0">
+							Régler la sélection <i class="fa fa-money"></i>
+						</md-button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

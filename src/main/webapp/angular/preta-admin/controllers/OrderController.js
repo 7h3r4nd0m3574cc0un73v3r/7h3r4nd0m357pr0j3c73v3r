@@ -4,21 +4,21 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderS
                                      function( $state, $stateParams, $scope, OrderService, PaymentService, StompService)
 {
 	/* Breadcrumb custom */
-	if( $stateParams.status == -1)
+	if( $stateParams.orderStatus == -1)
 		$scope.breadCrumbLabel = "Commandes";
-	else if( $stateParams.status == 0)
+	else if( $stateParams.orderStatus == 0)
 		$scope.breadCrumbLabel = "Commandes \xE0 payer";
-	else if( $stateParams.status == 1)
+	else if( $stateParams.orderStatus == 1)
 		$scope.breadCrumbLabel = "Commandes \xE0 confirmer";
-	else if( $stateParams.status == 2)
+	else if( $stateParams.orderStatus == 2)
 		$scope.breadCrumbLabel = "Commandes pay\xE8es";
-	else if( $stateParams.status == 3)
+	else if( $stateParams.orderStatus == 3)
 		$scope.breadCrumbLabel = "Commandes à livrer";
-	else if( $stateParams.status == 4)
+	else if( $stateParams.orderStatus == 4)
 		$scope.breadCrumbLabel = "Commandes livr\xE8es";
-	else if( $stateParams.status == 5)
+	else if( $stateParams.orderStatus == 5)
 		$scope.breadCrumbLabel = "Commandes \xE0 r\xE9gler";
-	else if( $stateParams.status == 6)
+	else if( $stateParams.orderStatus == 6)
 		$scope.breadCrumbLabel = "Commandes r\xE9gl\xE9es";
 	else
 		$scope.breadCrumbLabel = "Commandes";
@@ -31,6 +31,7 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderS
 	/* Handle PagedListJSON ArticleOrders */
 	$scope.entities = [];
 	$scope.entity = {};
+	$scope.selection =  { count: 0, total: 0 };
 
 	/* Pagination Settings */
 	$scope.pagination = { currentPage: $stateParams.page == undefined ? 1 : $stateParams.page,
@@ -55,7 +56,7 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderS
 						$scope.entities = response.entities;
 						
 						angular.forEach( $scope.entities, function( entity) {
-							prepareEntity( entity);
+							prepareEntity( entity, 1);
 						});
 						
 						$scope.isListLoading = false;
@@ -85,6 +86,10 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderS
 			/* Load OrderedArticles */
 			OrderService.loadOrderedArticlesByOrder( entity.id)
 						.then( function( orderedArticles) {
+							/* Expenses */
+							entity.selected = false;
+							entity.disabled = false;
+							/* End Expenses */
 							entity.orderedArticles = orderedArticles;
 							entity.total = 0;
 							angular.forEach( entity.orderedArticles, function( value) {
@@ -180,4 +185,43 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderS
 							});
 		};
 	}
+	
+	$scope.selectOrder = function( id) {
+		angular.forEach( $scope.entities, function( entity) {
+			if( entity.id == id)
+				entity.selected = !entity.selected;
+		});
+	}
+	
+	$scope.$watch( 'entities', function( newValue, oldValue) {
+		if( newValue.length) {
+			console.log( "Specific Change Detected");
+			var reference;
+			
+			$scope.selection.count = 0;
+			$scope.selection.total = 0;
+			
+			angular.forEach( newValue, function( entity) {
+				if( entity.selected) {
+					reference = entity;
+					console.log( entity);
+					$scope.selection.count++;
+					$scope.selection.total += entity.total;
+				}
+			});
+			
+			angular.forEach( newValue, function( entity) {
+				if( entity.eShop != undefined && reference != null) {
+					if( entity.eShop.id != reference.eShop.id)
+						entity.disabled = true;
+					else
+						entity.disabled = false;
+				}
+				
+				if( reference == null)
+					entity.disabled = false;
+			});
+		}
+		
+	}, true);
 }]);

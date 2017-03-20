@@ -1,7 +1,7 @@
 'use strict';
 
-App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootScope', 'OrderService', 'PaymentService', 'entity', 'StompService',
-                                     function( $state, $stateParams, $scope, $rootScope, OrderService, PaymentService, entity, StompService)
+App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootScope', 'OrderService', 'PaymentService', 'entity', 'StompService', 'ArticleService',
+                                     function( $state, $stateParams, $scope, $rootScope, OrderService, PaymentService, entity, StompService, ArticleService)
 {	
 	/* Breadcrumb & Box Title custom */
 	if( $stateParams.articleOrderStatus == -1) {
@@ -67,31 +67,7 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 						.then( function( response) {
 							
 							angular.forEach( response.entities, function( entity) {
-								prepareEntity( entity);
-								/*
-								OrderService.loadBuyer( entity.id)
-											.then( function( response) {
-												entity.buyer = response;
-											}, function( response) {
-												console.error( response);
-											});
-								OrderService.loadOrderedArticlesByOrder( entity.id)
-											.then( function( response) {
-												entity.articleCount = response.length;
-												entity.total = 0;
-												angular.forEach( response, function( orderedArticle) {
-													entity.total += ( orderedArticle.article.price + orderedArticle.article.deliveryFee ) * orderedArticle.quantity;
-												});
-											}, function( r) {
-												console.error( r);
-											});
-								OrderService.loadEShop( entity.id)
-											.then( function( response) {
-												entity.eShop = response;
-											}, function( response) {
-												console.error( response);
-											});
-								*/
+								prepareEntity( entity, 1);
 							});
 							
 							/* Save to scope */
@@ -124,14 +100,27 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 						console.log( response);
 					});
 		
+		/* TODO: Optim */
 		if( level >= 1) {
 			/* Load OrderedArticles */
 			OrderService.loadOrderedArticlesByOrder( entity.id)
 						.then( function( orderedArticles) {
 							entity.orderedArticles = orderedArticles;
 							entity.total = 0;
+							entity.articleCount = 0;
+							
 							angular.forEach( entity.orderedArticles, function( value) {
 								entity.total += ( value.article.price + value.article.deliveryFee ) * value.quantity;
+								entity.articleCount++;
+								/* Load Default Picture */
+								ArticleService.loadDefaultPicture( value.article.id)
+											  .then( function( r) {
+												  value.article.pictures = [];
+												  value.article.pictures.push( r);
+											  }, function( r) {
+												  console.error( r);
+											  });
+								
 							});
 						}, function( r) {
 							console.error( r);
@@ -176,6 +165,7 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 		$scope.initFormErrors();
 		if( $scope.entity.packageId == "" || $scope.entity.packageId == null) {
 			$scope.formErrors = { invalidPackageId: true };
+			
 			return false;
 		}
 		return true;
@@ -206,7 +196,7 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', '$rootS
 					}, function( r) {
 						console.error( r);
 						$scope.isEntityLoading = false;
-					});	
+					});
 	}
 	
 	/* Error Handling */

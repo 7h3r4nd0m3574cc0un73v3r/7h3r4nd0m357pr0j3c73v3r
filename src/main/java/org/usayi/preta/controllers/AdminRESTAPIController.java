@@ -47,6 +47,7 @@ import org.usayi.preta.entities.Category;
 import org.usayi.preta.entities.EAccount;
 import org.usayi.preta.entities.EMoneyProvider;
 import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.GenericStatus;
 import org.usayi.preta.entities.OrderStatus;
 import org.usayi.preta.entities.Payment;
@@ -1529,32 +1530,6 @@ public class AdminRESTAPIController
 				return Tools.internalServerError();
 			}
 		}
-		@GetMapping
-		@JsonView( Views.Admin.class)
-		@RequestMapping( "/logged-user/expense-pending-orders")
-		public ResponseEntity<?> loadAdminExpensePendingOrders( @RequestParam( name="page", defaultValue="1") final Integer page,
-															    @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize,
-															    @RequestParam( name="orderByIdAsc", defaultValue="true") final boolean orderByIdAsc) 
-		{
-			try
-			{
-				if( isAnonymous())
-					return Tools.unauthorized();
-				
-				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
-					return Tools.forbidden();
-				
-				return Tools.handlePagedListJSON( aRESTAPI.loadAdminExpensePendingOrders( getLoggedUserFromPrincipal().getUserInfo().getId(), page, pageSize, orderByIdAsc));
-				
-				/* TODO: Change to Addressed Payments */
-				//return Tools.handlePagedListJSON( aRESTAPI.loadAdminPayments( getLoggedUserFromPrincipal().getUserInfo().getId(), status, page, pageSize, orderByIdAsc));
-			}
-			catch( Exception e)
-			{
-				e.printStackTrace();
-				return Tools.internalServerError();
-			}
-		}
 		/* ArticleOrders */
 		@GetMapping
 		@JsonView( Views.Admin.class)
@@ -1977,6 +1952,22 @@ public class AdminRESTAPIController
 	}
 	/* End Slide */
 	
+	/* Expense */
+	@RequestMapping( "expense/add")
+	public ResponseEntity<?> addExpense( final Expense entity)
+	{
+		try
+		{
+			
+			return Tools.ok();
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
+	/* End Expense */
 	/* WebSocket */
 	@GetMapping
 	@RequestMapping( "/logged-users")

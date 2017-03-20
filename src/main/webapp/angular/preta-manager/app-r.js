@@ -339,6 +339,18 @@ App.config( [ '$stateProvider', '$urlRouterProvider', 'baSidebarServiceProvider'
 				$state.go( 'root.orders', { articleOrdersPage: 1, articleOrdersPageSize: 6, articleOrdersOrderByIdAsc: true, articleOrderStatus: 3});
 			}]
 		})
+		.state( 'root.orders-expense-pending', {
+			url: '/orders/expense-pending',
+			controller: [ '$state', function( $state) {
+				$state.go( 'root.orders', { articleOrdersPage: 1, articleOrdersPageSize: 6, articleOrdersOrderByIdAsc: true, articleOrderStatus: 5});
+			}]
+		})
+		.state( 'root.orders-expended', {
+			url: '/orders/expense-paid',
+			controller: [ '$state', function( $state) {
+				$state.go( 'root.orders', { articleOrdersPage: 1, articleOrdersPageSize: 6, articleOrdersOrderByIdAsc: true, articleOrderStatus: 6});
+			}]
+		})
 		.state( 'root.orders.show', {
 			url: '/show/{id}',
 			title: 'Commandes',
@@ -388,6 +400,12 @@ App.config( [ '$stateProvider', '$urlRouterProvider', 'baSidebarServiceProvider'
 		  },{
 			  title: 'Livraison en cours',
 			  stateRef: 'root.orders-delivering'
+		  }, {
+			  title: 'Attente R\xE8glement',
+			  stateRef: 'root.orders-expense-pending'
+		  }, {
+			  title: 'R\xE9gl\xE9es',
+			  stateRef: 'root.orders-expended'
 		  }, {
 			  title: 'Toutes',
 			  stateRef: 'root.orders-all'

@@ -869,14 +869,13 @@ public class PretaDAO implements IPretaDAO
 				+ " JOIN article.eShop articleEShop JOIN manager.managedEShops managedEShops WHERE manager = :manager AND articleEShop.id = managedEShops.id";
 			
 			if( status != OrderStatus.ALL)
-				hql += " AND entity.status = :orderStatus";
+				hql += " AND entity.status = :status";
 			
 			if( status.equals( OrderStatus.PENDING_EXPENSE))
 				hql += " AND entity.status = :status AND entity.expense is null";
 			
-			if( status.equals( OrderStatus.ESHOP_PAID)) {
+			if( status.equals( OrderStatus.ESHOP_PAID))
 				hql += " AND entity.status = :status AND entity.expense is not null";
-			}
 			
 			hql += " ORDER BY entity.id";
 			if( !orderByIdAsc)
@@ -886,7 +885,7 @@ public class PretaDAO implements IPretaDAO
 
 			query.setParameter( "manager", loadUser( id));
 			if( status != OrderStatus.ALL)
-				query.setParameter( "orderStatus", status);
+				query.setParameter( "status", status);
 
 			if( status.equals( OrderStatus.PENDING_EXPENSE) || status.equals( OrderStatus.ESHOP_PAID)) {
 				query.setParameter( "status", OrderStatus.DELIVERED);
@@ -2998,7 +2997,9 @@ public class PretaDAO implements IPretaDAO
 	@Override
 	public Long addExpense( Expense entity)
 	{
-		return null;
+		em.persist(entity);
+		
+		return entity.getId();
 	}
 	@Override
 	public Expense loadExpense( Long id)

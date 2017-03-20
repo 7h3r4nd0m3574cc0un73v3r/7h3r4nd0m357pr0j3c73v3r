@@ -137,6 +137,7 @@ public class ManagerRESTAPIController
 			}
 		}
 		/* Articles Orders By Status */
+		/*
 		@GetMapping
 		@JsonView( Views.Manager.class)
 		@RequestMapping( "/logged-user/article-orders")
@@ -187,10 +188,11 @@ public class ManagerRESTAPIController
 				return new ResponseEntity<List<ArticleOrder>>( HttpStatus.INTERNAL_SERVER_ERROR);
 			}	
 		}
+		*/
 		@GetMapping
 		@JsonView( Views.Admin.class)
 		@RequestMapping( "/logged-user/article-orders")
-		public ResponseEntity<?> loadAdminArticleOrders( @RequestParam( name="page", defaultValue="1") final Integer page,
+		public ResponseEntity<?> loadManagerArticleOrders( @RequestParam( name="page", defaultValue="1") final Integer page,
 													    @RequestParam( name="pageSize", defaultValue="0") final Integer pageSize,
 													    @RequestParam( name="orderByIdAsc", defaultValue="true") final boolean orderByIdAsc,
 													    @RequestParam( name="orderStatus", defaultValue="-1") final Integer status)

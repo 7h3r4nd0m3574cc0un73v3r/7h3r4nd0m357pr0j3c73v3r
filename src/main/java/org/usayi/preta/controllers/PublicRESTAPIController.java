@@ -503,7 +503,7 @@ public class PublicRESTAPIController
 			User user = getLoggedUserFromPrincipal();
 			
 			if( !user.hasRole( "ROLE_BUYER"))
-				return Tools.unauthorized();
+				return Tools.forbidden();
 			
 			ArticleOrder entity = pRESTAPI.loadArticleOrder(id);
 			
