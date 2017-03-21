@@ -7,6 +7,7 @@ import org.usayi.preta.entities.AdvOption;
 import org.usayi.preta.entities.Category;
 import org.usayi.preta.entities.EMoneyProvider;
 import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.GenericStatus;
 import org.usayi.preta.entities.OrderStatus;
 import org.usayi.preta.entities.PaymentType;
@@ -137,6 +138,12 @@ public interface IAdminRESTAPI extends ISharedRESTAPI
 	public void updateSlide( final Slide entity);
 	public Slide loadSlide( final Integer dispOrder);
 	/* End HomePicture */
+	
+	/* Expense */
+	public Expense loadExpense( final Long id);
+	public PagedListJSON loadAdminExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
+	public Long addExpense( final Expense entity);
+	/* End Expense */
 	
 	/* Category */
 	public Long addCategory( final Category entity);

@@ -361,6 +361,8 @@ public interface IPretaDAO
 	public PagedListJSON loadExpenses( final Integer page, final Integer pageSize);
 	public Long addExpense( final Expense entity);
 	public Expense loadExpense( final Long id);
+	public PagedListJSON loadAdminExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
+	public PagedListJSON loadManagerExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
 	/* End Expenses */
 	
 	/* Visited Article */

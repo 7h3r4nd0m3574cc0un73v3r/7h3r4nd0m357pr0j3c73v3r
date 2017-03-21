@@ -1,7 +1,7 @@
 'use strict';
 
-App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderService', 'PaymentService', 'StompService',
-                                     function( $state, $stateParams, $scope, OrderService, PaymentService, StompService)
+App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderService', 'PaymentService', 'StompService', 'ExpenseService',
+                                     function( $state, $stateParams, $scope, OrderService, PaymentService, StompService, ExpenseService)
 {
 	/* Breadcrumb custom */
 	if( $stateParams.orderStatus == -1)
@@ -212,10 +212,14 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderS
 			
 			angular.forEach( newValue, function( entity) {
 				if( entity.eShop != undefined && reference != null) {
+					/* The payment was received in the same account */
+					
+					/* Is The Same EShop */
 					if( entity.eShop.id != reference.eShop.id)
 						entity.disabled = true;
 					else
 						entity.disabled = false;
+					
 				}
 				
 				if( reference == null)
@@ -224,4 +228,17 @@ App.controller( 'OrderController', [ '$state', '$stateParams', '$scope', 'OrderS
 		}
 		
 	}, true);
+	
+	$scope.newExpense = function() {
+		ExpenseService.articleOrders = [];
+		
+		angular.forEach( $scope.entities, function( artOrd) {
+			if( artOrd.selected) {
+				ExpenseService.articleOrders.push( artOrd);
+			}
+		});
+		
+		$state.go( 'root.expenses.new');
+	}
+	
 }]);

@@ -1967,7 +1967,68 @@ public class AdminRESTAPIController
 			return Tools.internalServerError();
 		}
 	}
+	@GetMapping
+	@JsonView( Views.Admin.class)
+	@RequestMapping( "/logged-user/expenses")
+	public ResponseEntity<?> loadAdminExpense( @RequestParam( name="page", defaultValue="1") final Integer page,
+											   @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize,
+											   @RequestParam( name="orderByIdAsc", defaultValue="false") final boolean orderByIdAsc)
+	{
+		try
+		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+				return Tools.forbidden();
+			
+			return Tools.handlePagedListJSON( aRESTAPI.loadAdminExpenses( getLoggedUserFromPrincipal().getUserInfo().getId(), 1, 10, orderByIdAsc));
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
+	@GetMapping
+	@RequestMapping( "/expense/{id}")
+	@JsonView( Views.Admin.class)
+	public ResponseEntity<?> loadExpense( @PathVariable( "id") final Long id)
+	{
+		try
+		{
+			return new ResponseEntity<Expense>( aRESTAPI.loadExpense(id), HttpStatus.OK);
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
+		/* EAccount for Payment */
+//		@GetMapping
+//		@JsonView( Views.Public.class)
+//		@RequestMapping( "e-accounts-for-expenses")
+//		public ResponseEntity<?> loadAdminEAccountForPayments( @RequestParam( name="")
+//															   @RequestParam( name="page", defaultValue="1") final Integer page,
+//														  	   @RequestParam( name="pageSize", defaultValue="5") final Integer pageSize)
+//		{
+//			try
+//			{
+//				/* Kick if User is not logged */
+//				if( isAnonymous())
+//					return Tools.unauthorized();
+//				
+//				return Tools.handlePagedListJSON( pRESTAPI.loadAdminEAccountsForPayments(page, pageSize));
+//			}
+//			catch( Exception e)
+//			{
+//				e.printStackTrace();
+//				return Tools.internalServerError();
+//			}
+//		}
 	/* End Expense */
+	
 	/* WebSocket */
 	@GetMapping
 	@RequestMapping( "/logged-users")

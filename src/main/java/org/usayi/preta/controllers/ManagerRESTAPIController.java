@@ -34,6 +34,7 @@ import org.usayi.preta.entities.ArticleOrder;
 import org.usayi.preta.entities.Category;
 import org.usayi.preta.entities.EAccount;
 import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.Feature;
 import org.usayi.preta.entities.FeatureValue;
 import org.usayi.preta.entities.GenericStatus;
@@ -1477,6 +1478,47 @@ public class ManagerRESTAPIController
 		}
 	}
 	/* End Category */
+	
+	/* Expense */
+	@GetMapping
+	@JsonView( Views.Manager.class)
+	@RequestMapping( "/expense/{id}")
+	public ResponseEntity<?> loadExpense( @PathVariable( "id") final Long id)
+	{
+		try
+		{
+			return new ResponseEntity<Expense>( mRESTAPI.loadExpense(id), HttpStatus.OK);
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
+	@GetMapping
+	@JsonView( Views.Manager.class)
+	@RequestMapping( "/logged-user/expenses")
+	public ResponseEntity<?> loadManagerExpenses( @RequestParam( name="page", defaultValue="1") final Integer page,
+											      @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize,
+											      @RequestParam( name="orderByIdAsc", defaultValue="false") final boolean orderByIdAsc)
+	{
+		try
+		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_MANAGER"))
+				return Tools.forbidden();
+			
+			return Tools.handlePagedListJSON( mRESTAPI.loadManagerExpenses( getLoggedUserFromPrincipal().getUserInfo().getId(), 1, 10, orderByIdAsc));
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
+	/* End Expense */
 	
 	/* Tools - Dry */
 	public void fillArticleCategoriesFormMST( Article article, Collection<CategoryMultiSelectTreeJSON> categories)

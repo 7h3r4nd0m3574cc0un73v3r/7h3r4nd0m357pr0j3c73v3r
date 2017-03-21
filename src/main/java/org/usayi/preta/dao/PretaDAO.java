@@ -3004,7 +3004,53 @@ public class PretaDAO implements IPretaDAO
 	@Override
 	public Expense loadExpense( Long id)
 	{
-		return null;
+		return em.find( Expense.class, id);
+	}
+	@Override
+	@SuppressWarnings( "unchecked")
+	public PagedListJSON loadAdminExpenses( Long id, Integer page, Integer pageSize, boolean orderByIdAsc)
+	{
+		String hql = "SELECT DISTINCT entity FROM Expense entity JOIN entity.articleOrders articleOrder"
+				+ " JOIN articleOrder.payments payment JOIN payment.adminEAccount adminEAccount JOIN adminEAccount.user userInfo"
+				+ " WHERE userInfo.id = :id ORDER BY entity.id";
+		
+		if( !orderByIdAsc)
+			hql += " DESC";
+		
+		Query query = em.createQuery( hql);
+		query.setParameter( "id", id);
+		
+		PagedListJSON result =  generatePagedList(query, page, pageSize);
+		
+		for( Expense expense : ( List<Expense>) result.getEntities())
+		{
+			expense.setRegDate( getRegDate(Expense.class, expense.getId()));
+		}
+		
+		return result;
+	}
+	@Override
+	@SuppressWarnings( "unchecked")
+	public PagedListJSON loadManagerExpenses( Long id, Integer page, Integer pageSize, boolean orderByIdAsc)
+	{
+		String hql = "SELECT DISTINCT entity FROM Expense entity, User manager JOIN articleOrder.orderedArticles orderedArticle"
+				+ " JOIN orderedArticle.article article JOIN article.eShop eShop JOIN manager.managedEShops managedEShop WHERE manager = :manager"
+				+ " AND eShop.id = managedEShop.id ORDER BY entity.id";
+
+		if( !orderByIdAsc)
+			hql += " DESC";
+		
+		Query query = em.createQuery( hql );
+		query.setParameter( "id", loadUser( id));
+
+		PagedListJSON result =  generatePagedList(query, page, pageSize);
+		
+		for( Expense expense : ( List<Expense>) result.getEntities())
+		{
+			expense.setRegDate( getRegDate(Expense.class, expense.getId()));
+		}
+		
+		return result;
 	}
 	/* End Expenses */
 	

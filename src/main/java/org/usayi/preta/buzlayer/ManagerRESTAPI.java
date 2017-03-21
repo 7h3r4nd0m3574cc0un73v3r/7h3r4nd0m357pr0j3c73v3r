@@ -8,6 +8,7 @@ import org.usayi.preta.entities.Article;
 import org.usayi.preta.entities.ArticleFeature;
 import org.usayi.preta.entities.ArticleOrder;
 import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.Feature;
 import org.usayi.preta.entities.FeatureValue;
 import org.usayi.preta.entities.OrderStatus;
@@ -149,4 +150,17 @@ public class ManagerRESTAPI extends SharedRESTAPI implements IManagerRESTAPI
 		return pretaDao.addAdvOffer(entity);
 	}
 	/* End Advoffer */
+	
+	/* Expense */
+	@Override
+	public Expense loadExpense( final Long id)
+	{
+		return pretaDao.loadExpense(id);
+	}
+	@Override
+	public PagedListJSON loadManagerExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc)
+	{
+		return pretaDao.loadManagerExpenses(id, page, pageSize, orderByIdAsc);
+	}
+	/* End Expense */
 }

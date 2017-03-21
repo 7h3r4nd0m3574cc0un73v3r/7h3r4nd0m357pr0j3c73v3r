@@ -1,6 +1,7 @@
 package org.usayi.preta.entities;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
@@ -43,6 +45,19 @@ public class Expense implements Serializable
 	@ManyToOne
 	@JoinColumn( referencedColumnName="id")
 	private EAccount adminEAccount;
+
+	@Transient
+	private Timestamp regDate;
+	
+	public Timestamp getRegDate()
+	{
+		return regDate;
+	}
+
+	public void setRegDate(Timestamp regDate)
+	{
+		this.regDate = regDate;
+	}
 
 	@NotEmpty
 	@OneToMany( mappedBy="expense")

@@ -443,4 +443,22 @@ public class AdminRESTAPI extends SharedRESTAPI implements IAdminRESTAPI
 		pretaDao.deleteCategory(id);
 	}
 	/* End Category */
+
+	/* Expense */
+	@Override
+	public Expense loadExpense( final Long id)
+	{
+		return pretaDao.loadExpense(id);
+	}
+	@Override
+	public PagedListJSON loadAdminExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc)
+	{
+		return pretaDao.loadAdminExpenses(id, page, pageSize, orderByIdAsc);
+	}
+	@Override
+	public Long addExpense( final Expense entity)
+	{
+		return pretaDao.addExpense(entity);
+	}
+	/* End Expense */
 }

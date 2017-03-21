@@ -83,7 +83,7 @@
 							<input class="text-right" value="{{ selection.total | number }} F CFA" readonly />
 						</md-input-container>
 					</div>
-					<div layout="row" layout-align="end">
+					<div layout="row" layout-align="end" ng-click="newExpense()">
 						<md-button class="md-raised md-primary" ng-disabled="selection.count <= 0">
 							Régler la sélection <i class="fa fa-money"></i>
 						</md-button>

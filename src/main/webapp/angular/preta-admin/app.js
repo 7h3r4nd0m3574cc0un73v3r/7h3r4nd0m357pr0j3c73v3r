@@ -694,7 +694,7 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 		})
 		.state( 'root.expenses.new', {
 			url: '/new',
-			title: 'Nouveau',
+			title: 'R\xE8glements',
 			templateUrl: 'angular/preta-admin/views/expense/new.html',
 			ncyBreadcrumb: {
 				label: 'Nouveau'
@@ -872,7 +872,8 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
     /* Reglements */
     baSidebarServiceProvider.addStaticItem({
     	  title: 'R\xE8glements',
-    	  icon: 'glyphicon glyphicon-transfer'
+    	  icon: 'glyphicon glyphicon-transfer',
+    	  stateRef: 'root.expenses'
     });
     
     /* Remboursements */
