@@ -1,0 +1,49 @@
+ <md-card flex="auto">
+   <md-card-title>
+     <md-card-title-text>
+       <span class="md-title">Paiement #{{ entity.id | number }} - {{ entity.username }} ( Paiement #{{ entity.relId | number }} )</span>
+       <span class="md-subhead">
+       	<b>Date</b> {{ entity.regDate | date : 'medium'}}
+       </span>
+     </md-card-title-text>
+   </md-card-title>
+   <md-card-content>
+     <p>
+     	<label>Statut</label>
+     	<span>
+     		<payment-status status="entity.isValid" />
+     	</span>
+     </p>
+     <p>
+     	<label>Montant</label>
+     	<span>
+     		{{ entity.amount | number }} F CFA
+     	</span>
+     </p>
+     <p>
+     	<label>Objet</label>
+     	<span>
+     		<span class="badge label-danger" x-ng-if="entity.articleOrders.length">Commande{{ entity.articleOrders.length > 1 ? 's' : '' }}</span>
+     		<span class="badge label-warning" x-ng-if="entity.shopSub">Abonnement</span>
+     		<span class="badge label-info" x-ng-if="entity.advOffer">Publicité</span>
+     	</span>
+     </p>
+     <p>
+     	<label>Envoyé de </label>
+     	<span>
+     		{{ entity.eAccount.account }}
+     	</span>
+     	<label> à </label>
+     	<span>
+     		{{ entity.adminEAccount.account }}
+     	</span>
+     </p>
+   </md-card-content>
+   <md-card-actions layout="row" layout-align="end center">
+     <md-button class="md-primary md-raised md-icon-button" aria-label="Détails" x-ui-sref="root.payments.show( { id: entity.id })">
+       <i class="fa fa-folder-open"></i>
+     	<md-tooltip md-direction="top">
+      	Détails
+    	</md-tooltip>
+     </md-button>
+ </md-card>

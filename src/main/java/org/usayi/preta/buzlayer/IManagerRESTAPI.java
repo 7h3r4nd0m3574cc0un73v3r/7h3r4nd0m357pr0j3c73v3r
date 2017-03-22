@@ -4,6 +4,7 @@ import org.usayi.preta.entities.AdvOffer;
 import org.usayi.preta.entities.Article;
 import org.usayi.preta.entities.ArticleFeature;
 import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.Feature;
 import org.usayi.preta.entities.FeatureValue;
 import org.usayi.preta.entities.OrderStatus;
@@ -57,4 +58,9 @@ public interface IManagerRESTAPI extends ISharedRESTAPI
 	/* AdvOffer */
 	public Long addAdvOffer( final AdvOffer entity);
 	/* End AdvOffer */
+	
+	/* Expense */
+	public Expense loadExpense( final Long id);
+	public PagedListJSON loadManagerExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
+	/* End Expense */
 }

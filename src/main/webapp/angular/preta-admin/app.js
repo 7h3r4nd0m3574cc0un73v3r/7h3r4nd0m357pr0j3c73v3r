@@ -67,7 +67,6 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 							  						});
 					  			  });
 				  }
-				  
 			  }]
 		})
 		/* EMP */
@@ -578,7 +577,7 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 		.state( 'root.orders-expense-pending', {
 			url: '/orders/expense-pending',
 			controller: [ '$state', function( $state) {
-				$state.go( 'root.orders', { page: 1, pageSize: 10, orderByIdAsc: true, orderStatus: 5});
+				$state.go( 'root.orders', { page: 1, pageSize: 0, orderByIdAsc: true, orderStatus: 5});
 			}]
 		})
 		.state( 'root.orders-expended', {
@@ -683,6 +682,26 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 			controller: 'SlideController'
 		})
 		/* End Slides */
+		/* Expense */
+		.state( 'root.expenses', {
+			url: '/expenses?page&pageSize&orderByIdAsc',
+			title: 'R\xE8glements',
+			templateUrl: 'angular/preta-admin/views/expense/list.html',
+			ncyBreadcrumb: {
+				label: 'R\xE8glements'
+			},
+			controller: 'ExpenseController'
+		})
+		.state( 'root.expenses.new', {
+			url: '/new',
+			title: 'R\xE8glements',
+			templateUrl: 'angular/preta-admin/views/expense/new.html',
+			ncyBreadcrumb: {
+				label: 'Nouveau'
+			},
+			controller: 'ExpenseController'
+		})
+		/* End Expense */
 		/* Upgrade Requests */
 		.state( 'root.upgrade-requests', {
 			url: '/upgrade-requests?page&pageSize&orderByIdAsc&status',
@@ -853,7 +872,8 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
     /* Reglements */
     baSidebarServiceProvider.addStaticItem({
     	  title: 'R\xE8glements',
-    	  icon: 'glyphicon glyphicon-transfer'
+    	  icon: 'glyphicon glyphicon-transfer',
+    	  stateRef: 'root.expenses'
     });
     
     /* Remboursements */

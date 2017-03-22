@@ -83,6 +83,7 @@ App.controller( 'OrderController', [ '$rootScope', '$state', '$stateParams', '$s
 							/* Load Default Picture */
 							ArticleService.loadDefaultPicture( orderedArticle.article.id)
 										  .then( function( response) {
+											  orderedArticle.article.pictures = [];
 											  orderedArticle.article.pictures.push( response);
 										  }, function( response) {
 											  console.error( response);

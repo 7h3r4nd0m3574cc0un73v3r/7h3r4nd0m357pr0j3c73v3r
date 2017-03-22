@@ -41,7 +41,7 @@ App.factory('myInterceptor', [ '$q', '$injector', function( $q, $injector) {
     		/* Retrieve $state from injector */
     		var $state = $injector.get( '$state');
     		/* Redirect All Unathorized to 401 Error Page */
-    		if( !( rejection.status == 401 && ( rejection.config.url == 'rest-api/logged-user' || rejection.config.url == 'rest-api/login')))
+    		if( ( rejection.status == 401 && !( rejection.config.url == 'rest-api/logged-user' || rejection.config.url == 'rest-api/login')))
     			$state.go( 'root.errors.401');
     		/* redirects All WS 500 errors to Error 500 page */
     		if( rejection.status == 500)

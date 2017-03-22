@@ -90,7 +90,6 @@ App.controller( 'PaymentController', [ '$state', '$stateParams', '$scope', 'Paym
 											}, function( r) {
 												console.error( r);
 											});
-								/* Compute the expected Amount */
 								;
 						  });
 						  
