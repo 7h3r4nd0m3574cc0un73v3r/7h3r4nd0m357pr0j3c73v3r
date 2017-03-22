@@ -67,10 +67,10 @@
 		</div>
 	</div>
 	
-	<div class="row">
+	<div class="row" ng-if="pagination.orderStatus == 5">
 		<div class="col-md-12" x-ui-view>
 			<div x-ba-panel x-ba-panel-title="Sélection">
-				<div layout="column" layout-align="start" ng-if="pagination.orderStatus == 5">
+				<div layout="column" layout-align="start">
 					<div layout="row" layout-align="start">
 						<md-input-container class="md-block" flex>
 							<label>Nombre de commande sélectionnées</label>

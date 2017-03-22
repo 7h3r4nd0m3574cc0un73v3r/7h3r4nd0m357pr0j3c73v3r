@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.validation.ConstraintViolationException;
@@ -60,6 +61,7 @@ import org.usayi.preta.entities.SubOffer;
 import org.usayi.preta.entities.UpgradeRequest;
 import org.usayi.preta.entities.User;
 import org.usayi.preta.entities.UserInfo;
+import org.usayi.preta.entities.form.NewExpense;
 import org.usayi.preta.entities.json.CategoryTreeJSON;
 import org.usayi.preta.entities.json.LoggedUser;
 import org.usayi.preta.entities.json.PagedListJSON;
@@ -1953,11 +1955,55 @@ public class AdminRESTAPIController
 	/* End Slide */
 	
 	/* Expense */
+	@PostMapping
 	@RequestMapping( "expense/add")
-	public ResponseEntity<?> addExpense( final Expense entity)
+	public ResponseEntity<?> addExpense( @RequestBody final NewExpense entity)
 	{
 		try
 		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+				return Tools.forbidden();
+			
+			List<FieldErrorResource> fErrors = new ArrayList<FieldErrorResource>();
+			
+			if( entity.getExpenseRef().isEmpty() || entity.getExpenseRef() == null)
+				fErrors.add( new FieldErrorResource( "Expense", "expenseRef", "NotNull", "This field is mandatory."));
+			if( entity.getAmount() == null || entity.getAmount() < 0F)
+				fErrors.add( new FieldErrorResource( "Expense", "amount", "NotNull", "This field is mandatory."));
+			if( entity.geteAccount() == null)
+				fErrors.add( new FieldErrorResource( "Expense", "eAccount", "NotNull", "This field is mandatory."));
+			if( entity.getAdminEAccount() == null)
+				fErrors.add( new FieldErrorResource( "Expense", "adminEAccount", "NotNull", "This field is mandatory."));
+			if( entity.getArticleOrders().isEmpty())
+				fErrors.add( new FieldErrorResource( "Expense", "orders", "NotEmpty", "At least one order."));
+			
+			if( !fErrors.isEmpty())
+				return Tools.handleMultipleFieldErrors(fErrors);
+			
+			if( !entity.getAdminEAccount().geteMoneyProvider().getId().equals( entity.geteAccount().geteMoneyProvider().getId()))
+				fErrors.add( new FieldErrorResource( "Expense", "EAccounts", "Mismatch", "Eaccounts are not compatible."));
+			
+			/* TODO Controls on Expense */
+			/* Check if all article orders are realy from the same manager */
+			
+			Expense ent = new Expense( entity);
+			aRESTAPI.addExpense(ent);
+			
+			List<ArticleOrder> articleOrders = ( List<ArticleOrder>) entity.getArticleOrders();
+			
+			for( ArticleOrder articleOrder : articleOrders)
+			{
+				ArticleOrder artOrd = aRESTAPI.loadArticleOrder(articleOrder.getId());
+				
+				artOrd.setExpense(ent);
+				aRESTAPI.updateArticleOrder(artOrd);
+			}
+			
+			/* Svae Notification */
+			notifications.newExpenseRegistered(ent);
 			
 			return Tools.ok();
 		}
@@ -1970,7 +2016,7 @@ public class AdminRESTAPIController
 	@GetMapping
 	@JsonView( Views.Admin.class)
 	@RequestMapping( "/logged-user/expenses")
-	public ResponseEntity<?> loadAdminExpense( @RequestParam( name="page", defaultValue="1") final Integer page,
+	public ResponseEntity<?> loadAdminExpenses( @RequestParam( name="page", defaultValue="1") final Integer page,
 											   @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize,
 											   @RequestParam( name="orderByIdAsc", defaultValue="false") final boolean orderByIdAsc)
 	{
@@ -2006,27 +2052,107 @@ public class AdminRESTAPIController
 		}
 	}
 		/* EAccount for Payment */
-//		@GetMapping
-//		@JsonView( Views.Public.class)
-//		@RequestMapping( "e-accounts-for-expenses")
-//		public ResponseEntity<?> loadAdminEAccountForPayments( @RequestParam( name="")
-//															   @RequestParam( name="page", defaultValue="1") final Integer page,
-//														  	   @RequestParam( name="pageSize", defaultValue="5") final Integer pageSize)
-//		{
-//			try
-//			{
-//				/* Kick if User is not logged */
-//				if( isAnonymous())
-//					return Tools.unauthorized();
-//				
-//				return Tools.handlePagedListJSON( pRESTAPI.loadAdminEAccountsForPayments(page, pageSize));
-//			}
-//			catch( Exception e)
-//			{
-//				e.printStackTrace();
-//				return Tools.internalServerError();
-//			}
-//		}
+		@PostMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/manager-e-accounts")
+		public ResponseEntity<?> loadManagerEAccountsForExpense( @RequestBody long[] ids)
+		{
+			/* Based on the list of article orders, define the number 
+			 * the expense can be transfered to
+			 */
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+					return Tools.forbidden();
+				
+				List<ArticleOrder> articleOrders = new ArrayList<ArticleOrder>();
+				
+				for( long id : ids)
+				{
+					ArticleOrder articleOrder = aRESTAPI.loadArticleOrder(id);
+					if( articleOrder == null)
+						return Tools.handleSingleFieldError( new FieldErrorResource( "ArticleOrder", "entity", "NotFound", "The ArticleOrder with ID => " + id + " was not found."));
+					
+					articleOrders.add( articleOrder);
+				}
+				
+				if( articleOrders.size() < 1 )
+					return Tools.handleSingleFieldError( new FieldErrorResource( "ArticleOrders", "size", "Empty", "At least one article order must be given"));
+				
+				boolean sameManager = true;
+				
+				User refManager = aRESTAPI.loadEShopManager( aRESTAPI.loadArticleOrderEShop( articleOrders.get(0).getId()).getId());
+				
+				Iterator<ArticleOrder> it = articleOrders.iterator();
+				
+				do
+				{
+					if( !aRESTAPI.loadEShopManager( aRESTAPI.loadArticleOrderEShop( it.next().getId()).getId()).getUserInfo().getId().equals( refManager.getUserInfo().getId()))
+					{
+						sameManager = false;
+					}
+				} while (sameManager && it.hasNext());
+
+				if( !sameManager)
+					return Tools.handleSingleFieldError( new FieldErrorResource( "ArticleOrders", "manager", "Incompatible", "ArticleOrders have different managers."));
+				
+				return Tools.handlePagedListJSON( aRESTAPI.loadManagerEAccounts( refManager.getUserInfo().getId(), 1, 0));
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
+		/* ArticleOrders */	
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/expense/{id}/article-orders")
+		public ResponseEntity<?> loadExpenseArticleOrders( @PathVariable( name="id") final Long id,
+													@RequestParam( name="page", defaultValue="1") final Integer page,
+												    @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+					return Tools.forbidden();
+				
+				return Tools.handlePagedListJSON( aRESTAPI.loadExpenseArticleOrders(id, page, pageSize));
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
+		/* Manager */
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/expense/{id}/manager")
+		public ResponseEntity<?> loadExpenseManager( @PathVariable( name="id") final Long id)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+					return Tools.forbidden();
+				
+				return new ResponseEntity<User>( aRESTAPI.loadExpenseManager(id), HttpStatus.OK);
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
 	/* End Expense */
 	
 	/* WebSocket */

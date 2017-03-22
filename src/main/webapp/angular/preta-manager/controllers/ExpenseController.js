@@ -61,13 +61,6 @@ App.controller( 'ExpenseController', [ '$state', '$stateParams', '$scope', 'Expe
 						  console.error( r);
 					  });
 		
-		ExpenseService.loadManager( entity.id)
-					 .then( function( r) {
-						 entity.manager = r;
-					 }, function( r) {
-						 console.error( r);
-					 });
-		
 		$scope.isEntityLoading = false;
 	}
 	
@@ -120,14 +113,6 @@ App.controller( 'ExpenseController', [ '$state', '$stateParams', '$scope', 'Expe
 							angular.forEach( entity.orderedArticles, function( value) {
 								entity.total += ( value.article.price + value.article.deliveryFee ) * value.quantity;
 							});
-						}, function( r) {
-							console.error( r);
-						});
-			
-			/* Load Payments */
-			OrderService.loadPayments( entity.id)
-						.then( function( payments) {
-							entity.payments = payments.entities;
 						}, function( r) {
 							console.error( r);
 						});
@@ -250,28 +235,5 @@ App.controller( 'ExpenseController', [ '$state', '$stateParams', '$scope', 'Expe
 			if( artOrd.id == id)
 				artOrd.selected = !artOrd.selected;
 		});
-	}
-	
-	$scope.addEntity = function() {
-		$scope.entity.articleOrders = [];
-		angular.forEach( $scope.artOrds, function( artOrd) {
-			if( artOrd.selected) {
-				var tmp = artOrd;
-				delete artOrd.selected;
-				delete artOrd.disabled;
-				
-				$scope.entity.articleOrders.push( tmp);
-			}
-		});
-		
-		console.info( $scope.entity);
-		
-		ExpenseService.addEntity( $scope.entity)
-					  .then( function( r) {
-						  console.log( r);
-						  $state.go( 'root.expenses', {}, { reload: true});
-					  }, function( r) {
-						  console.error( r);
-					  });
 	}
 }]);

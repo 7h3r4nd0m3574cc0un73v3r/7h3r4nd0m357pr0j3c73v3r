@@ -99,6 +99,8 @@ public interface IPretaDAO
 		public ShopSub getCurrentShopSub( final Long id);
 		/* ArticleOrder */
 		public PagedListJSON loadEShopArticleOrders( final Long id, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc);
+		/* Admin */
+		public User loadArticleOrderAdmin( final Long id);
 	/* End EShop */
 	
 	/* Roles */
@@ -325,6 +327,8 @@ public interface IPretaDAO
 	public boolean isEAccountNumberTaken( final String account);
 		/* Account for payment */
 		public PagedListJSON loadAdminEAccountsForPayments( final Integer page, final Integer pageSize);
+		/* Manager Accounts for Expenses */
+		public PagedListJSON loadManagerEAccounts( final Long id, final Integer page, final Integer pageSize);
 	/* End EAccounts */
 	
 	/* Upgrade Request */
@@ -363,6 +367,10 @@ public interface IPretaDAO
 	public Expense loadExpense( final Long id);
 	public PagedListJSON loadAdminExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
 	public PagedListJSON loadManagerExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
+		/* ArticleOrders */
+		public PagedListJSON loadExpenseArticleOrders( final Long id, final Integer page, final Integer pageSize);
+		/* Manager */
+		public User loadExpenseManager( final Long id);
 	/* End Expenses */
 	
 	/* Visited Article */

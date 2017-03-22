@@ -2515,11 +2515,12 @@ public class PretaDAO implements IPretaDAO
 	@Override
 	public User getArticleOrderUser( Long id) 
 	{
-		Query query = em.createQuery( "SELECT entity.user FROM ArticleOrder entity JOIN entity.user WHERE entity.id = :id");
+		Query query = em.createQuery( "SELECT user FROM ArticleOrder entity JOIN entity.user user WHERE entity.id = :id");
 		query.setParameter( "id", id);
-		User entity = (User) query.getSingleResult();
+		if( query.getResultList().isEmpty())
+			return null;
 		
-		return entity;
+		return (User) query.getSingleResult();
 	}
 	@Override
 	public EShop loadArticleOrderEShop( Long id)
@@ -2571,6 +2572,19 @@ public class PretaDAO implements IPretaDAO
 			query.setParameter( "id", id);
 			
 			return generatePagedList(query, page, pageSize);
+		}
+		/* Admin *//* Admin */
+		@Override
+		public User loadArticleOrderAdmin( final Long id)
+		{
+			Query query = em.createQuery( "SELECT DISTINCT user FROM ArticleOrder entity, User user JOIN entity.payments payment JOIN payment.adminEAccount adminEAccount"
+					+ " JOIN adminEAccount.user userInfo JOIN user.userInfo userInfo2 WHERE userInfo.id = :id AND userInfo.id = userInfo2.id");
+			query.setParameter( "id", id);
+			
+			if( query.getResultList().isEmpty())
+				return null;
+			
+			return (User) query.getSingleResult();
 		}
 	/* End ArticleOrders */
 	
@@ -2707,7 +2721,43 @@ public class PretaDAO implements IPretaDAO
 			return true;
 		}
 	}
+		/* Manager Accounts for Expenses */
+		@Override
+		public PagedListJSON loadManagerEAccounts( Long id, Integer page, Integer pageSize)
+		{
+			Query query = em.createQuery( "SElECT DISTINCT entity FROM User user JOIN user.userInfo userInfo JOIN userInfo.eAccounts entity"
+					+ " WHERE userInfo.id = :id");
+			query.setParameter( "id", id);
+			
+			return generatePagedList(query, page, pageSize);
+		}
+
 	/* End Eaccounts */
+	
+	/* Expense */
+		/* Manager */
+		public User loadExpenseManager( final Long id)
+		{
+			Query query = em.createQuery( "SELECT DISTINCT user FROM Expense expense, User user JOIN expense.eAccount eAccount JOIN user.userInfo userInfo"
+					+ " JOIN userInfo.eAccounts uEAccount WHERE uEAccount.id = eAccount.id AND expense.id = :id");
+			query.setParameter( "id", id);
+			
+			if( query.getResultList().isEmpty() || query.getResultList().size() > 1)
+				return null;
+			
+			return ( User) query.getSingleResult();
+		}
+		/* ArticleOrders */
+		@Override
+		public PagedListJSON loadExpenseArticleOrders( Long id, Integer page, Integer pageSize)
+		{
+			Query query = em.createQuery( "SELECT entity FROM Expense expense JOIN expense.articleOrders entity"
+					+ " WHERE expense.id = :id");
+			query.setParameter( "id", id);
+			
+			return generatePagedList(query, page, pageSize);
+		}
+	/* End Expense */
 	
 	/* Upgrade Request */
 	@Override
@@ -3033,7 +3083,7 @@ public class PretaDAO implements IPretaDAO
 	@SuppressWarnings( "unchecked")
 	public PagedListJSON loadManagerExpenses( Long id, Integer page, Integer pageSize, boolean orderByIdAsc)
 	{
-		String hql = "SELECT DISTINCT entity FROM Expense entity, User manager JOIN articleOrder.orderedArticles orderedArticle"
+		String hql = "SELECT DISTINCT entity FROM Expense entity, User manager JOIN entity.articleOrders articleOrder JOIN articleOrder.orderedArticles orderedArticle"
 				+ " JOIN orderedArticle.article article JOIN article.eShop eShop JOIN manager.managedEShops managedEShop WHERE manager = :manager"
 				+ " AND eShop.id = managedEShop.id ORDER BY entity.id";
 
@@ -3041,7 +3091,7 @@ public class PretaDAO implements IPretaDAO
 			hql += " DESC";
 		
 		Query query = em.createQuery( hql );
-		query.setParameter( "id", loadUser( id));
+		query.setParameter( "manager", loadUser( id));
 
 		PagedListJSON result =  generatePagedList(query, page, pageSize);
 		

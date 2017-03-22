@@ -3,7 +3,7 @@
 		<a uib-dropdown-toggle ng-click="readNotifications()">
 			<i class="fa fa-bell"></i>
 			<span>{{ unreadNotificationsCount }}</span>
-			<span class="notification-ring" ng-show="unreadNotificationsCount > 0"></span>
+			<span class="notification-ring" x-ng-if="unreadNotificationsCount > 0"></span>
 		</a>
 	
 		<div uib-dropdown-menu class="top-dropdown-menu">
@@ -48,6 +48,11 @@
 							<span x-ng-switch-when="NEW_PAYMENT" x-ng-switch on="entity.entType" flex>
 								<span>
 									<a x-ui-sref="root.payments.show({ id: entity.entAbsId})">Un nouveau paiement requiert validation: Paiement # {{ entity.entAbsId }}</a>
+								</span>
+							</span>
+							<span x-ng-switch-when="DELIVERED_ORDER" x-ng-switch on="entity.entType" flex>
+								<span x-ng-switch-when="ORDER">
+									<a x-ui-sref="root.expenses.new">La commande {{ entity.entAbsId }} est prête pour son règlement.</a>
 								</span>
 							</span>
 						</span>

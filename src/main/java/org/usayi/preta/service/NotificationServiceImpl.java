@@ -9,6 +9,7 @@ import org.usayi.preta.entities.AdvOffer;
 import org.usayi.preta.entities.Article;
 import org.usayi.preta.entities.ArticleOrder;
 import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.Notification;
 import org.usayi.preta.entities.NotificationEntity;
 import org.usayi.preta.entities.NotificationType;
@@ -133,6 +134,18 @@ public class NotificationServiceImpl implements NotificationService
 		pretaDao.addNotification(n, manager.getUserInfo().getId());
 		websockets.newUserNotification( n);
 		/* TODO Send Notifications to Admin */
+		n = new Notification();
+		n.setAdmin(true);
+		n.setBuyer(false);
+		n.setManager(false);
+		n.setEntType( NotificationEntity.ORDER);
+		n.setnType( NotificationType.DELIVERED_ORDER);
+		n.setEntAbsId( entity.getId());
+		n.setEntAbsId( entity.getId());
+		
+		User admin = pretaDao.loadArticleOrderAdmin(entity.getId());
+		
+		pretaDao.addNotification(n, admin.getUserInfo().getId());
 	}
 
 	@Override
@@ -250,7 +263,24 @@ public class NotificationServiceImpl implements NotificationService
 		pretaDao.addNotification(n, manager.getUserInfo().getId());
 		websockets.newUserNotification( n);
 	}
-
+	
+	@Override
+	public void newExpenseRegistered( final Expense entity)
+	{
+		Notification n = new Notification();
+		n.setnType( NotificationType.EXPENDED);
+		n.setEntType( NotificationEntity.ORDER);
+		n.setEntAbsId( entity.getId());
+		n.setEntRelId( entity.getId());
+		n.setManager( true);
+		n.setBuyer(false);
+		n.setAdmin(false);
+		
+		User manager = pretaDao.loadExpenseManager( entity.getId());
+		
+		pretaDao.addNotification(n, manager.getUserInfo().getId());
+		websockets.newUserNotification(n);
+	}
 	/* Admin */
 	@Override
 	public void entityApprovalReady(Object entity)
