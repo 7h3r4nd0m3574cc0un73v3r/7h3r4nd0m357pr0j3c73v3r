@@ -143,6 +143,8 @@ public interface IAdminRESTAPI extends ISharedRESTAPI
 	public Expense loadExpense( final Long id);
 	public PagedListJSON loadAdminExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
 	public Long addExpense( final Expense entity);
+		/* Manager Accounts for Expenses */
+		public PagedListJSON loadManagerEAccounts( final Long id, final Integer page, final Integer pageSize);
 	/* End Expense */
 	
 	/* Category */

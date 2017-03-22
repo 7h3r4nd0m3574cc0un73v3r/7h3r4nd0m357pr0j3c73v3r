@@ -380,6 +380,32 @@ App.config( [ '$stateProvider', '$urlRouterProvider', 'baSidebarServiceProvider'
 			templateUrl: 'angular/preta-manager/views/errors/403.html',
 		})
 		/* End Errors */
+		
+		/* Expense */
+		.state( 'root.expenses', {
+			url: '/expenses?page&pageSize&orderByIdAsc',
+			params: {
+				page: "1",
+				pageSize: "10",
+				orderByIdAsc: "false"
+			},
+			title: 'R\xE8glements',
+			templateUrl: 'angular/preta-manager/views/expense/list.html',
+			ncyBreadcrumb: {
+				label: 'R\xE8glements'
+			},
+			controller: 'ExpenseController'
+		})
+		.state( 'root.expenses.show', {
+			url: '/show/{id:int}',
+			title: 'R\xE8glements',
+			templateUrl: 'angular/preta-manager/views/expense/show.html',
+			ncyBreadcrumb: {
+				label: 'Détails {{ entity.id | number }}'
+			},
+			controller: 'ExpenseController'
+		})
+		/* End Expense */
 	;
 	/* End Order Section */
 	/* Sidebar Config */
@@ -430,6 +456,11 @@ App.config( [ '$stateProvider', '$urlRouterProvider', 'baSidebarServiceProvider'
 			  title: 'Toutes',
 			  stateRef: 'root.adv-offers-all'
 		  }]
+	});
+	baSidebarServiceProvider.addStaticItem({
+		title: 'Mes R\xE8glements',
+		icon: 'fa fa-money',
+		stateRef: 'root.expenses'
 	});
 /*	baSidebarServiceProvider.addStaticItem({
 		title: 'Statistiques',

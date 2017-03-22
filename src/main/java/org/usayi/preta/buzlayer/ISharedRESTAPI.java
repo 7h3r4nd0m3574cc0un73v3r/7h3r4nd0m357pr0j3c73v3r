@@ -32,6 +32,8 @@ public interface ISharedRESTAPI
 		public EShop loadArticleOrderEShop( final Long id);
 		/* Payments */
 		public PagedListJSON loadArticleOrderPayments( final Long id, final Integer page, final Integer pageSize);
+		/* AAdmin */
+		public User loadArticleOrderAdmin( final Long id);
 	/* End ArticleOrders */
 		
 	/* EMoneyProviders */
@@ -149,4 +151,12 @@ public interface ISharedRESTAPI
 	public Notification loadNotification( final Long id);
 	public void updateNotification( final Notification entity);
 	/* End Notifications */
+	
+	/* Expense */
+		/* ArticleOrders */
+		public PagedListJSON loadExpenseArticleOrders( final Long id, final Integer page, final Integer pageSize);
+		/* Manager */
+		public User loadExpenseManager( final Long id);
+	/* End Expense */
+	
 }

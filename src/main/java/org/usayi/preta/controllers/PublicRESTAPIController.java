@@ -512,7 +512,7 @@ public class PublicRESTAPIController
 			
 			/* Checks if Buyer is the owner of the Article Order */
 			if( user.getUserInfo().getId().longValue() != entity.getUser().getUserInfo().getId().longValue()) {
-				return Tools.unauthorized();
+				return Tools.forbidden();
 			}
 			
 			/* Update Reception Date and Status */

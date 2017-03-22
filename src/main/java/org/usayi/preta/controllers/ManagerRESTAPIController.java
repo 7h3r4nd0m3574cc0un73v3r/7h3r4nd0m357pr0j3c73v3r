@@ -1073,7 +1073,7 @@ public class ManagerRESTAPIController
 			if( isAnonymous())
 				return Tools.unauthorized();
 			
-			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_MANAGER"))
 				return Tools.unauthorized();
 			
 			try
@@ -1487,6 +1487,15 @@ public class ManagerRESTAPIController
 	{
 		try
 		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_MANAGER"))
+				return Tools.forbidden();
+			
+			if( !mRESTAPI.loadExpenseManager(id).getUserInfo().getId().equals( getLoggedUserFromPrincipal().getUserInfo().getId()))
+				return Tools.forbidden();
+			
 			return new ResponseEntity<Expense>( mRESTAPI.loadExpense(id), HttpStatus.OK);
 		}
 		catch( Exception e)
@@ -1518,6 +1527,33 @@ public class ManagerRESTAPIController
 			return Tools.internalServerError();
 		}
 	}
+		/* ArticleOrders */
+		@GetMapping
+		@JsonView( Views.Manager.class)
+		@RequestMapping( "/expense/{id}/article-orders")
+		public ResponseEntity<?> loadExpenseArticleOrders( @PathVariable( name="id") final Long id,
+														   @RequestParam( name="page", defaultValue="1") final Integer page,
+														   @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_MANAGER"))
+					return Tools.forbidden();
+				
+				if( !mRESTAPI.loadExpenseManager(id).getUserInfo().getId().equals( getLoggedUserFromPrincipal().getUserInfo().getId()))
+					return Tools.forbidden();
+				
+				return Tools.handlePagedListJSON( mRESTAPI.loadExpenseArticleOrders(id, page, pageSize));
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
 	/* End Expense */
 	
 	/* Tools - Dry */

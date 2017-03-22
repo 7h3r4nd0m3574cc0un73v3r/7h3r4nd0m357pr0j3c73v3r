@@ -1,0 +1,22 @@
+	<md-card>
+       <md-card-title>
+         <md-card-title-media>
+           <div class="md-media-sm card-media">
+           	<!-- <img ng-src="rest-api/e-money-provider/{{ selectedAdminEAccount.emp.id }}/fetch-logo" class="img-responsive" style="max-height: 100px; max-width: 100px;" /> -->
+           	<img ng-src="https://drive.google.com/uc?id={{ entity.emp.logoGoogleId }}&export=download" class="img-responsive" style="max-height: 100px; max-width: 100px;" />
+           </div>
+         </md-card-title-media>
+         <md-card-title-text>
+           <span class="md-headline">{{ entity.emp.name }}</span>
+           <span class="md-subhead">Compte du virement</span>
+         </md-card-title-text>
+       </md-card-title>
+       <md-card-content>
+       	<p class="text-left">
+       		<label>Numéro</label>
+       		<span class="text-mainge" style="font-weight: bold; font-size: 120%">
+       			{{ entity.account }}
+       		</span>
+       	</p>
+       </md-card-content>
+    </md-card>

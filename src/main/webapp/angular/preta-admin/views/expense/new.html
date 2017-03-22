@@ -13,87 +13,87 @@
 	<div ng-if="!isEntityLoading && entity != null">
 	
 	</div>
-	
-	<div layout="row" layout-align="start center">
-		<md-input-container class="md-block" flex>
-			<label>Compte</label>
-			<md-select ng-model="entity.adminEAccount" required>
-				<md-option ng-repeat="eAccount in loggedUser.eAccounts" ng-value="eAccount">{{ eAccount.account }}</md-option>
-			</md-select>
-		</md-input-container>
-	</div>
-	<div layout="row" layout-align="start center">
-		<md-input-container class="md-block" flex>
-			<label>Montant</label>
-			<input value="{{ entity.amount | number }} F CFA" readonly class="text-right" />
-		</md-input-container>
-	</div>
-	
-	<div layout="row" layout-align="start center">
-		<md-input-container class="md-block" flex>
-			<label>Référence du règlement</label>
-			<input ng-model="entity.expenseRef" />
-		</md-input-container>
-	</div>
-	
-	<div layout="row" layout-align="start">
-		<h3>Commandes</h3>
-	</div>
-	
-	<md-content layout-sm="column" layout-gt-sm="row" layout-wrap layout-align-gt-sm="start stretch">
-		 <md-card x-ng-repeat="artOrd in artOrds" flex="auto">
-	        <md-card-title>
-	          <md-card-title-text>
-	            <span class="md-title">Commande #{{ artOrd.id | number }} - {{ artOrd.eShop.name }}</span>
-	            <span class="md-subhead">
-	            	Date Commande: {{ artOrd.regDate | date : 'medium' }}
-	            </span>
-	          </md-card-title-text>
-	        </md-card-title>
-	        <md-card-content>
-	          <p>
-	          	<label>Client</label>
-	          	<span>{{ artOrd.buyer.userInfo.firstName }}  {{ artOrd.buyer.userInfo.lastName }} : {{ artOrd.buyer.username }}</span>
-	          </p>
-	          <p>
-	          	<label>Statut</label>
-	          	<span><order-status status="artOrd.status" /></span>
-	          </p>
-	          <p>
-	          	<label>Montant</label>
-	          	<span>{{ artOrd.total | number }} F CFA</span>
-	          </p>
-	        </md-card-content>
-	        <md-card-actions layout="row" layout-align="end center">
-	          <md-button class="md-raised md-icon-button" aria-label="Sélectionner" x-ng-click="selectOrder( artOrd.id)" x-ng-disabled="artOrd.disabled">
-		          <i ng-class="{ 'fa fa-square-o': !artOrd.selected, 'fa fa-check-square': artOrd.selected }"></i>
-		          <md-tooltip md-direction="top">
-			          Sélectionner
-		          </md-tooltip>
-	          </md-button>
-	          <md-button class="md-primary md-raised md-icon-button" aria-label="Détails" x-ui-sref="root.orders.show( { id: artOrd.id })">
-	            <i class="fa fa-folder-open"></i>
-	          	<md-tooltip md-direction="top">
-		          Détails
-		        </md-tooltip>
-	          </md-button>
-	      </md-card>
-	</md-content>
-	
-	<div layout="row" layout-wrap>
-		<div>
-			<md-button class="md-raised" x-ui-sref="root.expenses" x-ui-sref-options="{ reload: true}">
-				<i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span>
-			</md-button>
+	<form name="myForm">
+		<div layout="row" layout-align="start center">
+			<md-input-container class="md-block" flex>
+				<label>Compte</label>
+				<md-select ng-model="entity.adminEAccount" required>
+					<md-option ng-repeat="eAccount in loggedUser.eAccounts" ng-value="eAccount">{{ eAccount.account }}</md-option>
+				</md-select>
+			</md-input-container>
 		</div>
-		<div flex></div>
-		<div layout="row" layout-align="end center">
-			<md-button class="md-raised md-warn" x-ng-click="rejectPayment( artOrd.id)" ng-disabled="artOrd.isValid != null">
-				Rejeter <i class="fa fa-ban"></i>
-			</md-button>
-			<md-button class="md-raised md-primary" x-ng-click="acceptPayment( artOrd.id)" ng-disabled="artOrd.isValid != null">
-				Accepter <i class="fa fa-check"></i>
-			</md-button>
+		<div layout="row" layout-align="center center" ng-if="entity.eAccount != null">
+			<div flex>
+				<e-account-card entity="entity.eAccount" />
+			</div>
 		</div>
-	</div>
+		<div layout="row" layout-align="start center">
+			<md-input-container class="md-block" flex>
+				<label>Montant</label>
+				<input value="{{ entity.amount | number }} F CFA" readonly class="text-right" />
+			</md-input-container>
+		</div>
+		<div layout="row" layout-align="start center">
+			<md-input-container class="md-block" flex>
+				<label>Référence du règlement</label>
+				<input ng-model="entity.expenseRef" required />
+			</md-input-container>
+		</div>
+		<div layout="row" layout-align="start">
+			<h3>Commandes</h3>
+		</div>
+			<div layout-sm="column" layout-gt-sm="row" layout-wrap layout-align-gt-sm="start stretch">
+				 <md-card x-ng-repeat="artOrd in artOrds" flex="auto">
+			        <md-card-title>
+			          <md-card-title-text>
+			            <span class="md-title">Commande #{{ artOrd.id | number }} - {{ artOrd.eShop.name }}</span>
+			            <span class="md-subhead">
+			            	Date Commande: {{ artOrd.regDate | date : 'medium' }}
+			            </span>
+			          </md-card-title-text>
+			        </md-card-title>
+			        <md-card-content>
+			          <p>
+			          	<label>Client</label>
+			          	<span>{{ artOrd.buyer.userInfo.firstName }}  {{ artOrd.buyer.userInfo.lastName }} : {{ artOrd.buyer.username }}</span>
+			          </p>
+			          <p>
+			          	<label>Statut</label>
+			          	<span><order-status status="artOrd.status" /></span>
+			          </p>
+			          <p>
+			          	<label>Montant</label>
+			          	<span>{{ artOrd.total | number }} F CFA</span>
+			          </p>
+			        </md-card-content>
+			        <md-card-actions layout="row" layout-align="end center">
+			          <md-button class="md-raised md-icon-button" aria-label="Sélectionner" x-ng-click="selectOrder( artOrd.id)" x-ng-disabled="artOrd.disabled">
+				          <i ng-class="{ 'fa fa-square-o': !artOrd.selected, 'fa fa-check-square': artOrd.selected }"></i>
+				          <md-tooltip md-direction="top">
+					          Sélectionner
+				          </md-tooltip>
+			          </md-button>
+			          <md-button class="md-primary md-raised md-icon-button" aria-label="Détails" x-ui-sref="root.orders.show( { id: artOrd.id })">
+			            <i class="fa fa-folder-open"></i>
+			          	<md-tooltip md-direction="top">
+				          Détails
+				        </md-tooltip>
+			          </md-button>
+			      </md-card>
+			</div>
+			
+		<div layout="row" layout-wrap>
+			<div>
+				<md-button class="md-raised" x-ui-sref="root.expenses" x-ui-sref-options="{ reload: true}">
+					<i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span>
+				</md-button>
+			</div>
+			<div flex></div>
+			<div layout="row" layout-align="end center">
+				<md-button class="md-raised md-primary" type="submit" x-ng-click="addEntity()" ng-disabled="selection.count < 0 || entity.eAccount == null || entity.amount < 0 || entity.adminEAccount == null || entity.expenseRef == null">
+					Valider <i class="fa fa-check"></i>
+				</md-button>
+			</div>
+		</div>
+	</form>	
 </div>

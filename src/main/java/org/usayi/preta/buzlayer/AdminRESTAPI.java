@@ -446,19 +446,25 @@ public class AdminRESTAPI extends SharedRESTAPI implements IAdminRESTAPI
 
 	/* Expense */
 	@Override
-	public Expense loadExpense( final Long id)
+	public Expense loadExpense( Long id)
 	{
 		return pretaDao.loadExpense(id);
 	}
 	@Override
-	public PagedListJSON loadAdminExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc)
+	public PagedListJSON loadAdminExpenses( Long id, Integer page, Integer pageSize, boolean orderByIdAsc)
 	{
 		return pretaDao.loadAdminExpenses(id, page, pageSize, orderByIdAsc);
 	}
 	@Override
-	public Long addExpense( final Expense entity)
+	public Long addExpense( Expense entity)
 	{
 		return pretaDao.addExpense(entity);
 	}
+		/* Manager Accounts for Expenses */
+		@Override
+		public PagedListJSON loadManagerEAccounts( Long id, Integer page, Integer pageSize)
+		{
+			return pretaDao.loadManagerEAccounts(id, page, pageSize);
+		}
 	/* End Expense */
 }

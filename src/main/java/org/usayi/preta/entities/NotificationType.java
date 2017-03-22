@@ -17,6 +17,7 @@ public enum NotificationType
 	EXPIRED, /* Info: Type: ShopSub || AdvOffer */
 	EXPIRING, /* Info: Type: ShopSub || AdvOffer */
 	ARTICLE_THRESHOLD, /* Infos: EShopId */
+	EXPENDED, /* ArticleOrder */
 	
 	/* Admin */
 	APPROVAL_READY, /* EShop || Profile || UpgradeRequest */

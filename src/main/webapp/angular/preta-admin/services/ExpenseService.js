@@ -34,7 +34,7 @@ App.factory( 'ExpenseService', ['$http', '$q', function( $http, $q) {
 					url: 'rest-api/admin/expense/add',
 					data: entity
 				}).then( function( r) {
-					return r.data;
+					return r;
 				}, function( r) {
 					return $q.reject( r);
 				});
@@ -54,6 +54,42 @@ App.factory( 'ExpenseService', ['$http', '$q', function( $http, $q) {
 					return $q.reject( r);
 				});
 			},
+			loadManagerEAccounts: function( ids) {
+				return $http({
+					method: 'POST',
+					url: 'rest-api/admin/manager-e-accounts',
+					data: ids
+				}).then( function( r) {
+					return r.data;
+				}, function( r) {
+					return $q.reject( r);
+				});
+			},
+			loadArticleOrders: function( id, page, pageSize) {
+				return $http({
+					method: 'GET',
+					url: 'rest-api/admin/expense/' + id + '/article-orders',
+					params: {
+						page: page,
+						pageSize: pageSize,
+					}
+				}).then( function( r) {
+					return r.data;
+				}, function( r) {
+					return $q.reject( r);
+				});
+			},
+			loadManager: function( id) {
+				return $http({
+					method: 'GET',
+					url: 'rest-api/admin/expense/' + id + '/manager',
+				}).then( function( r) {
+					return r.data;
+				}, function( r) {
+					return $q.reject( r);
+				});
+				
+			}
 		}
 	}                            
 ]);

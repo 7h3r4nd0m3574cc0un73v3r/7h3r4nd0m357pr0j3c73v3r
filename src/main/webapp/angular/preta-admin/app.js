@@ -685,6 +685,11 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 		/* Expense */
 		.state( 'root.expenses', {
 			url: '/expenses?page&pageSize&orderByIdAsc',
+			params: {
+				page: "1",
+				pageSize: "10",
+				orderByIdAsc: "false"
+			},
 			title: 'R\xE8glements',
 			templateUrl: 'angular/preta-admin/views/expense/list.html',
 			ncyBreadcrumb: {
@@ -698,6 +703,15 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 			templateUrl: 'angular/preta-admin/views/expense/new.html',
 			ncyBreadcrumb: {
 				label: 'Nouveau'
+			},
+			controller: 'ExpenseController'
+		})
+		.state( 'root.expenses.show', {
+			url: '/show/{id:int}',
+			title: 'R\xE8glements',
+			templateUrl: 'angular/preta-admin/views/expense/show.html',
+			ncyBreadcrumb: {
+				label: 'Détails'
 			},
 			controller: 'ExpenseController'
 		})

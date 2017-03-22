@@ -18,6 +18,11 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.usayi.preta.Views;
+import org.usayi.preta.entities.form.NewExpense;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Audited
@@ -28,25 +33,31 @@ public class Expense implements Serializable
 	@Id
 	@NotAudited
 	@GeneratedValue( strategy=GenerationType.IDENTITY)
+	@JsonView( { Views.Admin.class, Views.Manager.class })
 	private Long id;
 	
 	@NotNull
+	@JsonView( { Views.Admin.class, Views.Manager.class })
 	private Float amount;
 	
 	@NotNull
+	@JsonView( { Views.Admin.class, Views.Manager.class })
 	private String expenseRef;
 	
 	@NotNull
 	@ManyToOne
 	@JoinColumn( referencedColumnName="id")
+	@JsonView( { Views.Admin.class, Views.Manager.class })
 	private EAccount eAccount;
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn( referencedColumnName="id")
+	@JsonView( { Views.Admin.class, Views.Manager.class })
 	private EAccount adminEAccount;
 
 	@Transient
+	@JsonView( { Views.Admin.class, Views.Manager.class })
 	private Timestamp regDate;
 	
 	public Timestamp getRegDate()
@@ -60,6 +71,7 @@ public class Expense implements Serializable
 	}
 
 	@NotEmpty
+	@JsonIgnore
 	@OneToMany( mappedBy="expense")
 	private Collection<ArticleOrder> articleOrders = new ArrayList<ArticleOrder>();
 	
@@ -133,5 +145,14 @@ public class Expense implements Serializable
 	
 	public final void addArticleOrder( final ArticleOrder entity) {
 		articleOrders.add(entity);
+	}
+
+	public Expense( NewExpense e)
+	{
+		this.amount = e.getAmount();
+		this.expenseRef = e.getExpenseRef();
+		this.adminEAccount = e.getAdminEAccount();
+		this.eAccount = e.geteAccount();
+		this.articleOrders = e.getArticleOrders();
 	}
 }

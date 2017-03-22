@@ -102,6 +102,11 @@ public abstract class SharedRESTAPI implements ISharedRESTAPI
 		{
 			return pretaDao.loadArticleOrderPayments( id, page, pageSize);
 		}
+		/* AAdmin */
+		public User loadArticleOrderAdmin( Long id)
+		{
+			return pretaDao.loadArticleOrderAdmin(id);
+		}
 	/* End ArticleOrders */
 		
 	/* EMoneyProvider */
@@ -434,4 +439,18 @@ public abstract class SharedRESTAPI implements ISharedRESTAPI
 		return pretaDao.loadDisplayedSlides( page, pageSize);
 	}
 	/* End HomePicture */
+	
+	/* Expense */
+		/* ArticleOrders */
+		@Override
+		public PagedListJSON loadExpenseArticleOrders( Long id, Integer page, Integer pageSize)
+		{
+			return pretaDao.loadExpenseArticleOrders(id, page, pageSize);
+		}
+		/* Manager */
+		public User loadExpenseManager( Long id)
+		{
+			return pretaDao.loadExpenseManager(id);
+		}
+	/* End Expense */
 }
