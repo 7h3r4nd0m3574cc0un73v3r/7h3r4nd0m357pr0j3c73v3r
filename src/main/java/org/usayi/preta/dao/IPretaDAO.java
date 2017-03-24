@@ -69,7 +69,6 @@ public interface IPretaDAO
 	
 	/* ShopSub */
 	public PagedListJSON loadShopSubs( final Integer page, final Integer pageSize);
-	public PagedListJSON listPendingShopSub( final Integer page, final Integer pageSize);
 	public Long addShopSub( final ShopSub entity);
 	public void updateShopSub( final ShopSub entity);
 	public ShopSub loadShopSub( final Long id);
@@ -170,6 +169,7 @@ public interface IPretaDAO
 		public PagedListJSON loadAdminArticleOrders( final Long userId, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc);
 		/* Visited Articles */
 		public PagedListJSON loadUserVisitedArticles( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
+		public PagedListJSON loadUserVisitedArticlesStrict( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
 	/* End User */
 	
 	/* AdvOption */
@@ -298,7 +298,7 @@ public interface IPretaDAO
 	public Timestamp getArticleOrderRegDate( final Long id);
 	public List<ArticleOrder> listArticleOrderByEShop( final Long eShopId);
 	public List<ArticleOrder> listArticleOrderByStatus( final OrderStatus status);
-	public User getArticleOrderUser( final Long id);
+	public User loadArticleOrderBuyer( final Long id);
 		/* EShop */
 		public EShop loadArticleOrderEShop( final Long id);
 		/* Payments */
@@ -309,7 +309,7 @@ public interface IPretaDAO
 	//OrderedArticle
 	public OrderedArticle getOrderedArticle( final Long id);
 	public void addOrderedArticle( final OrderedArticle entity);
-	public List<OrderedArticle> listOrderedArticleByOrder( final Long id);
+	public List<OrderedArticle> loadOrderedArticleByOrder( final Long id);
 	public void editOrderedArticle( final OrderedArticle entity);
 	public PagedListJSON listOrderedArticleToRate( final Long userId, final Integer page, final Integer pageSize);
 	public Long getNumberOfArticlesToRate( final Long userId);

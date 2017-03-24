@@ -56,7 +56,6 @@ public interface IRESTAPI
 	public Long addShopSub( final ShopSub entity);
 	public void editShopSub( final ShopSub entity);
 	public ShopSub getShopSub( final Long id);
-	public PagedListJSON listPendingShopSub( final Integer page, final Integer pageSize);
 	
 	//EShop
 	public PagedListJSON listEShop( final Integer page, final Integer pageSize);

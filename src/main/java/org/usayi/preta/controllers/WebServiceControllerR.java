@@ -29,8 +29,6 @@ import org.usayi.preta.config.Tools;
 import org.usayi.preta.entities.Article;
 import org.usayi.preta.entities.ArticleOrder;
 import org.usayi.preta.entities.EAccount;
-import org.usayi.preta.entities.OrderStatus;
-import org.usayi.preta.entities.OrderedArticle;
 import org.usayi.preta.entities.Picture;
 import org.usayi.preta.entities.ShopSub;
 import org.usayi.preta.entities.User;
@@ -67,22 +65,6 @@ public class WebServiceControllerR
 		try
 		{
 			return Tools.handlePagedListJSON( restBL.listShopSub(page, pageSize));
-		}
-		catch( Exception e)
-		{
-			e.printStackTrace();
-			return Tools.internalServerError();
-		}
-	}
-	@GetMapping
-	@JsonView( Views.Public.class)
-	@RequestMapping( value="/shop-subs/pending")
-	public ResponseEntity<?> listPendingShopSub( @RequestParam( name="page", defaultValue="1") final Integer page,
-			   									 @RequestParam( name="pageSize", defaultValue="10") final Integer pageSize)
-	{
-		try
-		{
-			return Tools.handlePagedListJSON( restBL.listPendingShopSub(page, pageSize));
 		}
 		catch( Exception e)
 		{
@@ -378,22 +360,6 @@ public class WebServiceControllerR
 	
 	//ArticleOrder	
 	@GetMapping
-	@RequestMapping( "/article-order/{articleOrderId}/ordered-articles")
-	public ResponseEntity<List<OrderedArticle>> listOrderedArticleByOrder( @PathVariable( "articleOrderId") final Long articleOrderId)
-	{
-		try
-		{
-			List<OrderedArticle> entities = restBL.listOrderedArticleByOrder(articleOrderId);
-			
-			return new ResponseEntity<List<OrderedArticle>>( entities, HttpStatus.OK);
-		}
-		catch( Exception e)
-		{
-			e.printStackTrace();
-			return new ResponseEntity<List<OrderedArticle>>( HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	@GetMapping
 	@JsonView( Views.Public.class)
 	@RequestMapping( "/e-shop/{eShopId}/article-orders")
 	public ResponseEntity<List<ArticleOrder>> listArticleOrderByEShop( @PathVariable( "eShopId") final Long userId)
@@ -419,67 +385,6 @@ public class WebServiceControllerR
 			return new ResponseEntity<List<ArticleOrder>>( HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}	
-	@GetMapping
-	@JsonView( Views.Public.class)
-	@RequestMapping( "/article-order/{id}/buyer")
-	public ResponseEntity<?> getArticleOrderUser( @PathVariable( "id") final Long id)
-	{
-		try
-		{
-			if( restBL.getArticleOrderUser( id) == null)
-				return new ResponseEntity<Void>( HttpStatus.NOT_FOUND);
-			
-			return new ResponseEntity<User>( restBL.getArticleOrderUser( id), HttpStatus.OK);
-		}
-		catch( Exception e)
-		{
-			e.printStackTrace();
-			return new ResponseEntity<Void>( HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	@GetMapping
-	@JsonView( Views.Public.class)
-	@RequestMapping( "/article-order/status/{status}")
-	public ResponseEntity<?> listArticleOrderByStatus( @PathVariable( "status") final Integer status)
-	{
-		try
-		{
-			OrderStatus orderStatus;
-			switch( status)
-			{
-				case 0:
-					orderStatus = OrderStatus.PENDING_PAYMENT;
-					break;
-				case 1:
-					orderStatus = OrderStatus.PENDING_PAYMENT_CONFIRMATION;
-					break;
-				case 2:
-					orderStatus = OrderStatus.PAID;
-					break;
-				case 3:
-					orderStatus = OrderStatus.DELIVERING;
-					break;
-				case 4:
-					orderStatus = OrderStatus.DELIVERED;
-					break;
-				default:
-					orderStatus = null;
-					break;
-			}
-			
-			List<ArticleOrder> entities = restBL.listArticleOrderByStatus( orderStatus);
-			
-			if( entities.isEmpty())
-				return new ResponseEntity<Void>( HttpStatus.NO_CONTENT);
-			
-			return new ResponseEntity<List<ArticleOrder>>( entities, HttpStatus.OK);
-		}
-		catch( Exception e)
-		{
-			e.printStackTrace();
-			return new ResponseEntity<Void>( HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
 	
 //	@ExceptionHandler( { PersistenceException.class} )
 //	protected ResponseEntity<Void> handleException( PersistenceException e)

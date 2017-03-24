@@ -1,5 +1,7 @@
 package org.usayi.preta.buzlayer;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.usayi.preta.dao.IPretaDAO;
 import org.usayi.preta.entities.*;
@@ -106,6 +108,18 @@ public abstract class SharedRESTAPI implements ISharedRESTAPI
 		public User loadArticleOrderAdmin( Long id)
 		{
 			return pretaDao.loadArticleOrderAdmin(id);
+		}
+		/* OrderedArticles */
+		@Override
+		public List<OrderedArticle> loadArticleOrderOrderedArticles( Long id)
+		{
+			return pretaDao.loadOrderedArticleByOrder(id);
+		}
+		/* Buyer */
+		@Override
+		public User loadArticleOrderBuyer( Long id)
+		{
+			return pretaDao.loadArticleOrderBuyer( id);
 		}
 	/* End ArticleOrders */
 		

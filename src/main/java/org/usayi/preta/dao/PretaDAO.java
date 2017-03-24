@@ -2,6 +2,7 @@ package org.usayi.preta.dao;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -242,18 +243,36 @@ public class PretaDAO implements IPretaDAO
 	
 	/* Shop Sub */
 	@Override
+	@SuppressWarnings( "unchecked")
 	public PagedListJSON loadShopSubs( Integer page, Integer pageSize)
 	{
 		Query query = em.createQuery( "SELECT entity FROM ShopSub entity");
 
-		return generatePagedList(query, page, pageSize);
-	}
-	@Override
-	public PagedListJSON listPendingShopSub( Integer page, Integer pageSize)
-	{
-		Query query = em.createQuery( "SELECT entity FROM ShopSub entity WHERE entity.subStatus = 0 OR entity.subStatus = 1");
+		PagedListJSON result = generatePagedList(query, page, pageSize);
 		
-		return generatePagedList(query, page, pageSize);
+		/* When a ShopSub is registered, it's SubOffer or ShopStatus may change over time,
+		 * so the system needs to fetch the precise SubOffer /ShopStatus at the time of creation and update it
+		 * in the object it returns here.
+		 */
+		for( ShopSub shopSub : (List<ShopSub>) result.getEntities())
+		{
+			AuditReader reader = AuditReaderFactory.get( em);
+			
+			/* Store the registration date of the ShopSub */
+			long subRegDate = getRegDate( ShopSub.class, shopSub.getId()).getTime();
+			
+			/* fetch the SubOffer at the time of the ShopSub registration date */
+			SubOffer subOffer = reader.find( SubOffer.class, shopSub.getSubOffer().getId(), new Date( subRegDate));
+			
+			/* Fetch the ShopStatus at the time of the ShopSub registration */
+			ShopStatus shopStatus = reader.find( ShopStatus.class, subOffer.getShopStatus().getId(), new Date( subRegDate));
+			
+			subOffer.setShopStatus(shopStatus);
+			
+			shopSub.setSubOffer(subOffer);
+		}
+		
+		return result;
 	}
 	@Override
 	public Long addShopSub(ShopSub entity)
@@ -274,6 +293,25 @@ public class PretaDAO implements IPretaDAO
 	{
 		ShopSub entity = em.find(ShopSub.class, id);
 
+		/* When a ShopSub is registered, it's SubOffer or ShopStatus may change over time,
+		 * so the system needs to fetch the precise SubOffer /ShopStatus at the time of creation and update it
+		 * in the object it returns here.
+		 */
+		AuditReader reader = AuditReaderFactory.get( em);
+		
+		/* Store the registration date of the ShopSub */
+		long subRegDate = getRegDate( ShopSub.class, entity.getId()).getTime();
+		
+		/* fetch the SubOffer at the time of the ShopSub registration date */
+		SubOffer subOffer = reader.find( SubOffer.class, entity.getSubOffer().getId(), new Date( subRegDate));
+		
+		/* Fetch the ShopStatus at the time of the ShopSub registration */
+		ShopStatus shopStatus = reader.find( ShopStatus.class, subOffer.getShopStatus().getId(), new Date( subRegDate));
+		
+		subOffer.setShopStatus(shopStatus);
+		
+		entity.setSubOffer(subOffer);
+		
 		return entity;
 	}
 	@Override
@@ -288,16 +326,29 @@ public class PretaDAO implements IPretaDAO
 		if( status != null)
 			query.setParameter( "subStatus", status);
 		
-		List<Article> entities = query.getResultList();
-		
-		PagedListJSON result = new PagedListJSON();
-		result.setItemsNumber( entities.size());
-		result.setPagesNumber( computePagesNumber( entities.size(), pageSize));
-		
-		query.setFirstResult( (page - 1) * pageSize);
-		query.setMaxResults( pageSize);
-		
-		result.setEntities( query.getResultList());
+		PagedListJSON result = generatePagedList(query, page, pageSize);
+
+		/* When a ShopSub is registered, it's SubOffer or ShopStatus may change over time,
+		 * so the system needs to fetch the precise SubOffer /ShopStatus at the time of creation and update it
+		 * in the object it returns here.
+		 */
+		for( ShopSub shopSub : (List<ShopSub>) result.getEntities())
+		{
+			AuditReader reader = AuditReaderFactory.get( em);
+			
+			/* Store the registration date of the ShopSub */
+			long subRegDate = getRegDate( ShopSub.class, shopSub.getId()).getTime();
+			
+			/* fetch the SubOffer at the time of the ShopSub registration date */
+			SubOffer subOffer = reader.find( SubOffer.class, shopSub.getSubOffer().getId(), new Date( subRegDate));
+			
+			/* Fetch the ShopStatus at the time of the ShopSub registration */
+			ShopStatus shopStatus = reader.find( ShopStatus.class, subOffer.getShopStatus().getId(), new Date( subRegDate));
+			
+			subOffer.setShopStatus(shopStatus);
+			
+			shopSub.setSubOffer(subOffer);
+		}
 		
 		return result;
 	}
@@ -1120,6 +1171,12 @@ public class PretaDAO implements IPretaDAO
 			for( AdvOffer advOffer : (List<AdvOffer>) result.getEntities())
 			{
 				advOffer.setRegDate( getRegDate( AdvOffer.class, advOffer.getId()));
+				
+				AuditReader reader = AuditReaderFactory.get( em);
+				
+				AdvOption advOption = reader.find( AdvOption.class, advOffer.getAdvOption().getId(), new Date( advOffer.getRegDate().getTime()));
+				
+				advOffer.setAdvOption( advOption);
 			}
 			
 			return result;
@@ -1314,6 +1371,43 @@ public class PretaDAO implements IPretaDAO
 			
 			return result;
 		}
+		@Override
+		@SuppressWarnings( "unchecked")
+		public PagedListJSON loadUserVisitedArticlesStrict( Long id, Integer page, Integer pageSize, boolean orderByIdAsc)
+		{
+			String hql = "SELECT DISTINCT entity FROM Article article, VisitedArticle entity JOIN entity.user user JOIN user.userInfo userInfo JOIN article.eShop eShop"
+					+ " JOIN eShop.currentShopSub shopSub"
+					+ " WHERE userInfo.id = :id AND article.id = entity.articleId AND :now BETWEEN shopSub.startDate AND shopSub.endDate ORDER BY entity.id";
+	
+			if( !orderByIdAsc)
+				hql += " DESC";
+			
+			Query query = em.createQuery( hql);
+			query.setParameter( "id", id);
+			query.setParameter( "now", new Timestamp( System.currentTimeMillis()));
+			
+			PagedListJSON result = generatePagedList(query, page, pageSize);
+			
+			List<VisitedArticle> visitedArticles = new ArrayList<VisitedArticle>();
+			
+			for( VisitedArticle visArt : (List<VisitedArticle>) result.getEntities())
+			{
+				boolean found = false;
+				
+				for( VisitedArticle visArt2 : visitedArticles)
+				{
+					if( visArt2.getArticleId().equals(visArt.getArticleId()))
+						found = true;
+				}
+				
+				if( !found)
+					visitedArticles.add( visArt);
+			}
+			
+			result.setEntities( visitedArticles);
+			
+			return result;
+		}
 	/* End User */
 
 	/* AdvOffer */
@@ -1337,6 +1431,12 @@ public class PretaDAO implements IPretaDAO
 		for( AdvOffer advOffer : ( List<AdvOffer>) result.getEntities())
 		{
 			advOffer.setRegDate( getRegDate( AdvOffer.class, advOffer.getId()));
+			
+			AuditReader reader = AuditReaderFactory.get( em);
+			
+			AdvOption advOption = reader.find( AdvOption.class, advOffer.getAdvOption().getId(), new Date( advOffer.getRegDate().getTime()));
+			
+			advOffer.setAdvOption( advOption);
 		}
 		
 		return result;
@@ -1365,7 +1465,14 @@ public class PretaDAO implements IPretaDAO
 	public AdvOffer loadAdvOffer(Long id)
 	{
 		AdvOffer entity = em.find( AdvOffer.class, id);
+		
 		entity.setRegDate( getRegDate( AdvOffer.class, id));
+
+		AuditReader reader = AuditReaderFactory.get( em);
+		
+		AdvOption advOption = reader.find( AdvOption.class, entity.getAdvOption().getId(), new Date( entity.getRegDate().getTime()));
+		
+		entity.setAdvOption( advOption);
 		
 		return entity;
 	}
@@ -1409,32 +1516,32 @@ public class PretaDAO implements IPretaDAO
 			EShop eShop = loadAdvOfferEshop( id);
 			return loadEShopManager(eShop.getId());
 		}
-	/* Strict */
-	@SuppressWarnings("unchecked")
-	@Override
-	public PagedListJSON loadAdvOffersStrict(Integer page, Integer pageSize, GenericStatus status, boolean orderByIdAsc)
-	{
-		String hql = "SELECT entity FROM AdvOffer entity JOIN entity.article article JOIN article.eShop eShop JOIN eShop.currentShopSub shopSub"
-				+ " WHERE :now BETWEEN shopSub.startDate AND shopSub.endDate";
-		if( status != GenericStatus.ALL)
-			hql += " WHERE status = :status";
-		hql += " ORDER BY entity.id";
-		if( !orderByIdAsc)
-			hql += " DESC";
-		
-		Query query = em.createQuery( hql);
-		if( status != GenericStatus.ALL)
-			query.setParameter( "status", status);
-		
-		PagedListJSON result = generatePagedList(query, page, pageSize);
-		
-		for( AdvOffer advOffer : ( List<AdvOffer>) result.getEntities())
+		/* Strict */
+		@SuppressWarnings("unchecked")
+		@Override
+		public PagedListJSON loadAdvOffersStrict(Integer page, Integer pageSize, GenericStatus status, boolean orderByIdAsc)
 		{
-			advOffer.setRegDate( getRegDate( AdvOffer.class, advOffer.getId()));
+			String hql = "SELECT entity FROM AdvOffer entity JOIN entity.article article JOIN article.eShop eShop JOIN eShop.currentShopSub shopSub"
+					+ " WHERE :now BETWEEN shopSub.startDate AND shopSub.endDate";
+			if( status != GenericStatus.ALL)
+				hql += " WHERE status = :status";
+			hql += " ORDER BY entity.id";
+			if( !orderByIdAsc)
+				hql += " DESC";
+			
+			Query query = em.createQuery( hql);
+			if( status != GenericStatus.ALL)
+				query.setParameter( "status", status);
+			
+			PagedListJSON result = generatePagedList(query, page, pageSize);
+			
+			for( AdvOffer advOffer : ( List<AdvOffer>) result.getEntities())
+			{
+				advOffer.setRegDate( getRegDate( AdvOffer.class, advOffer.getId()));
+			}
+			
+			return result;
 		}
-		
-		return result;
-	}
 	/* End AdvOffer */
 	
 	/* AdvOption */
@@ -2513,7 +2620,7 @@ public class PretaDAO implements IPretaDAO
 		return entities;
 	}
 	@Override
-	public User getArticleOrderUser( Long id) 
+	public User loadArticleOrderBuyer( Long id) 
 	{
 		Query query = em.createQuery( "SELECT user FROM ArticleOrder entity JOIN entity.user user WHERE entity.id = :id");
 		query.setParameter( "id", id);
@@ -2603,13 +2710,36 @@ public class PretaDAO implements IPretaDAO
 	}
 	@Override
 	@SuppressWarnings( "unchecked")
-	public List<OrderedArticle> listOrderedArticleByOrder( Long id)
+	public List<OrderedArticle> loadOrderedArticleByOrder( Long id)
 	{
-		Query  query = em.createQuery( "SELECT entity FROM OrderedArticle entity JOIN entity.articleOrder articleOrder WHERE articleOrder.id = :id");
-		query.setParameter( "id", id);
-		List<OrderedArticle> entities = query.getResultList();
-		
-		return entities;
+		try
+		{
+			Query  query = em.createQuery( "SELECT entity FROM OrderedArticle entity JOIN entity.articleOrder articleOrder WHERE articleOrder.id = :id");
+			query.setParameter( "id", id);
+			
+			List<OrderedArticle> entities = query.getResultList();
+			
+			Timestamp timeStamp = getRegDate( ArticleOrder.class, id);
+			
+			/* Find the Entity at the ArticleOrder time */
+			AuditReader reader = AuditReaderFactory.get(em);
+			
+			for( OrderedArticle orderedArticle : entities)
+			{
+				Article revisedArticle = reader.find( Article.class, orderedArticle.getArticle().getId(), new Date( timeStamp.getTime()));
+				
+				revisedArticle.getKeywords();
+				orderedArticle.setArticle( revisedArticle);
+			}
+			
+			return entities;
+			
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return new ArrayList<OrderedArticle>();
+		}
 	}
 	@Override
 	public void editOrderedArticle( OrderedArticle entity)

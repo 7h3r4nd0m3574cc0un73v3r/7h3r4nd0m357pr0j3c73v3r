@@ -149,11 +149,6 @@ public class RESTAPI implements IRESTAPI
 	{
 		return pretaDao.loadShopSub(id);
 	}
-	@Override
-	public PagedListJSON listPendingShopSub( Integer page, Integer pageSize)
-	{
-		return pretaDao.listPendingShopSub( page, pageSize);
-	}
 	
 	//EShop	
 	@Override
@@ -428,7 +423,7 @@ public class RESTAPI implements IRESTAPI
 	@Override
 	public User getArticleOrderUser( Long id)
 	{
-		return pretaDao.getArticleOrderUser( id);
+		return pretaDao.loadArticleOrderBuyer( id);
 	}
 	
 	//OrderedArticle
@@ -445,7 +440,7 @@ public class RESTAPI implements IRESTAPI
 	@Override
 	public List<OrderedArticle> listOrderedArticleByOrder( Long id)
 	{
-		return pretaDao.listOrderedArticleByOrder( id);
+		return pretaDao.loadOrderedArticleByOrder( id);
 	}
 	@Override
 	public void editOrderedArticle( OrderedArticle entity)

@@ -1,6 +1,32 @@
 package org.usayi.preta.buzlayer;
 
-import org.usayi.preta.entities.*;
+import java.util.List;
+
+import org.usayi.preta.entities.AdvOffer;
+import org.usayi.preta.entities.AdvOption;
+import org.usayi.preta.entities.Article;
+import org.usayi.preta.entities.ArticleFeature;
+import org.usayi.preta.entities.ArticleOrder;
+import org.usayi.preta.entities.Category;
+import org.usayi.preta.entities.EAccount;
+import org.usayi.preta.entities.EMoneyProvider;
+import org.usayi.preta.entities.EShop;
+import org.usayi.preta.entities.Feature;
+import org.usayi.preta.entities.FeatureValue;
+import org.usayi.preta.entities.GenericStatus;
+import org.usayi.preta.entities.Notification;
+import org.usayi.preta.entities.OrderStatus;
+import org.usayi.preta.entities.OrderedArticle;
+import org.usayi.preta.entities.Payment;
+import org.usayi.preta.entities.PaymentType;
+import org.usayi.preta.entities.Picture;
+import org.usayi.preta.entities.Role;
+import org.usayi.preta.entities.ShopSub;
+import org.usayi.preta.entities.Slide;
+import org.usayi.preta.entities.SubOffer;
+import org.usayi.preta.entities.UpgradeRequest;
+import org.usayi.preta.entities.User;
+import org.usayi.preta.entities.UserInfo;
 import org.usayi.preta.entities.json.PagedListJSON;
 
 public interface ISharedRESTAPI
@@ -26,14 +52,18 @@ public interface ISharedRESTAPI
 	/* End Articles */
 	
 	/* ArticleOrder */
-		public ArticleOrder loadArticleOrder( final Long id);
-		public void updateArticleOrder( final ArticleOrder entity);
+	public ArticleOrder loadArticleOrder( final Long id);
+	public void updateArticleOrder( final ArticleOrder entity);
 		/* EShop */
 		public EShop loadArticleOrderEShop( final Long id);
 		/* Payments */
 		public PagedListJSON loadArticleOrderPayments( final Long id, final Integer page, final Integer pageSize);
 		/* AAdmin */
 		public User loadArticleOrderAdmin( final Long id);
+		/* OrderedArticles */
+		public List<OrderedArticle> loadArticleOrderOrderedArticles( final Long id);
+		/* Buyer */
+		public User loadArticleOrderBuyer( final Long id);
 	/* End ArticleOrders */
 		
 	/* EMoneyProviders */

@@ -670,6 +670,48 @@ public class PublicRESTAPIController
 		}
 		
 	}
+		/* OrderedArticle */
+		@GetMapping
+		@SuppressWarnings( "unchecked")
+		@JsonView( Views.Public.class)
+		@RequestMapping( "/article-order/{id}/ordered-articles")
+		public ResponseEntity<?> loadOrderedArticleByOrder( @PathVariable( "id") final Long id)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_BUYER"))
+					return Tools.forbidden();
+				
+				/* Check is Buyer is really owner of the ArticleOrder */
+				ArticleOrder entity = pRESTAPI.loadArticleOrder( id);
+
+				if( entity == null)
+					return Tools.entityNotFound();
+				
+				boolean isFound = false;
+				
+				for( ArticleOrder articleOrder : ( List<ArticleOrder>) pRESTAPI.loadBuyerArticleOrders( getLoggedUserFromPrincipal().getUserInfo().getId(), 1, 0, OrderStatus.ALL, true).getEntities())
+				{
+					if( articleOrder.getId().longValue() == entity.getId().longValue())
+						isFound = true;
+				}
+				
+				if( !isFound)
+					return Tools.forbidden();
+				
+				List<OrderedArticle> entities = pRESTAPI.loadArticleOrderOrderedArticles(id);
+				
+				return new ResponseEntity<List<OrderedArticle>>( entities, HttpStatus.OK);
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
 	/* End ArticleOrder */
 	
 	/* EMoney Provider */

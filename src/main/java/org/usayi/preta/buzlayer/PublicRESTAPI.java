@@ -130,7 +130,6 @@ public class PublicRESTAPI extends SharedRESTAPI implements IPublicRESTAPI
 		pretaDao.addOrderedArticle(entity);
 	}
 	/* End Ordered Articles */
-	
 
 	/* OrderedArticleFeatures */
 	@Override
@@ -273,7 +272,7 @@ public class PublicRESTAPI extends SharedRESTAPI implements IPublicRESTAPI
 		/* Visited Articles */
 		public PagedListJSON loadUserVisitedArticles( Long id, Integer page, Integer pageSize, boolean orderByIdAsc)
 		{
-			return pretaDao.loadUserVisitedArticles(id, page, pageSize, orderByIdAsc);
+			return pretaDao.loadUserVisitedArticlesStrict(id, page, pageSize, orderByIdAsc);
 		}
 	/* End User */
 	

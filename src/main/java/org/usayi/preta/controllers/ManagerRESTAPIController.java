@@ -39,6 +39,7 @@ import org.usayi.preta.entities.Feature;
 import org.usayi.preta.entities.FeatureValue;
 import org.usayi.preta.entities.GenericStatus;
 import org.usayi.preta.entities.OrderStatus;
+import org.usayi.preta.entities.OrderedArticle;
 import org.usayi.preta.entities.Payment;
 import org.usayi.preta.entities.Picture;
 import org.usayi.preta.entities.ShopSub;
@@ -651,6 +652,7 @@ public class ManagerRESTAPIController
 	/* Articles */
 	@GetMapping
 	@JsonView( Views.Manager.class)
+	@SuppressWarnings( "unchecked")
 	@RequestMapping( method=RequestMethod.GET, value="/article/{id}")
 	public ResponseEntity<?> loadArticle( @PathVariable( "id") final Long id)
 	{
@@ -660,6 +662,16 @@ public class ManagerRESTAPIController
 			
 			if( entity == null)
 				return Tools.entityNotFound();
+			
+			boolean isFound = false;
+			for( EShop eShop : (List<EShop>) mRESTAPI.loadManagedEShops( getLoggedUserFromPrincipal().getUserInfo().getId(), 1, 0).getEntities())
+			{
+				if( eShop.getId().equals( entity.geteShop().getId()))
+					isFound = true;
+			}
+			
+			if( !isFound)
+				return Tools.forbidden();
 			
 			return new ResponseEntity<Article>( entity, HttpStatus.OK);
 		}
@@ -1099,6 +1111,61 @@ public class ManagerRESTAPIController
 					return Tools.entityNotFound();
 				
 				return new ResponseEntity<EShop>( mRESTAPI.loadArticleOrderEShop( entity.getId()), HttpStatus.OK);
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
+		/* ArticleOrder Buyer */
+		@GetMapping
+		@JsonView( Views.Manager.class)
+		@RequestMapping( "/article-order/{id}/buyer")
+		public ResponseEntity<?> getArticleOrderBuyer( @PathVariable( "id") final Long id)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_MANAGER"))
+					return Tools.forbidden();
+				
+				if( mRESTAPI.loadArticleOrderBuyer( id) == null)
+					return Tools.entityNotFound();
+				
+				return new ResponseEntity<User>( mRESTAPI.loadArticleOrderBuyer( id), HttpStatus.OK);
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.unauthorized();
+			}
+		}
+		/* OrderedArticle */
+		@GetMapping
+		@JsonView( Views.Manager.class)
+		@RequestMapping( "/article-order/{id}/ordered-articles")
+		public ResponseEntity<?> loadOrderedArticleByOrder( @PathVariable( "id") final Long id)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_MANAGER"))
+					return Tools.forbidden();
+				
+				ArticleOrder entity = mRESTAPI.loadArticleOrder( id);
+
+				if( entity == null)
+					return Tools.entityNotFound();
+				
+				/* TODO Check if Manager have a reason to see this */
+				List<OrderedArticle> entities = mRESTAPI.loadArticleOrderOrderedArticles(id);
+				
+				return new ResponseEntity<List<OrderedArticle>>( entities, HttpStatus.OK);
 			}
 			catch( Exception e)
 			{

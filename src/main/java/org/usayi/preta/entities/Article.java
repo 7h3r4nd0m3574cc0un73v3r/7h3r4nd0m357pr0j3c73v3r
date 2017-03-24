@@ -73,6 +73,16 @@ public class Article implements Serializable
 	@JsonView( Views.Public.class)
 	private String description;
 	
+	public Collection<String> getKeywords()
+	{
+		return keywords;
+	}
+
+	public void setKeywords(Collection<String> keywords)
+	{
+		this.keywords = keywords;
+	}
+
 	@JsonView( Views.Public.class)
 	private ArticleState state;
 	
@@ -85,7 +95,6 @@ public class Article implements Serializable
 	@JsonView( Views.Public.class)
 	private Float deliveryFee = 0F;
 	
-	@JsonView( Views.Public.class)
 	@Column( length=30)
 	@ElementCollection( fetch=FetchType.EAGER)
 	/* TODO On update */

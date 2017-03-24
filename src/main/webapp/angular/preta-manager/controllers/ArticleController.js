@@ -12,9 +12,6 @@ App.controller( 'ArticleController', [ '$state', '$stateParams', '$scope', '$roo
 		EShopService.loadEntity( $stateParams.eShopId)
 					.then( function( response) {
 						$scope.activeEShop = response;
-						
-						/* Compute Profile Completion */
-						$scope.activeEShop.profileCompletion = EShopService.computeProfileCompletion( $scope.activeEShop);
 
 						/* Load Current Shop Sub */
 						EShopService.loadCurrentShopSub( $scope.activeEShop.id)
@@ -31,10 +28,6 @@ App.controller( 'ArticleController', [ '$state', '$stateParams', '$scope', '$roo
 									}, function( response) {
 										console.error( response);
 									});
-						
-						/*if( $scope.activeEShop.currentShopSub == null || $scope.activeEShop.profileCompletion < 100) {
-							$state.go( 'root.error-403');
-						}*/
 						
 					}, function( response) {
 						console.error( response);
@@ -138,14 +131,38 @@ App.controller( 'ArticleController', [ '$state', '$stateParams', '$scope', '$roo
 						 				   $scope.isLoading = false;
 						 			   });
 						 
-						 ArticleService.loadPictures( $scope.entity.id, 1, 0)
+						   /* ArticleService.loadPictures( $scope.entity.id, 1, 0)
 						 			   .then( function( response) {
 						 				   $scope.entity.pictures = response.entities;
 						 				   $scope.isLoading = false;
 						 			   }, function( response) {
 						 				   console.error( response);
 						 				   $scope.isLoading = false;
-						 			   });
+						 			   }); */
+						 
+							/* Load Article Pictures */
+							ArticleService.loadPictures( $scope.entity.id)
+										  .then( function( response) {
+											  $scope.entity.pictures = response.entities;
+											  
+											    /* UIB Slide Config */
+											    $scope.myInterval = 5000;
+											    $scope.noWrapSlides = false;
+											    $scope.active = 0;
+											    var slides = $scope.slides = [];
+											    var currIndex = 0;
+											    
+											    angular.forEach( $scope.entity.pictures, function( picture) {
+											    	slides.push({
+											    		/*image: 'rest/article/fetch-picture/' + picture.id,*/
+											    		image: 'https://drive.google.com/uc?id=' + picture.googleId +'&export=download',
+											    		id: currIndex++
+											    	});
+											    });
+											    /* ENd UIB Slide Config */
+										  }, function( response) {
+											  console.error( response);
+										  });
 						 
 					 }, function( response) {
 						 $scope.isLoading = false;
@@ -158,6 +175,7 @@ App.controller( 'ArticleController', [ '$state', '$stateParams', '$scope', '$roo
 			$state.go( $state.current.name, { articlesPage: $scope.pagination.currentPage, articlesPageSize: $scope.pagination.pageSize }, { notify: false});
 			
 			$scope.isListLoading = true;
+			
 			ArticleService.loadEntitiesByEShop( $stateParams.eShopId, $scope.pagination.currentPage,
 					$scope.pagination.pageSize)
 							.then( function( response) {
@@ -185,7 +203,10 @@ App.controller( 'ArticleController', [ '$state', '$stateParams', '$scope', '$roo
 	  fileInput.click();
 	};
 	/*End Picture widget Config */
-	
+
+    /* Carousel COnfig */
+    $scope.carouselConfig = { active: 0};
+    
 	/* File Upload config */
 	$scope.file0;
 	$scope.file1;

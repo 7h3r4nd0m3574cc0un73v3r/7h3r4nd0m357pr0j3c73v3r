@@ -249,14 +249,6 @@ public class AdminRESTAPI extends SharedRESTAPI implements IAdminRESTAPI
 		return pretaDao.loadShopSub(id);
 	}
 	@Override
-	public PagedListJSON listPendingShopSub( Integer page, Integer pageSize)
-	{
-		return pretaDao.listPendingShopSub( page, pageSize);
-	}
-	/* End ShopSSub */
-	
-	/* Shop Sub */
-	@Override
 	public PagedListJSON listShopSubByStatus(GenericStatus status, Integer page, Integer pageSize)
 	{
 		return pretaDao.loadShopSubByStatus(status, page, pageSize);
