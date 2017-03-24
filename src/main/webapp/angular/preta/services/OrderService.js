@@ -47,7 +47,7 @@ App.factory( 'OrderService', ['$http', '$q', 'Upload', function( $http, $q, Uplo
 							});
 			},
 			loadOrderedArticlesByOrder: function( articleOrderId) {
-				return $http.get( 'rest/article-order/' + articleOrderId + '/ordered-articles')
+				return $http.get( 'rest-api/article-order/' + articleOrderId + '/ordered-articles')
 							.then( function( response) {
 								return response.data;
 							}, function( response) {

@@ -20,7 +20,7 @@ App.factory( 'OrderService', ['$http', '$q', 'Upload', function( $http, $q, Uplo
 					});
 			},
 			loadBuyer: function( id) {
-				return $http.get( 'rest/article-order/' + id +'/buyer')
+				return $http.get( 'rest-api/manager/article-order/' + id +'/buyer')
 							.then(	function( response) { return response.data; },
 									function( errResponse) {
 										console.log( 'Error: OrderService > getBuyer');
@@ -52,7 +52,7 @@ App.factory( 'OrderService', ['$http', '$q', 'Upload', function( $http, $q, Uplo
 							});
 			},
 			loadOrderedArticlesByOrder: function( articleOrderId) {
-				return $http.get( 'rest/article-order/' + articleOrderId + '/ordered-articles')
+				return $http.get( 'rest-api/manager/article-order/' + articleOrderId + '/ordered-articles')
 							.then( function( response) {
 								return response.data ;
 							}, function( response) {

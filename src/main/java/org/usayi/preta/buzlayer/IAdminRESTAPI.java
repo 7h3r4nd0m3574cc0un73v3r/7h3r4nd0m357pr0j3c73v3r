@@ -67,7 +67,6 @@ public interface IAdminRESTAPI extends ISharedRESTAPI
 	public PagedListJSON listShopSub( final Integer page, final Integer pageSize);
 	public void updateShopSub( final ShopSub entity);
 	public ShopSub loadShopSub( final Long id);
-	public PagedListJSON listPendingShopSub( final Integer page, final Integer pageSize);
 	/* End ShopSub */
 	
 	/* ArticleOrder */

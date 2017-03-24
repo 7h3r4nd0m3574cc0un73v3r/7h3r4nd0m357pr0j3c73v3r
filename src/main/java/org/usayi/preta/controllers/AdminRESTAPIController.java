@@ -51,6 +51,7 @@ import org.usayi.preta.entities.EShop;
 import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.GenericStatus;
 import org.usayi.preta.entities.OrderStatus;
+import org.usayi.preta.entities.OrderedArticle;
 import org.usayi.preta.entities.Payment;
 import org.usayi.preta.entities.PaymentType;
 import org.usayi.preta.entities.Role;
@@ -1223,6 +1224,61 @@ public class AdminRESTAPIController
 			return Tools.internalServerError();
 		}
 	}
+		/* ArticleOrder Buyer */
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/article-order/{id}/buyer")
+		public ResponseEntity<?> loadArticleOrderBuyer( @PathVariable( "id") final Long id)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_MANAGER"))
+					return Tools.forbidden();
+				
+				if( aRESTAPI.loadArticleOrderBuyer( id) == null)
+					return Tools.entityNotFound();
+				
+				return new ResponseEntity<User>( aRESTAPI.loadArticleOrderBuyer( id), HttpStatus.OK);
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.unauthorized();
+			}
+		}
+		/* OrderedArticle */
+		@GetMapping
+		@JsonView( Views.Admin.class)
+		@RequestMapping( "/article-order/{id}/ordered-articles")
+		public ResponseEntity<?> loadOrderedArticleByOrder( @PathVariable( "id") final Long id)
+		{
+			try
+			{
+				if( isAnonymous())
+					return Tools.unauthorized();
+				
+				if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+					return Tools.forbidden();
+				
+				ArticleOrder entity = aRESTAPI.loadArticleOrder( id);
+
+				if( entity == null)
+					return Tools.entityNotFound();
+				
+				/* TODO Check if Manager have a reason to see this */
+				List<OrderedArticle> entities = aRESTAPI.loadArticleOrderOrderedArticles(id);
+				
+				return new ResponseEntity<List<OrderedArticle>>( entities, HttpStatus.OK);
+			}
+			catch( Exception e)
+			{
+				e.printStackTrace();
+				return Tools.internalServerError();
+			}
+		}
 	/* End Article Orders */
 	
 	/* AdvOffer */

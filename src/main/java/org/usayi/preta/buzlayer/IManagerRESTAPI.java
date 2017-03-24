@@ -55,6 +55,9 @@ public interface IManagerRESTAPI extends ISharedRESTAPI
 	public void updateArticle( final Article entity);
 	/* End Article */
 	
+	/* ArticleOrder */
+	/* End ArticleOrder */
+	
 	/* AdvOffer */
 	public Long addAdvOffer( final AdvOffer entity);
 	/* End AdvOffer */

@@ -1,94 +1,116 @@
 <div>
-	<div x-ba-panel x-ba-panel-title="Fiche Article {{ entity.name |limitTo: 30 }}" x-ba-panel-class="with-scroll">
-		<div layout-xs="column" layout-align="start stretch" layout-fill
-			 layout-gt-xs="row" layout-wrap>
-			<div flex-xs="100" flex-gt-xs="40" layout-align="center stretch">
-				<!-- <img x-ng-src="rest/article/fetchDefaultPic/{{ entity.id }}" flex class="img-responsive" /> -->
-				<img x-ng-src="https://drive.google.com/uc?id={{ entity.pictures[0].googleId == null ? entity.pictures[0].googleId : '0B0W0ktANhIydZlk5dmxPOGotbXM'}}&export=download" class="img-responsive center-block" />
+	<div x-ba-panel x-ba-panel-title="Fiche Article : {{ entity.name |limitTo: 30 }}">
+		<div layout="column" layout-align="start">
+			<div layout="row">
+				<md-input-container class="md-block" flex>
+					<label>Nom de l'article</label>
+					<input value="{{ entity.name }}" readonly />
+				</md-input-container>
 			</div>
-			<div flex-xs="100" flex-gt-xs="58" layout-margin>
-				<p class="md-title">{{ entity.name }}</p>
-				<p class="text-muted text-justify">{{ entity.description }}</p>
-				<p x-ng-if="entity.keywords.length">
+			<div layout="row" x-ng-show="entity.description">
+				<md-input-container class="md-block" flex>
+					<label>Description</label>
+					<input value="{{ entity.description }}" readonly />
+				</md-input-container>
+			</div>
+			<!-- Keyword -->
+			<div layout="row" ng-if="entity.keywords.length">
+				<p flex>
 					<label flex>Mots clés</label>
-					<md-chips flex readonly="true" md-readonly="true" ng-model="entity.keywords" md-removable="false">
-					</md-chips>
+					<md-chips flex readonly="true" md-readonly="true" ng-model="entity.keywords" md-removable="false"></md-chips>
 				</p>
-				<p>
-					<label>Prix original</label> <b><span class="text-primary">{{ entity.price | number }}</span> F CFA</b>
-				</p>
-				<p>
-					<span x-ng-show="entity.isDiscounted">
-						<label>En promotion à</label>
-						{{ entity.discountPrice | number }} F CFA
-					</span>
-				</p>
-				<p>
-					<label>Etat</label> <span>{{ entity.state == 'NEW' ? 'Neuf' : 'Occasion' }}</span>
-				</p>
-				<p>
-					<label>Stock</label> <span>{{ entity.stock | number }}</span> unités ( Alerte à: {{ entity.threshold | number }})
-				</p>
-				<p>
-					<label>Affiché</label> <span class="badge bg-success">{{ entity.isDisplayed ? 'Oui' : 'Non' }}</span>
-				</p>
+				</md-input-container>
 			</div>
-			
-			<div flex="100" x-ng-if="entity.features.length">
-				<p>
+			<div layout="row">
+				<md-input-container class="md-block" flex>
+					<label>Prix original</label>
+					<input value="{{ entity.price | number }} F CFA" class="text-right" readonly />
+				</md-input-container>
+			</div>
+			<div layout="row" layout-wrap>
+				<div flex>
+					<md-input-container class="md-block" flex>
+						<label>Livraison</label>
+						<input value="{{ entity.deliveryMode == 'FREE'? 'Gratuite' : 'Payante' }}" readonly />
+					</md-input-container>
+				</div>
+				<div flex ng-if="entity.deliveryMode != 'FREE'">
+					<md-input-container class="md-block" flex>
+						<label>Frais Livraison</label>
+						<input value="{{ entity.deliveryFee | number }} F CFA" class="text-right" readonly />
+					</md-input-container>
+				</div>
+			</div>
+			<div layout="row" x-ng-show="entity.deliveryTerms">
+				<md-input-container class="md-block" flex>
+					<label>Conditions de livraisons</label>
+					<input readonly value="{{ entity.deliveryTerms }}" />
+				</md-input-container>
+			</div>
+			<div layout="row" x-ng-show="entity.isDiscounted" layout-wrap>
+				<div flex>
+					<md-input-container class="md-block" flex>
+						<label>En promotion</label>
+						<input value="{{ entity.isDiscounted ? 'Oui' : 'Non' }}" readonly />
+					</md-input-container>
+				</div>
+				<div flex>
+					<md-input-container class="md-block" flex>
+						<label>Prix Promo</label>
+						<input value="{{ entity.discountPrice | number }} F CFA" class="text-right" readonly />
+					</md-input-container>
+				</div>
+			</div>
+			<div layout="row">
+				<div flex>
+					<md-input-container class="md-block" flex>
+						<label>Stock</label>
+						<input value="{{ entity.stock | number }} unités"  class="text-right" readonly />
+					</md-input-container>
+				</div>
+				<div flex>
+					<md-input-container class="md-block" flex>
+						<label>Stock d'alerte</label>
+						<input value="{{ entity.threshold | number }} unités"  class="text-right" readonly />
+					</md-input-container>
+				</div>
+			</div>
+			<div layout="row" layout-wrap>
+				<md-input-container class="md-block" flex>
+					<label>Etat</label>
+					<input value="{{ entity.state == 'NEW' ? 'Neuf' : 'Occasion' }}" readonly />
+				</md-input-container>
+				<md-input-container class="md-block" flex>
+					<label>Affiché en boutique ?</label>
+					<input value="{{ entity.isDisplayed ? 'Oui' : 'Non' }}" readonly />
+				</md-input-container>
+			</div>
+			<div layout="row" ng-show="entity.features.length">
+				<div class="md-block" flex>
 					<label>Caractéristiques</label>
-				</p>
-				<p x-ng-repeat="arfeat in entity.features">
-					<b>{{ arfeat.feature.label }} : </b>
-					&nbsp;<span class="badge bg-info" x-ng-repeat="featVal in arfeat.values">{{ featVal.value }}</span>
-				</p>
-			</div>
-			
-			<div flex="100" x-ng-if="entity.categories.length">
-				<p>
-					<label>Catégories</label>
-				</p>
-				<p x-ng-repeat="arfeat in entity.features">
-					<b>{{ arfeat.feature.label }} : </b>
-					&nbsp;<span class="badge bg-primary" x-ng-repeat="featVal in arfeat.values">{{ featVal.value }}</span>
-				</p>
-			</div>
-			
-			<div flex="100">
-				<p>
-					<label>Livraison</label>
-				</p>
-				<p>
-					<span x-ng-if="entity.deliveryMode == 'FREE'">
-						Gratuite
-					</span>
-					<span x-ng-if="entity.deliveryMode == 'CHARGED'">
-						Payante: {{ entity.deliveryFee | number }} F CFA
-					</span>
-				</p>
-				<p>
-					<label>Conditions de livraison</label>
-				</p>
-				<p>
-					{{ entity.deliveryTerms }}
-				</p>
-			</div>
-			
-			<div flex="100" x-ng-if="entity.pictures.length > 1">
-				<p>
-					<label>Autres images</label>
-				</p>
-				<div layout-gt-xs="row" layout-align-gt-xs="space-around"
-					 layout-xs="column" layout-align-xs="center center">
-					 
-					<!-- <img x-ng-src="rest-api/article/fetch-picture/{{ pic.id }}" flex-gt-xs="33" flex-xs="100" class="img-responsive img-thumbnail" x-ng-repeat="pic in entity.pictures"
-						 style="max-height: 200px; max-width: 200px;" x-ng-if=" !pic.isDefault"/> -->
-					<img x-ng-src="https://drive.google.com/uc?id={{ pic.googleId }}" flex-gt-xs="33" flex-xs="100" class="img-responsive img-thumbnail" x-ng-repeat="pic in entity.pictures"
-					 	 style="max-height: 200px; max-width: 200px;" x-ng-if=" !pic.isDefault"/>
+					<p x-ng-repeat="arfeat in entity.features">
+						<b>{{ arfeat.feature.label }} : </b>
+						<span class="badge bg-info" x-ng-repeat="featVal in arfeat.values">{{ featVal.value }}</span>
+					</p>
 				</div>
 			</div>
 			
-			<div flex="100" layout="row" layout-align="space-between">
+			<div layout="row" layout-align="center center">
+				<div uib-carousel interval="myInterval" no-wrap="noWrapSlides" active="carouselConfig.active">
+					<div uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+						<img ng-src="{{ slide.image }}" style="margin: auto; width: 100% !important; max-height: 320px;">
+					</div>
+				</div>
+				<div layout="row" layout-align="center space-around" layout-margin>
+				
+					<a ng-click="carouselConfig.active = slide.id" class="picture-thumbnail" x-ng-repeat="slide in slides" flex="25">
+						<img ng-src="{{ slide.image }}" class="img-responsive center-block" style="max-width: 80px; max-height: 80px;" />
+					</a>
+					
+				</div>
+			</div>
+			
+			<div flex layout="row" layout-align="space-between">
 				<div flex layout="row" layout-align="start center">
 					<md-button flex="nogrow" class="md-raised" aria-label="Retour à la liste" x-ui-sref="root.e-shops.show.articles">
 						<i class="fa fa-arrow-circle-left"></i> Retour<span class="hidden-xs"> à la liste</span>
@@ -103,6 +125,7 @@
 					</md-button>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 </div>
