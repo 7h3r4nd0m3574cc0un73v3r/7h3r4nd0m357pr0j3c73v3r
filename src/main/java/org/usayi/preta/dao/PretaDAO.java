@@ -2714,7 +2714,8 @@ public class PretaDAO implements IPretaDAO
 	{
 		try
 		{
-			Query  query = em.createQuery( "SELECT entity FROM OrderedArticle entity JOIN entity.articleOrder articleOrder WHERE articleOrder.id = :id");
+			Query  query = em.createQuery( "SELECT DISTINCT entity FROM OrderedArticle entity JOIN entity.articleOrder articleOrder JOIN entity.article article JOIN article.keywords keyword"
+					+ " WHERE articleOrder.id = :id");
 			query.setParameter( "id", id);
 			
 			List<OrderedArticle> entities = query.getResultList();

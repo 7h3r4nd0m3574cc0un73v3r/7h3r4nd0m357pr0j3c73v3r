@@ -19,6 +19,8 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.usayi.preta.Views;
@@ -96,8 +98,8 @@ public class Article implements Serializable
 	private Float deliveryFee = 0F;
 	
 	@Column( length=30)
+	@Fetch( FetchMode.SELECT)
 	@ElementCollection( fetch=FetchType.EAGER)
-	/* TODO On update */
 	private Collection<String> keywords = new ArrayList<String>();
 	
 	@JsonView( Views.Manager.class)
