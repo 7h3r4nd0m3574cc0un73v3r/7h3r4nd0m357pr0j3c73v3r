@@ -91,9 +91,6 @@
 		<s:authentication-provider ref="userAuthenticationProvider" />
 	</s:authentication-manager>	
 	<!-- Scheduling -->
-	<bean class="org.usayi.preta.scheduling.ScheduledExpireTask" scope="prototype" >
-    	<property name="dao" ref="pretaDao"></property>
-	</bean>
 	
 	<!-- <context:load-time-weaver weaver-class="org.springframework.instrument.classloading.ReflectiveLoadTimeWeaver" aspectj-weaving="on"/> -->
 	

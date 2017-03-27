@@ -1,7 +1,9 @@
 <ul class="al-msg-center clearfix">
 	<li uib-dropdown>
-		<a uib-dropdown-toggle> <i class="fa fa-bell"></i><span>{{ unreadNotificationsCount }}</span>
-			<span class="notification-ring"></span>
+		<a uib-dropdown-toggle ng-click="readNotifications()">
+			<i class="fa fa-bell"></i>
+			<span>{{ unreadNotificationsCount }}</span>
+			<span class="notification-ring" x-ng-if="unreadNotificationsCount > 0"></span>
 		</a>
 	
 		<div uib-dropdown-menu class="top-dropdown-menu">

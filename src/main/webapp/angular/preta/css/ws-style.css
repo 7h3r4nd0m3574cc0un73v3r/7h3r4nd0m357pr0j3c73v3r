@@ -367,12 +367,12 @@ h2.title:after{
 	
 }
 
-/* Products Container */
 /* Carousel gradient */
 .carousel-control.left, .carousel-control.right{ 
     background: none !important;
     filter: progid:none !important;>
 }
+/* Products Container */
 .products-container {
 	background-color: white;
 	padding: 0;

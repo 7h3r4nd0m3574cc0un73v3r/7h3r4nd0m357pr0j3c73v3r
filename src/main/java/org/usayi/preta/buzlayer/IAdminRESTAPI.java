@@ -9,6 +9,7 @@ import org.usayi.preta.entities.EMoneyProvider;
 import org.usayi.preta.entities.EShop;
 import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.GenericStatus;
+import org.usayi.preta.entities.LocalMarket;
 import org.usayi.preta.entities.OrderStatus;
 import org.usayi.preta.entities.PaymentType;
 import org.usayi.preta.entities.Role;
@@ -146,6 +147,15 @@ public interface IAdminRESTAPI extends ISharedRESTAPI
 		public PagedListJSON loadManagerEAccounts( final Long id, final Integer page, final Integer pageSize);
 	/* End Expense */
 	
+	/* LocalMarket */
+	public PagedListJSON loadLocalMarkets( final Integer page, final Integer pageSize, final boolean orderByIdAsc);
+	public void updateLocalMarket( final LocalMarket entity);
+	public LocalMarket loadLocalMarket( final String name);
+	public LocalMarket loadLocalMarket( final Long id);
+	public void deleteLocalMarket( final Long id);
+	public Long addLocalMarket( final LocalMarket entity);
+	/* End LocalMarket */
+		
 	/* Category */
 	public Long addCategory( final Category entity);
 	public void updateCategory( final Category entity);

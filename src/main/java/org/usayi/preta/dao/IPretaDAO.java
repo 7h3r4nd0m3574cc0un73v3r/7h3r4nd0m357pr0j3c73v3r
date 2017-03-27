@@ -17,6 +17,7 @@ import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.Feature;
 import org.usayi.preta.entities.FeatureValue;
 import org.usayi.preta.entities.GenericStatus;
+import org.usayi.preta.entities.LocalMarket;
 import org.usayi.preta.entities.Notification;
 import org.usayi.preta.entities.OrderStatus;
 import org.usayi.preta.entities.OrderedArticle;
@@ -377,6 +378,16 @@ public interface IPretaDAO
 	public PagedListJSON loadVisitedArticles( final Integer page, final Integer pageSize, final boolean orderByIdAsc);
 	public Long addVisitedArticle( final VisitedArticle entity);
 	/* End Visited Article */
+	
+	/* LocalMarket */
+	public PagedListJSON loadAvailableLocalMarkets( final Integer page, final Integer pageSize, final boolean orderByNameAsc);
+	public PagedListJSON loadLocalMarkets( final Integer page, final Integer pageSize, final boolean orderByIdAsc);
+	public void updateLocalMarket( final LocalMarket entity);
+	public LocalMarket loadLocalMarket( final String name);
+	public Long addLocalMarket( final LocalMarket entity);
+	public LocalMarket loadLocalMarket( final Long id);
+	public void deleteLocalMarket( final Long id);
+	/* End LocalMarket */
 	
 	/* Generic */
 	public Timestamp getRegDate( Class<?> entityClass, final Long id);

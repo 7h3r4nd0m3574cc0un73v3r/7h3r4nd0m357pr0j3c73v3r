@@ -66,4 +66,8 @@ public interface IManagerRESTAPI extends ISharedRESTAPI
 	public Expense loadExpense( final Long id);
 	public PagedListJSON loadManagerExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc);
 	/* End Expense */
+	
+	/* LocalMarket */
+	public PagedListJSON loadAvailableLocalMarkets( final Integer page, final Integer pageSize, final boolean orderByNameAsc);
+	/* End LocalMarket */
 }

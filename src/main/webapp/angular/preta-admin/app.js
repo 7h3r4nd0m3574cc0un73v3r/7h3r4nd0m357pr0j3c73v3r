@@ -747,6 +747,45 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
 			controller: 'ProfileValidationController'
 		})
 		/* End Profiles Validation */
+		
+		/* Local Markets */
+		.state( 'root.local-markets', {
+			url: '/local-markets',
+			title: 'Marchés Locaux',
+			templateUrl: 'angular/preta-admin/views/local-market/list.html',
+			controller: 'LocalMarketController',
+		    ncyBreadcrumb: {
+			    label: 'Marchés Locaux'
+		    }
+		})
+		.state( 'root.local-markets.new', {
+			url: '/new',
+			title: 'Marchés Locaux',
+			templateUrl: 'angular/preta-admin/views/local-market/new.html',
+			ncyBreadcrumb: {
+				label: 'Nouveau'
+			},
+			controller: 'LocalMarketController'
+		})
+		.state( 'root.local-markets.show', {
+			url: '/show/{id:int}',
+			title: 'Marchés Locaux',
+			templateUrl: 'angular/preta-admin/views/local-market/show.html',
+			ncyBreadcrumb: {
+				label: 'Détails #{{ entity.id }}'
+			},
+			controller: 'LocalMarketController'
+		})
+		.state( 'root.local-markets.update', {
+			url: '/update/{id:int}',
+			title: 'Marchés Locaux',
+			templateUrl: 'angular/preta-admin/views/local-market/update.html',
+			ncyBreadcrumb: {
+				label: 'Modifier #{{ entity.id }}'
+			},
+			controller: 'LocalMarketController'
+		})
+		/* Local Markets */
 		/* Errors */
 		.state( 'root.error404', {
 			url: '/error/404',
@@ -764,7 +803,12 @@ function routeConfig( $stateProvider, $urlRouterProvider, baSidebarServiceProvid
         title: 'Fournisseurs EMoney',
         icon: 'fa fa-money',
         stateRef: 'root.emps'
-      });
+    });
+    baSidebarServiceProvider.addStaticItem({
+        title: 'Marchés locaux',
+        icon: 'fa fa-map-signs',
+        stateRef: 'root.local-markets'
+    });
     baSidebarServiceProvider.addStaticItem({
     	  title: 'Status de Boutiques',
     	  icon: 'fa fa-flag',

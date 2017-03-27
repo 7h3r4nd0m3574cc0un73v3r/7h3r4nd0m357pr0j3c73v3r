@@ -1,6 +1,6 @@
 <div x-ui-view>
 	<div class="row">
-		<div class="col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-lg-9 col-md-9 col-sm-9 col-xs-12">
+		<div class="col-lg-offset-3 col-md-offset-3 col-lg-9 col-md-9 col-sm-12 col-xs-12">
 			<div class="row">
 				<div class="row">
 				
@@ -17,13 +17,16 @@
 									<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
 					        	</div>
 					        	
-					        	<div layout="column" layout-align="center center" x-ng-if="!isLoading && !grouped.length">
-									<p>
-										Erreur détectée. Veuillez suivre le processus d'achat correctement.
-									</p>
+					        	<div layout="column" layout-align="center center" x-ng-if="!isLoading && !grouped.length" layout-padding>
+									<div flex>
+										<h3 class="text-mainge"><b>Action non autorisée détectée.</b></h3>
+										<p>
+											Merci de bien vouloir reprendre le processus de commande.
+										</p>
+									</div>
 					        	</div>
 				        	
-								<div class="row" x-ng-if="!isLoading && grouped.length">
+								<div class="row" x-ng-if="!isLoading && grouped.length" cg-busy="{ promise: promise, message: 'Merci de patienter ...', templateUrl: 'angular/common/templates/custom-cg-busy.html' }">
 									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" x-ng-repeat="articleOrder in grouped">
 										<h4><b>Résumé Commande #{{ articleOrder.id }}</b></h4>
 										<p>

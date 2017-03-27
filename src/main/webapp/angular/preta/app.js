@@ -20,8 +20,15 @@ var App = angular.module( "pretaApp", [
                                        'ngMessages',
                                        'rzModule',
                                        'vcRecaptcha',
-                                       'angular-preload-image'
+                                       'angular-preload-image',
+                                       'cgBusy'
                                       ]);
+/* cgBusy Config */
+App.value( 'cgBusyDefaults'), {
+	message: 'Merci de patienter ...',
+	templateUrl: 'angular/common/templates/custom-cg-busy.html'
+}
+
 /* Config Interceptor */
 App.factory('myInterceptor', [ '$q', '$injector', function( $q, $injector) {  
     var myInterceptor = {

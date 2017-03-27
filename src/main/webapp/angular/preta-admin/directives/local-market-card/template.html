@@ -1,0 +1,37 @@
+ <md-card flex="auto">
+   <md-card-title>
+     <md-card-title-text>
+       <span class="md-title">{{ entity.name }}</span>
+       <span class="md-subhead">
+       	{{ entity.fullAddress }}
+       </span>
+     </md-card-title-text>
+   </md-card-title>
+   <md-card-content>
+     <p>
+     	<label>Affiché</label>
+     	<span>
+     		<state-label is-enabled="entity.displayed" />
+     	</span>
+     </p>
+   </md-card-content>
+   <md-card-actions layout="row" layout-align="end center">
+     <md-button class="md-raised md-icon-button" aria-label="Détails" x-ui-sref="root.local-markets.show( { id: entity.id })">
+       <i class="fa fa-folder-open"></i>
+     	<md-tooltip md-direction="top">
+      	Détails
+    	</md-tooltip>
+     </md-button>
+     <md-button class="md-accent md-raised md-icon-button" aria-label="Modifier" x-ui-sref="root.local-markets.update( { id: entity.id })">
+       <i class="fa fa-edit"></i>
+     	<md-tooltip md-direction="top">
+      	Modifier
+    	</md-tooltip>
+     </md-button>
+     <md-button class="md-warn md-raised md-icon-button" aria-label="Supprimer" x-ng-click="deleteEntity( entity.id)">
+       <i class="fa fa-trash"></i>
+     	<md-tooltip md-direction="top">
+      	Supprimer
+    	</md-tooltip>
+     </md-button>
+ </md-card>

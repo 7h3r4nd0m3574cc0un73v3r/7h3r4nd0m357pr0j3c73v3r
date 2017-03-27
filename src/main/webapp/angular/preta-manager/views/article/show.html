@@ -95,19 +95,21 @@
 				</div>
 			</div>
 			
-			<div layout="row" layout-align="center center">
-				<div uib-carousel interval="myInterval" no-wrap="noWrapSlides" active="carouselConfig.active">
-					<div uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
-						<img ng-src="{{ slide.image }}" style="margin: auto; width: 100% !important; max-height: 320px;">
+			<div layout="column" layout-align="center center">
+				<div flex>
+					<div uib-carousel interval="myInterval" no-wrap="noWrapSlides" active="carouselConfig.active">
+						<div uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+							<img ng-src="{{ slide.image }}" style="margin: auto; width: 100% !important; max-height: 320px;">
+						</div>
 					</div>
 				</div>
-				<div layout="row" layout-align="center space-around" layout-margin>
 				
-					<a ng-click="carouselConfig.active = slide.id" class="picture-thumbnail" x-ng-repeat="slide in slides" flex="25">
+				<div layout="row" layout-align="start space-around" layout-margin flex>
+					<a ng-click="carouselConfig.active = slide.id" class="picture-thumbnail" x-ng-repeat="slide in slides" flex="auto">
 						<img ng-src="{{ slide.image }}" class="img-responsive center-block" style="max-width: 80px; max-height: 80px;" />
 					</a>
-					
 				</div>
+				
 			</div>
 			
 			<div flex layout="row" layout-align="space-between">

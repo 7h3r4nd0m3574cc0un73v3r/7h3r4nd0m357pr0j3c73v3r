@@ -38,6 +38,7 @@ App.controller( 'EShopController', [ '$state', '$stateParams', '$scope', '$rootS
     /* Init Variables */
 	$scope.entities = [];
 	$scope.subOffers = [];
+	$scope.localMarkets = [];
 	$scope.entity = {};
 	$scope.selectedAdminEAccount = undefined;
 	$scope.adminEAccounts = [];
@@ -87,18 +88,23 @@ App.controller( 'EShopController', [ '$state', '$stateParams', '$scope', '$rootS
 								
 								/* Load Current Shop Sub */
 								EShopService.loadCurrentShopSub( value.id)
-											.then( function( response) {
-												value.currentShopSub = response;
-											}, function( response) {
-												console.error( response);
+											.then( function( r) {
+												console.info( "EShop " + value.id);
+												console.warn( r);
+												
+												value.currentShopSub = r;
+												if( r.status == 204)
+													value = {};
+											}, function( r) {
+												console.error( r);
 												value.currentShopSub = null;
 											});
 								
 								EShopService.loadArticlesCount( value.id)
-											.then( function( response) {
-												value.articlesCount = response;
-											}, function( response) {
-												console.error( response);
+											.then( function( r) {
+												value.articlesCount = r;
+											}, function( r) {
+												console.error( r);
 											});
 							});
 							
@@ -126,10 +132,14 @@ App.controller( 'EShopController', [ '$state', '$stateParams', '$scope', '$rootS
 						
 						/* Load Current Shop Sub */
 						EShopService.loadCurrentShopSub( $scope.entity.id)
-									.then( function( response) {
-										$scope.entity.currentShopSub = response;
-									}, function( response) {
-										console.error( response);
+									.then( function( r) {
+										if( r.status == 200)
+											$scope.entity.currentShopSub = r;
+										
+										if( r.status == 204)
+											$scope.entity.currentShopSub = {};
+										
+									}, function( r) {
 										$scope.entity.currentShopSub = undefined;
 									});
 						
@@ -158,18 +168,28 @@ App.controller( 'EShopController', [ '$state', '$stateParams', '$scope', '$rootS
 				   }, function( response) {
 					   console.error( response);
 				   });
-	
+
+	$scope.loadLocalMarkets = function() {
+		EShopService.loadLocalMarkets()
+					.then( function( r) {
+						$scope.localMarkets = r.entities;
+					}, function( r) {
+						console.error( r);
+					});
+	}
 	$scope.dummy = {};
 	$scope.form = { entity: { eShop: null, shopSub: null, payment: null }, file: null };
 	$scope.formErrors = {};
 	
+	/* New EShop */
+	$scope.promise;
 	
 	$scope.addEntity = function() {
 		console.log( $scope.form);
 		console.log( $scope.dummy);
 		
 		if( $scope.dummy.myForm.$valid) {
-			EShopService.addEntity( $scope.form)
+			$scope.promise = EShopService.addEntity( $scope.form)
 			.then( function( r) {
 				$state.go( 'root.e-shops', null, { reload: true});
 			}, function( r) {
@@ -177,6 +197,7 @@ App.controller( 'EShopController', [ '$state', '$stateParams', '$scope', '$rootS
 			});
 		}
 	};
+	/* End New EShop */
 	
 	$scope.updateEntity = function( file) {
 		EShopService.updateEntity( $scope.entity, file)

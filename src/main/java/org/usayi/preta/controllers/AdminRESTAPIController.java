@@ -50,6 +50,7 @@ import org.usayi.preta.entities.EMoneyProvider;
 import org.usayi.preta.entities.EShop;
 import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.GenericStatus;
+import org.usayi.preta.entities.LocalMarket;
 import org.usayi.preta.entities.OrderStatus;
 import org.usayi.preta.entities.OrderedArticle;
 import org.usayi.preta.entities.Payment;
@@ -2210,6 +2211,119 @@ public class AdminRESTAPIController
 			}
 		}
 	/* End Expense */
+	
+	/* LocalMarkets */
+	@GetMapping
+	@JsonView( Views.Admin.class)
+	@RequestMapping( value="/local-markets")
+	public ResponseEntity<?> localLocalMarkets( @RequestParam( name="page", defaultValue="1") final Integer page,
+											    @RequestParam( name="pageSize", defaultValue="0") final Integer pageSize,
+											    @RequestParam( name="orderByIdAsc", defaultValue="true") final boolean orderByIdAsc)
+	{
+		try
+		{
+			return Tools.handlePagedListJSON( aRESTAPI.loadLocalMarkets(page, pageSize, orderByIdAsc));
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
+	@PostMapping
+	@RequestMapping( value="/local-market/add")
+	public ResponseEntity<?> addLocalMarket( @RequestBody final LocalMarket entity)
+	{
+		try
+		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN")) {
+				return Tools.unauthorized();
+			}
+			
+			List<FieldErrorResource> fErrors = new ArrayList<FieldErrorResource>();
+			
+			if( entity.getName() == null || entity.getName().isEmpty())
+				fErrors.add( new FieldErrorResource( "LocalMarket", "name", "NotNull", "This field is mandatory."));
+			
+			if( !fErrors.isEmpty())
+				return Tools.handleMultipleFieldErrors(fErrors);
+			
+			if( aRESTAPI.loadLocalMarket( entity.getName()) != null)
+				return Tools.handleSingleFieldError( new FieldErrorResource( "LocalMarket", "name", "Conflict", "This name is taken."));
+
+			if( !fErrors.isEmpty())
+				return Tools.handleMultipleFieldErrors(fErrors);
+			
+			aRESTAPI.addLocalMarket(entity);
+			
+			return Tools.created();
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
+	@PutMapping
+	@RequestMapping( value="/local-market/{id}/update")
+	public ResponseEntity<?> updateLocalMarket( @RequestBody LocalMarket entity, @PathVariable( "id") final Long id)
+	{
+		if( isAnonymous())
+			return Tools.unauthorized();
+		if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+			return Tools.unauthorized();
+		
+		LocalMarket originalEntity = aRESTAPI.loadLocalMarket( id);
+
+		if( originalEntity == null)
+			return new ResponseEntity<Void>( HttpStatus.NOT_FOUND);
+
+		BeanUtils.copyProperties(entity, originalEntity, Tools.getNullPropertyNames(entity));
+
+		aRESTAPI.updateLocalMarket( originalEntity);
+
+		return Tools.ok();
+	}
+	@GetMapping
+	@JsonView( Views.Admin.class)
+	@RequestMapping( value="/local-market/{id}")
+	public ResponseEntity<?> loadLocalMarket( @PathVariable( "id") final Long id)
+	{
+		LocalMarket entity = aRESTAPI.loadLocalMarket( id);
+
+		if( entity == null)
+			return Tools.entityNotFound();
+
+		return new ResponseEntity<LocalMarket>( entity, HttpStatus.OK);
+	}
+	@DeleteMapping
+	@RequestMapping( value="/local-market/{id}/delete")
+	public ResponseEntity<?> deleteLocalMarket(@PathVariable( "id") final Long id)
+	{
+		try
+		{
+			if( isAnonymous())
+				return Tools.unauthorized();
+			if( !getLoggedUserFromPrincipal().hasRole( "ROLE_ADMIN"))
+				return Tools.forbidden();
+			
+			if( aRESTAPI.loadLocalMarket( id) == null)
+				return Tools.entityNotFound();
+
+			aRESTAPI.deleteLocalMarket( id);
+
+			return Tools.ok();
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
+	/* End LocalMarkets */
 	
 	/* WebSocket */
 	@GetMapping

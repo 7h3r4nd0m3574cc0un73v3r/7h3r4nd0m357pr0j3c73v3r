@@ -290,6 +290,13 @@ public class ManagerRESTAPIController
 			if( !fErrors.isEmpty())
 				return Tools.handleMultipleFieldErrors(fErrors);
 			
+			/* lvl 2 */
+			if( mRESTAPI.loadEShop( eShop.getName()) != null)
+				fErrors.add( new FieldErrorResource( "EShop", "name", "Conflict", "This EShop name is already registered"));
+
+			if( !fErrors.isEmpty())
+				return Tools.handleMultipleFieldErrors(fErrors);
+			
 			if( file != null)
 			{
 				if( !Tools.isValidImage(file))
@@ -347,14 +354,15 @@ public class ManagerRESTAPIController
 			/* Schedule Expiry
 			 * Email & Notifications Embeded
 			 */
-			scheduler.scheduleExpiring(shopSub);
+			/* TODO Enable Expiry */
+//			scheduler.scheduleExpiring(shopSub);
 			
 			return Tools.created();
 		}
 		catch( Exception e)
 		{
 			e.printStackTrace();
-			return new ResponseEntity<Void>( HttpStatus.INTERNAL_SERVER_ERROR);
+			return Tools.internalServerError();
 		}
 	}
 	@SuppressWarnings("unchecked")
@@ -446,7 +454,7 @@ public class ManagerRESTAPIController
 		}
 		@PostMapping
 		@JsonView( Views.Manager.class)
-		@RequestMapping( "e-shop/{id}/current-shop-sub")
+		@RequestMapping( "/e-shop/{id}/current-shop-sub")
 		public ResponseEntity<?> loadEShopCurrentShopSub(@PathVariable( "id") final Long id )
 		{
 			try
@@ -457,14 +465,14 @@ public class ManagerRESTAPIController
 				ShopSub entity = mRESTAPI.getCurrentShopSub(id);
 				
 				if( entity == null)
-					return new ResponseEntity<Void>( HttpStatus.NOT_FOUND);
+					return new ResponseEntity<Void>( HttpStatus.NO_CONTENT);
 				
 				return new ResponseEntity<ShopSub>( entity, HttpStatus.OK);
 			}
 			catch( Exception e)
 			{
 				e.printStackTrace();
-				return new ResponseEntity<Void>( HttpStatus.INTERNAL_SERVER_ERROR);
+				return Tools.internalServerError();
 			}
 		}
 		/* Articles */
@@ -644,7 +652,7 @@ public class ManagerRESTAPIController
 		catch( Exception e)
 		{
 			e.printStackTrace();
-			return new ResponseEntity<Void>( HttpStatus.INTERNAL_SERVER_ERROR);
+			return Tools.internalServerError();
 		}
 	}
 	/* End Shop Subs */
@@ -1622,6 +1630,26 @@ public class ManagerRESTAPIController
 			}
 		}
 	/* End Expense */
+
+	/* LocalMarker */
+	@GetMapping
+	@JsonView( Views.Admin.class)
+	@RequestMapping( value="/local-markets")
+	public ResponseEntity<?> localLocalMarkets( @RequestParam( name="page", defaultValue="1") final Integer page,
+											    @RequestParam( name="pageSize", defaultValue="0") final Integer pageSize,
+											    @RequestParam( name="orderByIdAsc", defaultValue="true") final boolean orderByIdAsc)
+	{
+		try
+		{
+			return Tools.handlePagedListJSON( mRESTAPI.loadAvailableLocalMarkets(page, pageSize, orderByIdAsc));
+		}
+		catch( Exception e)
+		{
+			e.printStackTrace();
+			return Tools.internalServerError();
+		}
+	}
+	/* End LocalMarket */
 	
 	/* Tools - Dry */
 	public void fillArticleCategoriesFormMST( Article article, Collection<CategoryMultiSelectTreeJSON> categories)

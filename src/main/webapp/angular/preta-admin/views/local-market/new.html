@@ -1,0 +1,100 @@
+<div x-ba-panel x-ba-panel-title="Nouveau Marché Local">
+	<form name="myForm">
+		<div layout="row" layout-align="start">
+			<md-input-container class="md-block" flex>
+				<label>Dénomination</label>
+				<input ng-model="form.entity.name" required name="name" id="name" />
+				<div ng-messages="myForm.name.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			        <div ng-if="formErrors.name.conflict">Ce nom est déjà pris</div>
+			    </div>
+			</md-input-container>
+		</div>
+		
+		<div layout="row" layout-align="start">
+			<md-input-container class="md-block" flex>
+	            <label>Afficher aux Managers</label>
+	            <md-switch class="md-primary" ng-model="form.entity.displayed" aria-label="Afficher" name="displayed" id="displayed">
+				    {{ form.entity.displayed ? 'Oui' : 'Non' }}
+				</md-switch>
+			</md-input-container>
+		</div>
+		 <div layout="row" layout-align="start" layout-wrap>
+			 <md-input-container class="md-block" flex>
+	            <label>Pays</label>
+	            <md-select ng-model="form.entity.country" name="country">
+	            	<md-option ng-repeat="country in countries" ng-value="country.code" ng-disabled="country.code != 'BJ'">
+	            		{{ country.name }}
+	            	</md-option>
+	            </md-select>
+			    <div ng-messages="myForm.country.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+         	 </md-input-container>
+                    
+	          <md-input-container class="md-block" flex>
+	            <label>Département</label>
+	            <input ng-model="form.entity.department" type="text" name="department" />
+			    <div ng-messages="myForm.department.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+	          
+	          <md-input-container class="md-block" flex>
+	            <label>Ville</label>
+	            <input ng-model="form.entity.city" type="text" name="city" />
+			    <div ng-messages="myForm.city.$error" style="color:red;">
+			        <div ng-message="required">Champ requis.</div>
+			    </div>
+	          </md-input-container>
+         </div>
+	          
+        <div layout="row" layout-align="start">
+          <md-input-container class="md-block" flex>
+            <label>Arrondissement</label>
+            <input ng-model="form.entity.borough" type="text" name="borough" />
+		    <div ng-messages="myForm.borough.$error" style="color:red;">
+		        <div ng-message="required">Champ requis.</div>
+		    </div>
+          </md-input-container>
+          <md-input-container class="md-block" flex>
+            <label>Quartier</label>
+            <input ng-model="form.entity.district" type="text" name="district" />
+		    <div ng-messages="myForm.district.$error" style="color:red;">
+		        <div ng-message="required">Champ requis.</div>
+		    </div>
+          </md-input-container>
+          <md-input-container class="md-block" flex>
+            <label>Rue</label>
+            <input ng-model="form.entity.street" type="text" name="street" />
+		    <div ng-messages="myForm.street.$error" style="color:red;">
+		        <div ng-message="required">Champ requis.</div>
+		    </div>
+          </md-input-container>
+        </div>
+	        
+	    <div layout="row">
+          <md-input-container class="md-block" flex>
+            <label>Adresse complète</label>
+            <textarea ng-model="form.entity.fullAddress" md-maxlength="150" rows="5" md-select-on-focus name="fullAddress"></textarea>
+		    <div ng-messages="myForm.fullAddress.$error" style="color:red;">
+		        <div ng-message="required">Champ requis.</div>
+		    </div>
+          </md-input-container>
+	    </div>
+		    
+		<div layout="row" layout-wrap>
+			<div>
+				<md-button class="md-raised" x-ui-sref="root.local-markets" x-ui-sref-options="{ reload: true}">
+					<i class="fa fa-arrow-circle-left"></i><span class="hidden-xs">&nbsp;Retour à la liste</span>
+				</md-button>
+			</div>
+			<div flex></div>
+			<div layout="row" layout-align="end center">
+				<md-button class="md-raised md-primary" type="submit" x-ng-click="addEntity()" ng-disabled="!myForm.$valid">
+					Valider <i class="fa fa-check"></i>
+				</md-button>
+			</div>
+		</div>
+	</form>	
+</div>

@@ -675,7 +675,7 @@ public class PublicRESTAPIController
 		@SuppressWarnings( "unchecked")
 		@JsonView( Views.Public.class)
 		@RequestMapping( "/article-order/{id}/ordered-articles")
-		public ResponseEntity<?> loadOrderedArticleByOrder( @PathVariable( "id") final Long id)
+		public ResponseEntity<?> loadOrderedArticlesByOrder( @PathVariable( "id") final Long id)
 		{
 			try
 			{

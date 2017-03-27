@@ -4,3 +4,29 @@
 .partial-width { width: 28%; }
 .header-cell { width: 25% !important; text-align: left !important; }
 .special-header { margin-top: 16px; margin-bottom: 8px; font-weight: bold;}
+/* Article Page */
+a.picture-thumbnail {
+	text-decoration: none;
+	border: 1px solid #ddd;
+}
+a.picture-thumbnail:link {
+	color: black;
+}
+a.picture-thumbnail:visited {
+	color: #666;
+}
+a.picture-thumbnail:hover {
+    cursor: pointer;
+    border: 1px solid #ff6823;
+}
+a.picture-thumbnail:active {
+    color: #ff7328;
+    border: 1px solid #ff6823;
+}
+/* End Article Page */
+
+/* Carousel gradient */
+.carousel-control.left, .carousel-control.right{ 
+    background: none !important;
+    filter: progid:none !important;>
+}

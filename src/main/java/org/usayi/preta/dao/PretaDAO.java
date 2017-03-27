@@ -30,6 +30,7 @@ import org.usayi.preta.entities.Expense;
 import org.usayi.preta.entities.Feature;
 import org.usayi.preta.entities.FeatureValue;
 import org.usayi.preta.entities.GenericStatus;
+import org.usayi.preta.entities.LocalMarket;
 import org.usayi.preta.entities.Notification;
 import org.usayi.preta.entities.OrderStatus;
 import org.usayi.preta.entities.OrderedArticle;
@@ -2080,7 +2081,7 @@ public class PretaDAO implements IPretaDAO
 		Query query = em.createQuery( "SELECT DISTINCT entity FROM Article entity JOIN entity.eShop eShop JOIN eShop.currentShopSub shopSub JOIN entity.categories categories"
 				+ " WHERE categories = :category AND :now BETWEEN shopSub.startDate AND shopSub.endDate ORDER BY entity.id ASC");
 		query.setParameter( "category", this.loadCategory( categoryId));
-		query.setParameter( "now", System.currentTimeMillis());
+		query.setParameter( "now", new Date( System.currentTimeMillis()));
 		
 		PagedListJSON result = generatePagedList(query, page, pageSize);
 		
@@ -2714,7 +2715,7 @@ public class PretaDAO implements IPretaDAO
 	{
 		try
 		{
-			Query  query = em.createQuery( "SELECT DISTINCT entity FROM OrderedArticle entity JOIN entity.articleOrder articleOrder JOIN entity.article article JOIN article.keywords keyword"
+			Query  query = em.createQuery( "SELECT DISTINCT entity FROM OrderedArticle entity JOIN entity.articleOrder articleOrder JOIN entity.article article"
 					+ " WHERE articleOrder.id = :id");
 			query.setParameter( "id", id);
 			
@@ -3255,6 +3256,76 @@ public class PretaDAO implements IPretaDAO
 		return entity.getId();
 	}
 	/* End Visited Article */
+
+	/* LocalMarket */
+	@Override
+	public PagedListJSON loadAvailableLocalMarkets( final Integer page, final Integer pageSize, final boolean orderByNameAsc)
+	{
+		String hql = "SELECT entity FROM LocalMarket entity WHERE entity.deleted = false AND entity.displayed = true ORDER BY entity.name";
+
+		if( !orderByNameAsc)
+			hql += " DESC";
+		
+		Query query = em.createQuery( hql);
+		
+		return generatePagedList(query, page, pageSize);
+	}
+	@Override
+	public PagedListJSON loadLocalMarkets( final Integer page, final Integer pageSize, final boolean orderByIdAsc)
+	{
+		String hql = "SELECT entity FROM LocalMarket entity WHERE entity.deleted = false ORDER BY entity.id";
+		Query query = em.createQuery( hql);
+
+		if( !orderByIdAsc)
+			hql += " DESC";
+		
+		return generatePagedList(query, page, pageSize);
+	}
+	@Override
+	public void updateLocalMarket( final LocalMarket entity)
+	{
+		em.merge(entity);
+	}
+	@Override
+	public LocalMarket loadLocalMarket( final String name)
+	{
+		Query query = em.createQuery( "SELECT entity FROM LocalMarket entity WHERE entity.deleted = false AND entity.name = :name");
+		query.setParameter( "name", name);
+		
+		if( query.getResultList().size() <= 0)
+			return null;
+		
+		return (LocalMarket) query.getSingleResult();
+	}
+	@Override
+	public LocalMarket loadLocalMarket( final Long id)
+	{
+		Query query = em.createQuery( "SELECT entity FROM LocalMarket entity WHERE entity.deleted = false AND entity.id = :id");
+		query.setParameter( "id", id);
+		
+		if( query.getResultList().size() <= 0)
+			return null;
+		
+		return (LocalMarket) query.getSingleResult();
+	}
+	@Override
+	public Long addLocalMarket( LocalMarket entity)
+	{
+		em.persist(entity);
+		
+		return entity.getId();
+	}
+	@Override
+	public void deleteLocalMarket( final Long id)
+	{
+		LocalMarket entity = loadLocalMarket(id);
+		
+		if( entity != null) {
+			entity.setDeleted(true);
+			em.merge( entity);
+		}
+	}
+	/* End LocalMarket */
 	
 	//Tools*
 	@SuppressWarnings("rawtypes")
