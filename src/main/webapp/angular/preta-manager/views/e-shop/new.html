@@ -68,13 +68,24 @@
 			
 			<div layout-sm="column" layout-gt-sm="row">
 	          <md-input-container class="md-block" flex>
-	            <label>Marché de la place</label>
-	            <md-switch class="md-primary" ng-model="form.entity.eShop.isInMarket" aria-label="Switch 1">
+	            <label>Est-elle située dans un marché de la place ?</label>
+	            <md-switch class="md-primary" ng-model="form.entity.eShop.isInMarket" aria-label="Marché de la place">
 				    {{ form.entity.eShop.isInMarket ? 'Oui' : 'Non' }}
 				</md-switch>
 	          </md-input-container>
+	          <md-input-container class="md-block" flex x-ng-if="form.entity.eShop.isInMarket">
+	            <label>Sélectionnez le marché</label>
+	            <md-select placeholder="Sélectionnez le marché concerné" required x-ng-model="form.entity.eShop.market" md-on-open="loadLocalMarkets()">
+					<md-option x-ng-value="localMarket" x-ng-repeat="localMarket in localMarkets">
+						{{ localMarket.name }}
+					</md-option>
+	            </md-select>
+	          </md-input-container>
+	        </div>
+	        
+	        <div layout="row" layout-align="start">
 	          <md-input-container class="md-block" flex>
-	            <label>Type de boutique</label>
+	            <label>Type de boutique ( Suivant les produits vendus)</label>
 	            <md-select x-ng-model="form.entity.eShop.shopType" required>
 	            	<md-option x-ng-value="'LOCAL'">
 	            		Locale

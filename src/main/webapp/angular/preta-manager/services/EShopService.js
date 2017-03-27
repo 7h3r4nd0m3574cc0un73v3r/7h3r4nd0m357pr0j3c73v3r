@@ -84,27 +84,22 @@ App.factory( 'EShopService', ['$http', '$q', 'Upload', function( $http, $q, Uplo
 				}).then( function( response) { return response.data},
 						 function( response) { return $q.reject( response); });
 			},
-			/* EShop Profile Completion */
-			computeProfileCompletion: function( entity) {
-				var total = 0;
-				var propNum = 0;
-				var nullPropNum = 0;
-				
-				angular.forEach( entity, function( value, key){
-					if( key != 'id' && key != 'regDate' &&
-						key != 'logoFile' && key != 'logoGoogleId' &&
-						key != 'isEnabled' && key != 'profileCompletion' &&
-						key != 'isInMarket') {
-						if( value == null || value == "" || value == undefined)
-							nullPropNum++;
-						
-						propNum++;
+			loadLocalMarkets: function( ) {
+				return $http({
+					url: 'rest-api/manager/local-markets',
+					method: 'GET',
+					params: {
+						page: "1",
+						pageSize: "0",
+						orderByNameAsc: "true"
 					}
-				});
-				
-				return Math.round( (propNum - nullPropNum) / propNum * 100);
+				}).then( function( r) { return r.data; },
+						function( r) {
+							console.log( 'Error: EShopService > loadLocalMarkets');
+							return $q.reject( r);
+						}
+				);
 			}
-			/* End EShop Profile Completion */
 		}
 	}                            
 ]);

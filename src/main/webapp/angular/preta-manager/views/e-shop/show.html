@@ -1,6 +1,5 @@
 <div x-ui-view>
-	<div x-ba-panel x-ba-panel-title="Boutique : {{ entity.name |limitTo: 30 }}" x-ba-panel-class="with-scroll">
-
+	<div x-ba-panel x-ba-panel-title="Boutique : {{ entity.name |limitTo: 30 }}">
 		<div layout="column">
 			<div flex>
 				<!-- <img x-ng-src="rest-api/e-shop/{{ entity.id }}/fetch-logo" class="img-responsive img-thumbnail center-block" /> -->
@@ -40,12 +39,21 @@
 	          </md-input-container>
 			</div>
 		    
-		    <div layout-sm="column" layout-gt-sm="row">
+		    <div layout="row" layout-wrap>
 	          <md-input-container class="md-block" flex>
-	            <label>Marché de la place</label>
+	            <label>Située dans un marché de la place</label>
 	            <input readonly ng-value="entity.isInMarket ? 'Oui' : 'Non'" />
 	          </md-input-container>
 	          
+	          <md-input-container class="md-block" flex ng-if="entity.isInMarket && entity.market != null">
+	            <label>Marché concerné</label>
+	            <input readonly value="{{ entity.market.name }}" />
+	          </md-input-container>
+	          
+	        </div>
+	        
+	        
+	        <div layout-sm="column" layout-gt-sm="row">
 	          <md-input-container class="md-block" flex>
 	            <label>Type de boutique</label>
 	            <md-select x-ng-model="entity.shopType" ng-disabled="true">

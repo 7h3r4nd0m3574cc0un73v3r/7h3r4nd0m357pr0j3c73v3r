@@ -652,7 +652,7 @@ public class ManagerRESTAPIController
 		catch( Exception e)
 		{
 			e.printStackTrace();
-			return new ResponseEntity<Void>( HttpStatus.INTERNAL_SERVER_ERROR);
+			return Tools.internalServerError();
 		}
 	}
 	/* End Shop Subs */
