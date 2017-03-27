@@ -131,7 +131,9 @@ public class Tools
 					!field.getName().equals( "articles") &&
 					!field.getName().equals( "manager") &&
 					!field.getName().equals( "articlesCount") &&
-					!field.getName().equals( "currentShopSub")
+					!field.getName().equals( "currentShopSub") &&
+					!field.getName().equals( "ifu") &&
+					!field.getName().equals( "rc")
 				 ) {
 					propCount++;
 					

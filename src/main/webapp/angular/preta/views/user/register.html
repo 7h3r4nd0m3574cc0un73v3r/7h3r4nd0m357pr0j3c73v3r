@@ -6,123 +6,125 @@
 					<div class="default-panel-header">
 						<h4 class="title text-mainge"><i class="fa fa-user-plus"></i>&nbsp;Inscription</h4> <small>Créez votre compte sans plus tarder !</small>
 					</div>
-					<form name="form">
-						<div layout="column" layout-padding>
-						  <!-- Username -->
-						  <div layout="row" flex>
-					          <md-input-container class="md-block" flex>
-					            <label>Nom d'utilisateur</label>
-					            <md-icon><i class="fa fa-user text-mainge"></i></md-icon>
-					            <input ng-model="entity.username" type="text" required name="username" />
-							    <div ng-messages="form.username.$error" multiple md-auto-hide="false">
-							      <div ng-message="required">
-						            Champ requis.
-						          </div>
-							      <div x-ng-if="formErrors.username.conflict">
-							      	Désolé, ce nom d'utilisateur est déjà pris.
-							      </div>
-								</div>
-					          </md-input-container>
-					      </div>
-					      
-					      <!-- Password -->
-					      <div layout="row" flex>
-					          <md-input-container class="md-block" flex>
-					            <label>Mot de passe</label>
-					            <md-icon><i class="fa fa-lock text-mainge"></i></md-icon>
-					            <input ng-model="entity.password" type="password" required name="password" ng-minlength="8" />
-							    <div ng-messages="form.password.$error" multiple md-auto-hide="false">
-							      <div ng-message="required">
-						            Champ requis.
-						          </div>
-						          <div ng-message="minlength">
-						          	Le mot de passe doit comporter au moins 8 caractères.
-						          </div>
-							      <div x-ng-if="formErrors.password.mismatch">
-							      	Les mots de passe ne correspondent pas.
-							      </div>
-								</div>
-					          </md-input-container>
-					      </div>
-					      
-					      <!-- ConfirmPassword -->
-					      <div layout="row" flex>
-					          <md-input-container class="md-block" flex>
-					            <label>Confirmer mot de passe</label>
-					            <md-icon><i class="fa fa-lock text-mainge"></i></md-icon>
-					            <input ng-model="entity.confirmPassword" type="password" required name="confirmPassword" ng-minlength="8" />
-					            <div ng-messages="form.confirmPassword.$error" multiple md-auto-hide="false">
-							      <div ng-message="required">
-						            Champ requis.
-						          </div>
-						          <div ng-message="minlength">
-						          	Le mot de passe doit comporter au moins 8 caractères.
-						          </div>
-							      <div x-ng-if="formErrors.password.mismatch">
-							      	Les mots de passe ne correspondent pas.
-							      </div>
-								</div>
-					          </md-input-container>
-					      </div>
-					      
-					      <!-- Mail Address -->
-					      <div layout="row" flex>
-					          <md-input-container class="md-block" flex>
-					            <label>Adresse Mail</label>
-					            <md-icon><i class="fa fa-envelope text-mainge"></i></md-icon>
-					            <input ng-model="entity.userInfo.email" type="email" required ng-pattern="/^.+@.+\..+$/" name="email" />
-					          	<div ng-messages="form.email.$error" multiple md-auto-hide="false">
-							      <div ng-message="required">
-							      	Champs requis.
-							      </div>
-							      <div ng-message="pattern">
-							      	Cette adresse mail est invalide.
-							      </div>
-							      <div x-ng-if="formErrors.email.conflict">
-							      	Désolé, cette adresse mail est déjà enregistrée.
-							      </div>
-					          	</div>
-					          </md-input-container>
-					      </div>
-					      
-					      <!-- Mobile -->
-					      <div layout="row" flex>
-					          <md-input-container class="md-block" flex>
-					            <label>Téléphone Mobile (pour achats)</label>
-					            <md-icon><i class="fa fa-phone text-mainge"></i></md-icon>
-					            <input ng-model="entity.mobile" type="text" numbers-only required name="mobile" />
-					            <div ng-messages="form.mobile.$error">
-							      <div ng-message="required">
-							      	Champ requis.
-							      </div>
-							      <div x-ng-if="formErrors.mobile.conflict">
-									Désolé, ce numéro est déjà enregstré.
-							      </div>
-							      <div x-ng-if="formErrors.mobile.invalid">
-							      	Désolé, ce numéro n'est pas supporté actuellement.
-							      	Veuillez renseigner un numéro correspondant à l'un des réseau suivant:
-							      	<ul>
-							      		<li>MTN</li>
-							      		<li>Moov</li>
-							      	</ul>
-							      </div>
-					            </div>
-					          </md-input-container>
-					      </div>
-							
-						  <div layout="row" layout-align="center center" flex>
-						  	<md-input-container class="md-block" flex>
-						  		<div flex vc-recaptcha key="'6LclTRcUAAAAAMdM9DJOL7a6QQum6lh8PyC1Maos'" x-ng-model="entity.captcha" required></div>
-						  	</md-input-container>
-						  </div>
-					      
-					      <div layout="row" layout-align="end center" flex layout-margin>
-					          <md-button class="md-raised md-primary" type="submit" x-ng-click="addEntity()" x-ng-disabled="!form.$valid">
-					          	Valider&nbsp;<i class="fa fa-check-circle"></i>
-					          </md-button>
-					      </div>
-						</div>
-					</form>
+					<div cg-busy="{ promise: promise, message: 'Merci de patienter ...', templateUrl: 'angular/common/templates/custom-cg-busy.html' }">
+						<form name="form">
+							<div layout="column" layout-padding>
+							  <!-- Username -->
+							  <div layout="row" flex>
+						          <md-input-container class="md-block" flex>
+						            <label>Nom d'utilisateur</label>
+						            <md-icon><i class="fa fa-user text-mainge"></i></md-icon>
+						            <input ng-model="entity.username" type="text" required name="username" />
+								    <div ng-messages="form.username.$error" multiple md-auto-hide="false">
+								      <div ng-message="required">
+							            Champ requis.
+							          </div>
+								      <div x-ng-if="formErrors.username.conflict">
+								      	Désolé, ce nom d'utilisateur est déjà pris.
+								      </div>
+									</div>
+						          </md-input-container>
+						      </div>
+						      
+						      <!-- Password -->
+						      <div layout="row" flex>
+						          <md-input-container class="md-block" flex>
+						            <label>Mot de passe</label>
+						            <md-icon><i class="fa fa-lock text-mainge"></i></md-icon>
+						            <input ng-model="entity.password" type="password" required name="password" ng-minlength="8" />
+								    <div ng-messages="form.password.$error" multiple md-auto-hide="false">
+								      <div ng-message="required">
+							            Champ requis.
+							          </div>
+							          <div ng-message="minlength">
+							          	Le mot de passe doit comporter au moins 8 caractères.
+							          </div>
+								      <div x-ng-if="formErrors.password.mismatch">
+								      	Les mots de passe ne correspondent pas.
+								      </div>
+									</div>
+						          </md-input-container>
+						      </div>
+						      
+						      <!-- ConfirmPassword -->
+						      <div layout="row" flex>
+						          <md-input-container class="md-block" flex>
+						            <label>Confirmer mot de passe</label>
+						            <md-icon><i class="fa fa-lock text-mainge"></i></md-icon>
+						            <input ng-model="entity.confirmPassword" type="password" required name="confirmPassword" ng-minlength="8" />
+						            <div ng-messages="form.confirmPassword.$error" multiple md-auto-hide="false">
+								      <div ng-message="required">
+							            Champ requis.
+							          </div>
+							          <div ng-message="minlength">
+							          	Le mot de passe doit comporter au moins 8 caractères.
+							          </div>
+								      <div x-ng-if="formErrors.password.mismatch">
+								      	Les mots de passe ne correspondent pas.
+								      </div>
+									</div>
+						          </md-input-container>
+						      </div>
+						      
+						      <!-- Mail Address -->
+						      <div layout="row" flex>
+						          <md-input-container class="md-block" flex>
+						            <label>Adresse Mail</label>
+						            <md-icon><i class="fa fa-envelope text-mainge"></i></md-icon>
+						            <input ng-model="entity.userInfo.email" type="email" required ng-pattern="/^.+@.+\..+$/" name="email" />
+						          	<div ng-messages="form.email.$error" multiple md-auto-hide="false">
+								      <div ng-message="required">
+								      	Champs requis.
+								      </div>
+								      <div ng-message="pattern">
+								      	Cette adresse mail est invalide.
+								      </div>
+								      <div x-ng-if="formErrors.email.conflict">
+								      	Désolé, cette adresse mail est déjà enregistrée.
+								      </div>
+						          	</div>
+						          </md-input-container>
+						      </div>
+						      
+						      <!-- Mobile -->
+						      <div layout="row" flex>
+						          <md-input-container class="md-block" flex>
+						            <label>Téléphone Mobile (pour achats)</label>
+						            <md-icon><i class="fa fa-phone text-mainge"></i></md-icon>
+						            <input ng-model="entity.mobile" type="text" numbers-only required name="mobile" />
+						            <div ng-messages="form.mobile.$error">
+								      <div ng-message="required">
+								      	Champ requis.
+								      </div>
+								      <div x-ng-if="formErrors.mobile.conflict">
+										Désolé, ce numéro est déjà enregstré.
+								      </div>
+								      <div x-ng-if="formErrors.mobile.invalid">
+								      	Désolé, ce numéro n'est pas supporté actuellement.
+								      	Veuillez renseigner un numéro correspondant à l'un des réseau suivant:
+								      	<ul>
+								      		<li>MTN</li>
+								      		<li>Moov</li>
+								      	</ul>
+								      </div>
+						            </div>
+						          </md-input-container>
+						      </div>
+								
+							  <div layout="column" layout-align="center center" flex>
+							  	<md-input-container class="md-block" flex>
+							  		<div flex vc-recaptcha key="'6LclTRcUAAAAAMdM9DJOL7a6QQum6lh8PyC1Maos'" x-ng-model="entity.captcha" required></div>
+							  	</md-input-container>
+							  </div>
+						      
+						      <div layout="row" layout-align="end center" flex layout-margin>
+						          <md-button class="md-raised md-primary" type="submit" x-ng-click="addEntity()" x-ng-disabled="!form.$valid">
+						          	Valider&nbsp;<i class="fa fa-check-circle"></i>
+						          </md-button>
+						      </div>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>

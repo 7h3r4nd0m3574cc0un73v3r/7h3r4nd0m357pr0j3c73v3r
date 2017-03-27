@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.annotation.Nullable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -81,6 +83,7 @@ public class EShop implements Serializable
 	@JsonView( Views.Public.class)
 	private String ifu;
 	
+	@Nullable
 	@JsonView( Views.Public.class)
 	private String rc;
 	
@@ -137,6 +140,22 @@ public class EShop implements Serializable
 	@JoinColumn( referencedColumnName="id")
 	private ShopSub currentShopSub;
 	
+	@Fetch( FetchMode.SELECT)
+	@JsonView( Views.Public.class)
+	@ManyToOne( fetch=FetchType.EAGER)
+	@JoinColumn( referencedColumnName="id")
+	private LocalMarket market;
+	
+	public LocalMarket getMarket()
+	{
+		return market;
+	}
+
+	public void setMarket(LocalMarket market)
+	{
+		this.market = market;
+	}
+
 	public final Long getId()
 	{
 		return id;

@@ -52,7 +52,7 @@ public class ManagerRESTAPI extends SharedRESTAPI implements IManagerRESTAPI
 			return result;
 		}
 		@Override
-		public PagedListJSON loadManagerArticleOrders( final Long id, final Integer page, final Integer pageSize, final OrderStatus status, final boolean orderByIdAsc)
+		public PagedListJSON loadManagerArticleOrders( Long id, Integer page, Integer pageSize, OrderStatus status, boolean orderByIdAsc)
 		{
 			return pretaDao.loadManagerArticleOrders(id, page, pageSize, status, orderByIdAsc);
 		}
@@ -153,14 +153,22 @@ public class ManagerRESTAPI extends SharedRESTAPI implements IManagerRESTAPI
 	
 	/* Expense */
 	@Override
-	public Expense loadExpense( final Long id)
+	public Expense loadExpense( Long id)
 	{
 		return pretaDao.loadExpense(id);
 	}
 	@Override
-	public PagedListJSON loadManagerExpenses( final Long id, final Integer page, final Integer pageSize, final boolean orderByIdAsc)
+	public PagedListJSON loadManagerExpenses( Long id, Integer page, Integer pageSize, boolean orderByIdAsc)
 	{
 		return pretaDao.loadManagerExpenses(id, page, pageSize, orderByIdAsc);
 	}
 	/* End Expense */
+
+	/* LocalMarket */
+	@Override
+	public PagedListJSON loadAvailableLocalMarkets( Integer page, Integer pageSize, boolean orderByNameAsc)
+	{
+		return pretaDao.loadAvailableLocalMarkets(page, pageSize, orderByNameAsc);
+	}
+	/* End LocalMarket */
 }

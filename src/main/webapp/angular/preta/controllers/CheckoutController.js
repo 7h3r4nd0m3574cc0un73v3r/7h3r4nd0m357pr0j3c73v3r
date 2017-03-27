@@ -80,8 +80,10 @@ App.controller( 'CheckoutController', ['$state', '$scope', 'ArticleService', 'Or
 	if( ArticleService.referrer == 2) 
 		ArticleService.referrer = 0;
 	
+	$scope.promise;
+	
 	$scope.placeOrder = function() {
-		OrderService.addArticleOrder( $scope.grouped, $scope.form.eAccount.id, $scope.form.paymentRef, $scope.selectedAdminEAccount.id,
+		$scope.promise = OrderService.addArticleOrder( $scope.grouped, $scope.form.eAccount.id, $scope.form.paymentRef, $scope.selectedAdminEAccount.id,
 									  $scope.form.useDefaultDeliveryAddress, $scope.form.deliveryAddress)
 									  
 					.then( function( response) {

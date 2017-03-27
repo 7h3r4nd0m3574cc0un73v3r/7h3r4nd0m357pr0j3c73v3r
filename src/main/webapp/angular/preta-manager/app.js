@@ -19,6 +19,7 @@ var App = angular.module( "managerPretaApp", [
                                               'lfNgMdFileInput',
                                               'ngStomp',
                                               'ngAudio',
+                                              'cgBusy',
                                               'BlurAdmin'
                                               ]);
 App.config( routeConfig);

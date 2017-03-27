@@ -436,6 +436,39 @@ public class AdminRESTAPI extends SharedRESTAPI implements IAdminRESTAPI
 	}
 	/* End Category */
 
+	/* LocalMarket */
+	@Override
+	public PagedListJSON loadLocalMarkets( Integer page, Integer pageSize, boolean orderByIdAsc)
+	{
+		return pretaDao.loadLocalMarkets(page, pageSize, orderByIdAsc);
+	}
+	@Override
+	public void updateLocalMarket( LocalMarket entity)
+	{
+		pretaDao.updateLocalMarket(entity);
+	}
+	@Override
+	public LocalMarket loadLocalMarket( String name)
+	{
+		return pretaDao.loadLocalMarket(name);
+	}
+	@Override
+	public LocalMarket loadLocalMarket( Long id)
+	{
+		return pretaDao.loadLocalMarket(id);
+	}
+	@Override
+	public void deleteLocalMarket( Long id)
+	{
+		pretaDao.deleteLocalMarket(id);
+	}
+	@Override
+	public Long addLocalMarket( final LocalMarket entity)
+	{
+		return pretaDao.addLocalMarket(entity);
+	}
+	/* End LocalMarket */
+	
 	/* Expense */
 	@Override
 	public Expense loadExpense( Long id)

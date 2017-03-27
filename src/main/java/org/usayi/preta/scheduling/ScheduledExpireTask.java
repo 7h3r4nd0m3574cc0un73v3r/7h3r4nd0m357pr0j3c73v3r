@@ -6,7 +6,6 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.scheduling.annotation.Async;
-import org.usayi.preta.dao.IPretaDAO;
 import org.usayi.preta.entities.AdvOffer;
 import org.usayi.preta.entities.EShop;
 import org.usayi.preta.entities.GenericStatus;
@@ -15,21 +14,17 @@ import org.usayi.preta.service.NotificationService;
 
 @Description( value="Task to expire either and AdvOffer or an ShopSub")
 public class ScheduledExpireTask implements Runnable
-{
-	@Autowired
-	private IPretaDAO dao;
-	
+{	
 	@Autowired
 	private NotificationService notifications;
 	
 	private Object entity;
 	
-	public ScheduledExpireTask(Object entity, IPretaDAO dao, NotificationService notifications)
+	public ScheduledExpireTask(Object entity, NotificationService notifications)
 	{
 		super();
 		this.entity = entity;
-		this.notifications = notifications;
-		this.dao = dao;
+		this.notifications = notifications;		
 	}
 
 	
@@ -45,19 +40,19 @@ public class ScheduledExpireTask implements Runnable
 		try
 		{
 			if( entity.getClass().equals( ShopSub.class)) {
-				ShopSub sub = dao.loadShopSub( (( ShopSub) entity).getId());
+				ShopSub sub = SchedulerStaticDAOImpl.getDao().loadShopSub( (( ShopSub) entity).getId());
 				System.err.println( "DEBUG: Detected ShopSub #" + sub.getId());
 				sub.setSubStatus(GenericStatus.EXPIRED);
 				
 				/* Remove the expired ShopSub from EShop */
 				if( sub.equals( sub.geteShop().getCurrentShopSub())) {
-					EShop e = dao.loadEShop( sub.geteShop().getId());
+					EShop e = SchedulerStaticDAOImpl.getDao().loadEShop( sub.geteShop().getId());
 					e.setCurrentShopSub( null);
 					
-					dao.updateEShop( e);
+					SchedulerStaticDAOImpl.getDao().updateEShop( e);
 				}
 				
-				dao.updateShopSub(sub);
+				SchedulerStaticDAOImpl.getDao().updateShopSub(sub);
 				/* Notify Manager of Expired entity */
 				notifications.managerExpiredEntity(sub);
 				
@@ -67,10 +62,10 @@ public class ScheduledExpireTask implements Runnable
 			if( entity.getClass().equals( AdvOffer.class)) {
 				System.err.println( "DEBUG: Detected AdvOffer " + (( AdvOffer) entity).getId());
 				
-				AdvOffer ad = dao.loadAdvOffer( ((AdvOffer) entity).getId());
+				AdvOffer ad = SchedulerStaticDAOImpl.getDao().loadAdvOffer( ((AdvOffer) entity).getId());
 				ad.setStatus( GenericStatus.EXPIRED);
 				
-				dao.updateAdvOffer( ad);
+				SchedulerStaticDAOImpl.getDao().updateAdvOffer( ad);
 
 				/* Notify Manager of expired entity */
 				notifications.managerExpiredEntity(ad);
@@ -93,18 +88,6 @@ public class ScheduledExpireTask implements Runnable
 	public void setEntity(Object entity)
 	{
 		this.entity = entity;
-	}
-
-
-	public IPretaDAO getDao()
-	{
-		return dao;
-	}
-
-
-	public void setDao(IPretaDAO dao)
-	{
-		this.dao = dao;
 	}
 
 

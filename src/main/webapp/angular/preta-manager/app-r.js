@@ -1,4 +1,10 @@
 /* D055 Code - Preta Manager */
+/* cgBusy Config */
+App.value( 'cgBusyDefaults'), {
+	message: 'Merci de patienter ...',
+	templateUrl: 'angular/common/templates/custom-cg-busy.html'
+}
+
 App.config( [ '$stateProvider', '$urlRouterProvider', 'baSidebarServiceProvider', '$mdThemingProvider',
               function( $stateProvider, $urlRouterProvider, baSidebarServiceProvider, $mdThemingProvider) {
 	

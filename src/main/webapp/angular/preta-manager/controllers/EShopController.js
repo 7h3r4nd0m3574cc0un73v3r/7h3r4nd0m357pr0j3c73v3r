@@ -127,9 +127,13 @@ App.controller( 'EShopController', [ '$state', '$stateParams', '$scope', '$rootS
 						/* Load Current Shop Sub */
 						EShopService.loadCurrentShopSub( $scope.entity.id)
 									.then( function( response) {
-										$scope.entity.currentShopSub = response;
+										if( response.status == 200)
+											$scope.entity.currentShopSub = response;
+										
+										if( response.status == 204)
+											ŝcope.entity.currentShopSub = undefined;
+										
 									}, function( response) {
-										console.error( response);
 										$scope.entity.currentShopSub = undefined;
 									});
 						
@@ -163,13 +167,15 @@ App.controller( 'EShopController', [ '$state', '$stateParams', '$scope', '$rootS
 	$scope.form = { entity: { eShop: null, shopSub: null, payment: null }, file: null };
 	$scope.formErrors = {};
 	
+	/* New EShop */
+	$scope.promise;
 	
 	$scope.addEntity = function() {
 		console.log( $scope.form);
 		console.log( $scope.dummy);
 		
 		if( $scope.dummy.myForm.$valid) {
-			EShopService.addEntity( $scope.form)
+			$scope.promise = EShopService.addEntity( $scope.form)
 			.then( function( r) {
 				$state.go( 'root.e-shops', null, { reload: true});
 			}, function( r) {
@@ -177,6 +183,7 @@ App.controller( 'EShopController', [ '$state', '$stateParams', '$scope', '$rootS
 			});
 		}
 	};
+	/* End New EShop */
 	
 	$scope.updateEntity = function( file) {
 		EShopService.updateEntity( $scope.entity, file)

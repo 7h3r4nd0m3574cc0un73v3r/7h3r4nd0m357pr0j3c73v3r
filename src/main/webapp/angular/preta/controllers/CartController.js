@@ -24,7 +24,6 @@ App.controller( 'CartController', [ '$rootScope', '$scope', '$state', 'ArticleSe
 	
 	/* Loading Entities */
 	function loadEntities( page, pageSize) {
-		$log.info( "Load Entities called");
 		$scope.isListLoading = true;
 		/* Load Everything, pagiantion handlded with slice */
 		ArticleService.loadCartContent( page, pageSize)
@@ -32,11 +31,12 @@ App.controller( 'CartController', [ '$rootScope', '$scope', '$state', 'ArticleSe
 						  $scope.pagination.pagesNumber = response.pagesNumber;
 						  $scope.pagination.itemsNumber = response.itemsNumber;
 						  
-						  angular.forEach( response.allEntities, function( cartItem) {
+						  angular.forEach( response.entities, function( cartItem) {
 							  cartItem.isSelected = false;
 							  /* Load Article Pictures */
-							   ArticleService.loadDefaultPicture( cartItem.article.id)
+							  ArticleService.loadDefaultPicture( cartItem.article.id)
 							  				.then( function( response) {
+							  					
 							  					cartItem.article.pictures = [];
 							  					cartItem.article.pictures.push( response);
 							  				}, function( response) {
@@ -297,4 +297,9 @@ App.controller( 'CartController', [ '$rootScope', '$scope', '$state', 'ArticleSe
 			}
 		});
 	};
+	
+	$scope.$watch( 'allEntities', function( newValue, oldValue) {
+		console.warn( "Change detected");
+		$scope.updateTotal();
+	}, true);
 }]);

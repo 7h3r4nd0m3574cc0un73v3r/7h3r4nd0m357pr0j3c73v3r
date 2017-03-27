@@ -1,5 +1,5 @@
 <div x-ba-panel x-ba-panel-title="Ajouter une boutique" x-ba-panel-class="with-scroll">
-	<div class="container-fluid">
+	<div class="container-fluid" cg-busy="{ promise: promise }">
 		<form class="form-horizontal" name="dummy.myForm">
 		
 			<h3 class="text-primary"><b>Informations de base</b></h3>
@@ -7,7 +7,7 @@
 			<div layout="row">
 	          <md-input-container class="md-block" flex>
 	            <label>Nom de la boutique</label>
-	            <input ng-model="form.entity.eShop.name" required md-minlength="4" name="name" id="name">
+	            <input ng-model="form.entity.eShop.name" md-minlength="4" name="name" id="name" required>
 			    <div ng-messages="myForm.name.$error" style="color:red;">
 			        <div ng-message="required">Champ requis.</div>
 			    </div>
@@ -17,7 +17,7 @@
 		    <div layout="row">
 	          <md-input-container class="md-block" flex>
 	            <label>Présentation</label>
-	            <textarea ng-model="form.entity.eShop.description" md-maxlength="1500" rows="5" md-select-on-focus required name="description"></textarea>
+	            <textarea ng-model="form.entity.eShop.description" md-maxlength="1500" required rows="5" md-select-on-focus name="description"></textarea>
 			    <div ng-messages="myForm.description.$error" style="color:red;">
 			        <div ng-message="required">Champ requis.</div>
 			    </div>
@@ -51,7 +51,7 @@
 			<div layout-gt-sm="row" layout-sm="column">
 	          <md-input-container class="md-block" flex-sm="100" flex-gt-sm>
 	            <label>IFU</label>
-	            <input ng-model="form.entity.eShop.ifu" md-maxlength="13" md-minlength="13" numbers-only required name="ifu"/>
+	            <input ng-model="form.entity.eShop.ifu" md-maxlength="13" md-minlength="13" numbers-only name="ifu"/>
 			    <div ng-messages="myForm.ifu.$error" style="color:red;">
 			        <div ng-message="required">Champ requis.</div>
 			    </div>
@@ -59,7 +59,7 @@
 	          
 	          <md-input-container class="md-block" flex-sm="100" flex-gt-sm>
 	            <label>Registre de Commerce</label>
-	            <input ng-model="form.entity.eShop.rc" required name="rc">
+	            <input ng-model="form.entity.eShop.rc" name="rc">
 			    <div ng-messages="myForm.rc.$error" style="color:red;">
 			        <div ng-message="required">Champ requis.</div>
 			    </div>

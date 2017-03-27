@@ -1,0 +1,45 @@
+<div x-ui-view>
+	<div class="row">
+		<div class="col-md-12">
+			<div x-ba-panel x-ba-panel-title="Nouveau Marché Local" >
+				<div layout="row" laout-align="end">
+					<span flex></span>
+					<md-button class="md-raised md-primary" x-ui-sref="root.local-markets.new">
+						<i class="fa fa-plus-square"></i> Ajouter Marché Local
+					</md-button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12">
+			<div x-ba-panel x-ba-panel-title="Marchés Locaux">
+					
+				<div layout="column" layout-align="space-around center" x-ng-show="isListLoading">
+					<md-progress-circular flex md-mode="indeterminate"></md-progress-circular>
+	       		</div>
+					
+			    <div layout="column" layout-align="center center" x-ng-if="!isListLoading && !entities.length">
+   					<div flex="auto">
+   						<h3 class="md-title text-success"><i class="fa fa-circle-o-notch"></i>&nbsp;<b>Aucun marché local à afficher</b></h3>
+   					</div>
+		        </div>
+		        
+				 <!-- Entities Loaded -->
+				<md-content layout-sm="column" layout-gt-sm="row" layout-wrap layout-align-gt-sm="start stretch" x-ng-if="!isListLoading && entities.length">
+					<local-market-card entity="entity" x-ng-repeat="entity in entities" />
+				</md-content>
+				
+				<div class="text-center" x-ng-if="pagination.itemsNumber > pagination.pageSize">
+					<pagination uib-pagination x-ng-model="pagination.currentPage" boundary-links-numbers="true" rotate="false"
+							num-pages="pagination.pagesNumber" max-size="5" class="pagination" items-per-page="pagination.pageSize"
+							total-items="pagination.itemsNumber" x-ng-change="changePage()"
+							previous-text="Précédent" next-text="Suivant">
+					</pagination>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>

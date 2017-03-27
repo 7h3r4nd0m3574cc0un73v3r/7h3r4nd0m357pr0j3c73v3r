@@ -13,7 +13,7 @@ App.controller( 'LoginController', [ '$scope', '$state', '$window', 'LoginServic
 								ConfigService.isAuthenticated = true;
 								ConfigService.loggedUser = response.data.user;
 								
-								$window.location.href = "preta-manager";
+								$window.location.href = "hobossa-manager";
 							}
 						},
 						function( errResponse) {

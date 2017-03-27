@@ -5,34 +5,24 @@
 			<research-widget></research-widget>
 			
 			<div x-ui-view>
-				
- 				<div class="row">
-					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 hide-xs hide-sm" style="padding: 0 !important;">
-						<categories-menu x-categories="categories" />
+				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 hide-sm hide-xs">
+						<div class="container-fluid">
+							<categories-menu x-categories="categories" />
+						</div>
 					</div>
 					
 					<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-						<home-slides />
-					</div>
-	
-					<!-- 
-					<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 hide-xs hide-sm" style="padding: 0 !important;">
-						<div class="row">
-							<div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-lg-11 col-ms-11 col-sm-11 col-xs-12">
-								<h4 class="text-mainge">N'hésitez plus !</h4>
-								<a x-ui-sref="root.registration" x-ng-show="loggedUser == null" class="btn btn-mainge btn-flat center-block" style="margin-bottom: 4px;">M'inscrire</a>
-								EShop Register
-								<a x-ui-sref="root.eshop-reg" class="btn btn-mainge btn-flat center-block" x-ng-show="loggedUser == null">Enregistrer ma boutique !</a>
-								<a x-ui-sref="root.upgrade-request" x-ng-show="loggedUser != null && !loggedUser.isManager" class="btn btn-mainge btn-flat center-block">Enregistrer ma Boutique</a>
-								<a href="preta-manager#/e-shops" x-ng-show="loggedUser != null && loggedUser.isManager" class="btn btn-mainge btn-flat center-block">Enregistrer ma Boutique</a>
+						<div class="container-fluid">
+							<div class="row">
+								<home-slides />
 							</div>
 						</div>
 					</div>
-					-->
 				</div>
 				
 				<!-- Left Column -->
-				<div class="col-lg-3 col-md-2 col-sm-12 col-xs-12">
+				<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
 					<!-- Advertisment -->
 					<div class="row hide-xs hide-sm">
 						<div class="container-fluid animated fadeInLeft">

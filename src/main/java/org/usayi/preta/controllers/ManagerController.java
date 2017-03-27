@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping( "/preta-manager")
+@RequestMapping( "/hobossa-manager")
 public class ManagerController {
 	
 	//AngularJS : Manager Application
