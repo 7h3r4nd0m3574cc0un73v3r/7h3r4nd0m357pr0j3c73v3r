@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface EMailTemplateService
 {
-	public final static String templatesPath = "/random/preta/templates/";
+	public final static String templatesPath = "C:/Hobossa/templates/";
 	public final static String baseTmplPath = templatesPath + "base-tmpl.html";
 	
 	/* Account Management */

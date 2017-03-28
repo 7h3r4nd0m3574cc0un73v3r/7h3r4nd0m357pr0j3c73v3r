@@ -36,7 +36,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService
 	public static final String defaultSlideId = "0B0W0ktANhIydQkhBQWcyUW5tZkU";
 	
 	/* Local Path Settings */
-	public static final String uploadPath ="/random/preta/uploads/";
+	public static final String uploadPath ="C:/Hobossa/uploads/";
 	
 	private static final String articleUploadPath = uploadPath + "articles/";
 	private static final String slideUploadPath = uploadPath + "slides/";

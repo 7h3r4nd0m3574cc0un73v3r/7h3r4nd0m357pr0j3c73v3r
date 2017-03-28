@@ -15,8 +15,8 @@
 			value="com.mysql.jdbc.Driver">
 		</property>
 		<property name="url" value="jdbc:mysql://localhost:3306/preta_db"></property>
-		<property name="username" value="preta_app"></property>
-		<property name="password" value="preta_app_password"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value=""></property>
 	</bean>
 	
 	<bean id="persistenceUnitManager"
@@ -72,7 +72,7 @@
 					  login-page="/admin-login" />
 		
 		<s:intercept-url pattern="/admin/**"  access="hasRole('ROLE_ADMIN')" />
-		<s:intercept-url pattern="/preta-manager/**"  access="hasRole('ROLE_MANAGER')" />
+		<s:intercept-url pattern="/hobossa-manager/**"  access="hasRole('ROLE_MANAGER')" />
 		<!-- <s:intercept-url pattern="/admin/**"  access="ROLE_ADMIN" /> -->
 		<!-- <s:intercept-url pattern="/categoryAdmin/**" access="ROLE_ADMIN_CAT" /> -->
 		
